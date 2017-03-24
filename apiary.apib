@@ -9,7 +9,7 @@ about the congregation to support various ministries.
 ## REST API conventions
 
 - Custom verbs are allowed through `X-HTTP-Method-Override`, but use sparingly.
-- Use HATEOAS styled references (use hypertext `links` to navigate the API).
+- Use HAL styled references (use hypertext `_links` to navigate the API).
   Always include a `self` reference for entities that have an ID.
 - Query references by ID, not by link (in `GET` requests).
 - Update references by link instead of ID (in `POST` and `PUT` requests).
@@ -22,7 +22,7 @@ specified. Single-valued complex attribute can be updated using the attribute
 path notation, e.g. `foo.bar.baz`, but it cannot be used to update members of
 a collection (i.e. `foo[1].bar.baz` is not an acceptable attribute path).
 
-Updates to references must be made using `links` attribute.
+Updates to references must be made using `_links` attribute.
 
 ## Removals
 
@@ -88,7 +88,7 @@ church site, either directly or indirectly.
                     "isLandline": true
                   }
                 ],
-                "links": {
+                "_links": {
                     "self": {
                         "href": "/api/v1/sites/SETRASARI"
                     },
@@ -133,7 +133,7 @@ church site, either directly or indirectly.
                 "isLandline": true
               }
             ],
-            "links": {
+            "_links": {
                 "self": {
                     "href": "/api/v1/sites/SETRASARI"
                 },
@@ -172,7 +172,7 @@ church site, either directly or indirectly.
                 "isLandline": true
               }
             ],
-            "links": {
+            "_links": {
                 "pool": {
                     "href": "/api/v1/ous/BANDUNG_UTARA"
                 }
@@ -216,7 +216,7 @@ church site, either directly or indirectly.
                     "isLandline": true
                   }
                 ],
-                "links": {
+                "_links": {
                     "self": {
                         "href": "/api/v1/sites/SETRASARI"
                     },
@@ -270,7 +270,7 @@ church site, either directly or indirectly.
                 "isLandline": true
               }
             ],
-            "links": {
+            "_links": {
                 "self": {
                     "href": "/api/v1/sites/SETRASARI"
                 },
@@ -318,7 +318,7 @@ church site, either directly or indirectly.
                 "isLandline": true
               }
             ],
-            "links": {
+            "_links": {
                 "self": {
                     "href": "/api/v1/sites/TEGAL"
                 },
@@ -367,7 +367,7 @@ under the synod.
                     "code": "GII",
                     "name": "Gereja Injili Indonesia"
                 },
-                "links": {
+                "_links": {
                     "self": {
                         "href": "/api/v1/ous/BANDUNG_UTARA"
                     },
@@ -395,7 +395,7 @@ under the synod.
                 "code": "GII",
                 "name": "Gereja Injili Indonesia"
             },
-            "links": {
+            "_links": {
                 "self": {
                     "href": "/api/v1/ous/BANDUNG_UTARA"
                 },
@@ -413,7 +413,7 @@ under the synod.
             "code": "BANDUNG_UTARA",
             "name": "Bandung Utara",
             "type": "POOL",
-            "links": {
+            "_links": {
                 "parent": {
                     "href": "/api/v1/ous/GII"
                 }
@@ -436,7 +436,7 @@ under the synod.
                     "code": "GII",
                     "name": "Gereja Injili Indonesia"
                 },
-                "links": {
+                "_links": {
                     "self": {
                         "href": "/api/v1/ous/BANDUNG_UTARA"
                     },
@@ -469,7 +469,7 @@ under the synod.
                 "code": "GII",
                 "name": "Gereja Injili Indonesia"
             },
-            "links": {
+            "_links": {
                 "self": {
                     "href": "/api/v1/ous/BANDUNG_UTARA"
                 },
@@ -497,7 +497,7 @@ under the synod.
                 "code": "GII",
                 "name": "Gereja Injili Indonesia"
             },
-            "links": {
+            "_links": {
                 "self": {
                     "href": "/api/v1/ous/BANDUNG_UTARA"
                 },
@@ -545,7 +545,7 @@ by this resource.
                 },
                 "commission": "ADULTS",
                 "startTime": "07:30",
-                "links": {
+                "_links": {
                     "self": {
                         "href": "/api/v1/sites/SETRASARI/services/SETRASARI-1"
                     },
@@ -574,7 +574,7 @@ by this resource.
             },
             "commission": "ADULTS",
             "startTime": "07:30",
-            "links": {
+            "_links": {
                 "self": {
                     "href": "/api/v1/sites/SETRASARI/services/SETRASARI-1"
                 },
@@ -612,7 +612,7 @@ by this resource.
                 },
                 "commission": "ADULTS",
                 "startTime": "07:30",
-                "links": {
+                "_links": {
                     "self": {
                         "href": "/api/v1/sites/SETRASARI/services/SETRASARI-1"
                     },
@@ -646,7 +646,7 @@ by this resource.
             },
             "commission": "ADULTS",
             "startTime": "10:00",
-            "links": {
+            "_links": {
                 "self": {
                     "href": "/api/v1/sites/SETRASARI/services/SETRASARI-2"
                 },
@@ -675,7 +675,7 @@ by this resource.
             },
             "commission": "ADULTS",
             "startTime": "19:00",
-            "links": {
+            "_links": {
                 "self": {
                     "href": "/api/v1/sites/SETRASARI/services/SETRASARI-4"
                 },
@@ -714,7 +714,7 @@ The following attributes are returned only if they match the search filter:
 - Identity card number
 - Address
 
-The `meta` attribute provides match information for records that are included
+The `_meta` attribute provides match information for records that are included
 because of a match to the `q` or `address` query parameters.
 
 + Parameters
@@ -754,7 +754,7 @@ because of a match to the `q` or `address` query parameters.
 
         [
             {
-                "_id": "5077700222",
+                "id": "5077700222",
                 "primarySite": {
                     "code": "SETRASARI",
                     "name": "GII Setrasari"
@@ -786,7 +786,7 @@ because of a match to the `q` or `address` query parameters.
                 "alternateNames": [
                 ],
                 "gender": "M",
-                "links": {
+                "_links": {
                     "self": {
                         "href": "/api/v1/people/5077700222"
                     },
@@ -799,7 +799,7 @@ because of a match to the `q` or `address` query parameters.
                         }
                     ]
                 },
-                "meta": {
+                "_meta": {
                     "q": {
                         "matchScore": 80,
                         "matchingFields": [
@@ -824,7 +824,7 @@ because of a match to the `q` or `address` query parameters.
 The complete information about a person can be retrieved using this action.
 The attributes that get returned depend on the access that the logged in user
 has. Some information, such as extended family ties, which retrieval will
-result in a separate audit log, will need to be fetched using the `links`
+result in a separate audit log, will need to be fetched using the `_links`
 that may be included in the response.
 
 + Parameters
@@ -835,7 +835,7 @@ that may be included in the response.
 + Response 200 (application/json)
 
         {
-            "_id": "5077700222",
+            "id": "5077700222",
             "primarySite": {
                 "code": "SETRASARI",
                 "name": "GII Setrasari"
@@ -998,7 +998,7 @@ that may be included in the response.
                     }
                 }
             ],
-            "links": {
+            "_links": {
                 "self": {
                     "href": "/api/v1/people/5077700222"
                 },
@@ -1075,7 +1075,7 @@ congregant that he is most closely related to.
             },
             "fullName": "Livia Setiadi",
             "gender": "F",
-            "links": {
+            "_links": {
                 "primarySite": {
                     "href": "/api/v1/sites/SETRASARI"
                 }
@@ -1117,7 +1117,7 @@ congregant that he is most closely related to.
                 "month": 3,
                 "year": 1992
             },
-            "links": {
+            "_links": {
                 "primarySite": {
                     "href": "/api/v1/sites/SETRASARI"
                 },
@@ -1138,7 +1138,7 @@ congregant that he is most closely related to.
     + Body
 
             {
-                "_id": "5010000bbb",
+                "id": "5010000bbb",
                 "status": "ACTIVE",
                 "currentMembership": {
                     "type": "REGULAR",
@@ -1151,7 +1151,7 @@ congregant that he is most closely related to.
                 },
                 "fullName": "Livia Setiadi",
                 "gender": "F",
-                "links": {
+                "_links": {
                     "self": {
                         "href": "/api/v1/people/5010000bbb"
                     },
@@ -1168,7 +1168,7 @@ congregant that he is most closely related to.
             "message": "Data perorangan tidak dapat ditambahkan karena ada data orang lain yang mirip.",
             "possibleDuplicates": [
                 {
-                    "_id": "5010000bbb",
+                    "id": "5010000bbb",
                     "primarySite": {
                         "code": "DAGO",
                         "name": "GII Dago"
@@ -1190,7 +1190,7 @@ congregant that he is most closely related to.
                     },
                     "fullName": "Livia Setiadi",
                     "gender": "F",
-                    "links": {
+                    "_links": {
                         "self": {
                             "href": "/api/v1/people/5077700222"
                         },
@@ -1221,7 +1221,7 @@ person record.
 + Request (application/json)
 
         {
-            "links": {
+            "_links": {
                 "edit": {
                     "href": "/api/v1/profileEdits/5432112345",
                 }
@@ -1231,7 +1231,7 @@ person record.
 + Response 200 (application/json)
 
         {
-            "_id": "5077700222",
+            "id": "5077700222",
             "primarySite": {
                 "code": "SETRASARI",
                 "name": "GII Setrasari"
@@ -1394,7 +1394,7 @@ person record.
                     }
                 }
             ],
-            "links": {
+            "_links": {
                 "self": {
                     "href": "/api/v1/people/5077700222"
                 },
@@ -1455,7 +1455,7 @@ summary, if specified. The edit data needs to be retrieved separately.
 
         [
             {
-                "_id": "5432112345",
+                "id": "5432112345",
                 "person": {
                     "personId": "5077700222",
                     "personName": "Jonathan Setiadi"
@@ -1463,7 +1463,7 @@ summary, if specified. The edit data needs to be retrieved separately.
                 "isResolved": false,
                 "creationDate": "2017-04-01",
                 "submitterName": "Jonathan Setiadi",
-                "links": {
+                "_links": {
                     "self": {
                         "href": "/api/v1/profileEdits/5432112345"
                     },
@@ -1476,7 +1476,7 @@ summary, if specified. The edit data needs to be retrieved separately.
                 }
             },
             {
-                "_id": "567a907c67",
+                "id": "567a907c67",
                 "person": {
                     "personId": "5077700222",
                     "personName": "Jonathan Setiadi"
@@ -1487,7 +1487,7 @@ summary, if specified. The edit data needs to be retrieved separately.
                 "resolution": "ACCEPTED",
                 "submitterName": "Maria Magdalena",
                 "reviewerName": "Maria Magdalena",
-                "links": {
+                "_links": {
                     "self": {
                         "href": "/api/v1/profileEdits/5432112345"
                     },
@@ -1521,7 +1521,7 @@ good enough to make such a call.
 + Response 200 (application/json)
 
         {
-            "_id": "567a907c67",
+            "id": "567a907c67",
             "person": {
                 "personId": "5077700222",
                 "personName": "Jonathan Setiadi"
@@ -1544,13 +1544,13 @@ good enough to make such a call.
                         "email": "jonathan.setiadi@hospital.com"
                     }
                 ],
-                "links": {
+                "_links": {
                     "primaryService": {
                         "href": "/sites/SETRASARI/services/1"
                     }
                 }
             },
-            "links": {
+            "_links": {
                 "self": {
                     "href": "/api/v1/profileEdits/5432112345"
                 },
@@ -1588,13 +1588,13 @@ This action creates a new edit towards a person's profile.
                         "email": "jonathan.setiadi@hospital.com"
                     }
                 ],
-                "links": {
+                "_links": {
                     "primaryService": {
                         "href": "/sites/SETRASARI/services/1"
                     }
                 }
             },
-            "links": {
+            "_links": {
                 "person": {
                     "href": "/api/v1/people/5077700222"
                 }
@@ -1610,7 +1610,7 @@ This action creates a new edit towards a person's profile.
     + Body
 
             {
-                "_id": "567a907c67",
+                "id": "567a907c67",
                 "person": {
                     "personId": "5077700222",
                     "personName": "Jonathan Setiadi"
@@ -1633,13 +1633,13 @@ This action creates a new edit towards a person's profile.
                             "email": "jonathan.setiadi@hospital.com"
                         }
                     ],
-                    "links": {
+                    "_links": {
                         "primaryService": {
                             "href": "/sites/SETRASARI/services/1"
                         }
                     }
                 },
-                "links": {
+                "_links": {
                     "self": {
                         "href": "/api/v1/profileEdits/5432112345"
                     },
@@ -1678,7 +1678,7 @@ The response returns the edit, along with edit contents, with its new status.
 + Response 200 (application/json)
 
         {
-            "_id": "5181aa2b3b",
+            "id": "5181aa2b3b",
             "person": {
                 "personId": "5077700222",
                 "personName": "Jonathan Setiadi"
@@ -1700,7 +1700,7 @@ The response returns the edit, along with edit contents, with its new status.
                     "country": "Indonesia"
                 }
             },
-            "links": {
+            "_links": {
                 "self": {
                     "href": "/api/v1/profileEdits/5181aa2b3b"
                 },
