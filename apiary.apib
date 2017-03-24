@@ -1,0 +1,1717 @@
+FORMAT: 1A
+HOST: http://hitsapi.apiblueprint.org/
+
+# HITS API
+
+Hok Im Tong IT Service APIs provide actions to organize and retrieve information
+about the congregation to support various ministries.
+
+## REST API conventions
+
+- Custom verbs are allowed through `X-HTTP-Method-Override`, but use sparingly.
+- Use HATEOAS styled references (use hypertext `links` to navigate the API).
+  Always include a `self` reference for entities that have an ID.
+- Query references by ID, not by link (in `GET` requests).
+- Update references by link instead of ID (in `POST` and `PUT` requests).
+- No batch operations within the regular APIs.
+
+## Updates
+
+When updating a multi-valued attribute, the entire collection must be
+specified. Single-valued complex attribute can be updated using the attribute
+path notation, e.g. `foo.bar.baz`, but it cannot be used to update members of
+a collection (i.e. `foo[1].bar.baz` is not an acceptable attribute path).
+
+Updates to references must be made using `links` attribute.
+
+## Removals
+
+For most entities, `DELETE` verb will archive the record, instead of actually
+removing the entity from the system. Archived records are not included in query
+results by default.
+
+## Group Organization
+
+These APIs are used to maintain the representation of the church organization
+in HITS.
+
+### Church Sites [/sites{?sort,poolCode,includeArchived}]
+
+This resource represents the multiple locations that GII as a multi-site church
+constitutes of. Most entities within HITS would be associated to a particular
+church site, either directly or indirectly.
+
+#### List Church Sites [GET]
+
++ Parameters
+
+    + sort:`+name` (optional, string)
+      Ascending and descending sorting over a single field. If not specified,
+      the records have no guaranteed ordering.
+      
+    + poolCode:`BANDUNG_UTARA` (optional, string)
+      Filter for church location pool ID.
+      
+    + includeArchived:`false` (optional, boolean)
+      Whether to include church sites that have been marked as archived.
+        + Default: false
+        
++ Response 200 (application/json)
+
+        [  
+            {
+                "code": "SETRASARI",
+                "name": "GII Setrasari",
+                "pool": {
+                    "code": "BANDUNG_UTARA",
+                    "name": "Bandung Utara"
+                },
+                "addresses": [
+                  {
+                    "label": "HOUSE_OF_WORSHIP",
+                    "isPrimary": true,
+                    "street": "Jl. Setrasari Plaza C-4",
+                    "suite": "GSG Istana EGI Setrasari Mall",
+                    "city": "Bandung",
+                    "province": "Jawa Barat",
+                    "country": "Indonesia",
+                    "postalCode": "40162"
+                  }
+                ],
+                "contactNumbers": [
+                  {
+                    "label": "OFFICE",
+                    "isPrimary": true,
+                    "number": "2007553",
+                    "countryCode": "+62",
+                    "areaCode": "22",
+                    "isLandline": true
+                  }
+                ],
+                "links": {
+                    "self": {
+                        "href": "/api/v1/sites/SETRASARI"
+                    },
+                    "pool": {
+                        "href": "/api/v1/ous/BANDUNG_UTARA"
+                    }
+                }
+            }
+        ]
+
+#### Retrieve Church Site Info [GET /sites/{id}]
+
++ Parameters
+
+    + id:`SETRASARI` (string)
+      Code of the church site.
+
++ Response 200 (application/json)
+
+        {
+            "code": "SETRASARI",
+            "name": "GII Setrasari",
+            "addresses": [
+              {
+                "label": "HOUSE_OF_WORSHIP",
+                "isPrimary": true,
+                "street": "Jl. Setrasari Plaza C-4",
+                "suite": "GSG Istana EGI Setrasari Mall",
+                "city": "Bandung",
+                "province": "Jawa Barat",
+                "country": "Indonesia",
+                "postalCode": "40162"
+              }
+            ],
+            "contactNumbers": [
+              {
+                "label": "OFFICE",
+                "isPrimary": true,
+                "number": "2007553",
+                "countryCode": "+62",
+                "areaCode": "22",
+                "isLandline": true
+              }
+            ],
+            "links": {
+                "self": {
+                    "href": "/api/v1/sites/SETRASARI"
+                },
+                "pool": {
+                    "href": "/api/v1/ous/BANDUNG_UTARA"
+                }
+            }
+        }
+
+#### Create a Church Site [POST]
+
++ Request (application/json)
+
+        {
+            "code": "SETRASARI",
+            "name": "GII Setrasari",
+            "addresses": [
+              {
+                "label": "HOUSE_OF_WORSHIP",
+                "isPrimary": true,
+                "street": "Jl. Setrasari Plaza C-4",
+                "suite": "GSG Istana EGI Setrasari Mall",
+                "city": "Bandung",
+                "province": "Jawa Barat",
+                "country": "Indonesia",
+                "postalCode": "40162"
+              }
+            ],
+            "contactNumbers": [
+              {
+                "label": "OFFICE",
+                "isPrimary": true,
+                "number": "2007553",
+                "countryCode": "+62",
+                "areaCode": "22",
+                "isLandline": true
+              }
+            ],
+            "links": {
+                "pool": {
+                    "href": "/api/v1/ous/BANDUNG_UTARA"
+                }
+            }
+        }
+        
++ Response 201 (application/json)
+
+    + Headers
+    
+            Location: /api/v1/sites/SETRASARI
+            
+    + Body
+    
+            {
+                "code": "SETRASARI",
+                "name": "GII Setrasari",
+                "pool": {
+                    "code": "BANDUNG_UTARA",
+                    "name": "Bandung Utara"
+                },
+                "addresses": [
+                  {
+                    "label": "HOUSE_OF_WORSHIP",
+                    "isPrimary": true,
+                    "street": "Jl. Setrasari Plaza C-4",
+                    "suite": "GSG Istana EGI Setrasari Mall",
+                    "city": "Bandung",
+                    "province": "Jawa Barat",
+                    "country": "Indonesia",
+                    "postalCode": "40162"
+                  }
+                ],
+                "contactNumbers": [
+                  {
+                    "label": "OFFICE",
+                    "isPrimary": true,
+                    "number": "2007553",
+                    "countryCode": "+62",
+                    "areaCode": "22",
+                    "isLandline": true
+                  }
+                ],
+                "links": {
+                    "self": {
+                        "href": "/api/v1/sites/SETRASARI"
+                    },
+                    "pool": {
+                        "href": "/api/v1/ous/BANDUNG_UTARA"
+                    }
+                }
+            }
+
+#### Update a Church Site [PUT /sites/{id}]
+
++ Parameters
+
+    + id:`SETRASARI` (string)
+      Code of the church site.
+      
++ Request (application/json)
+
+        {
+            "name": "GII EGI"
+        }
+
++ Response 200 (application/json)
+
+        {
+            "code": "SETRASARI",
+            "name": "GII EGI",
+            "pool": {
+                "code": "BANDUNG_UTARA",
+                "name": "Bandung Utara"
+            },
+            "addresses": [
+              {
+                "label": "HOUSE_OF_WORSHIP",
+                "isPrimary": true,
+                "street": "Jl. Setrasari Plaza C-4",
+                "suite": "GSG Istana EGI Setrasari Mall",
+                "city": "Bandung",
+                "province": "Jawa Barat",
+                "country": "Indonesia",
+                "postalCode": "40162"
+              }
+            ],
+            "contactNumbers": [
+              {
+                "label": "OFFICE",
+                "isPrimary": true,
+                "number": "2007553",
+                "countryCode": "+62",
+                "areaCode": "22",
+                "isLandline": true
+              }
+            ],
+            "links": {
+                "self": {
+                    "href": "/api/v1/sites/SETRASARI"
+                },
+                "pool": {
+                    "href": "/api/v1/ous/BANDUNG_UTARA"
+                }
+            }
+        }
+
+#### Archive a Church Site [DELETE /sites/{id}]
+
++ Parameters
+
+    + id:`SETRASARI` (string)
+      Code of the church site.
+
++ Response 200 (application/json)
+
+        {
+            "code": "TEGAL",
+            "name": "GII Tegal",
+            "isArchived": true,
+            "pool": {
+                "code": "GARUT",
+                "name": "Garut"
+            },
+            "addresses": [
+              {
+                "label": "HOUSE_OF_WORSHIP",
+                "isPrimary": true,
+                "street": "Jl. Jenderal Sudirman 32",
+                "city": "Tegal",
+                "province": "Jawa Tengah",
+                "country": "Indonesia",
+                "postalCode": "52125"
+              }
+            ],
+            "contactNumbers": [
+              {
+                "label": "OFFICE",
+                "isPrimary": true,
+                "number": "351567",
+                "countryCode": "+62",
+                "areaCode": "283",
+                "isLandline": true
+              }
+            ],
+            "links": {
+                "self": {
+                    "href": "/api/v1/sites/TEGAL"
+                },
+                "pool": {
+                    "href": "/api/v1/ous/GARUT"
+                }
+            }
+        }
+
+### Organizational Units [/ous{?sort,type,parentOUCode,includeArchived}]
+
+Church locations in GII are grouped into pools. While currently there are no higher
+level intermediate grouping between pools and the synod, organizational units are
+used in HITS to represent this grouping structure, and a possible future hierarchy
+under the synod.
+
+#### List Organizational Units [GET]
+
++ Parameters
+
+    + sort:`+name` (optional, string)
+      Ascending and descending sorting over a single field. If not specified,
+      the records have no guaranteed ordering.
+      
+    + type:`POOL` (optional, enum[string])
+      Filter for organizational unit type.
+        + Members
+            + POOL
+            + SYNOD
+
+    + parentOUCode:`GII` (optional, string)
+      Filter for parent organizational unit.
+      
+    + includeArchived:`false` (optional, boolean)
+      Whether to include organizational units that have been marked as archived.
+        + Default: false
+        
++ Response 200 (application/json)
+
+        [
+            {
+                "code": "BANDUNG_UTARA",
+                "name": "Bandung Utara",
+                "type": "POOL",
+                "parent": {
+                    "code": "GII",
+                    "name": "Gereja Injili Indonesia"
+                },
+                "links": {
+                    "self": {
+                        "href": "/api/v1/ous/BANDUNG_UTARA"
+                    },
+                    "parent": {
+                        "href": "/api/v1/ous/GII"
+                    }
+                }
+            }
+        ]
+
+#### Retrieve Organizational Unit Info [GET /ous/{id}]
+
++ Parameters
+
+    + id:`BANDUNG_UTARA` (string)
+      Code of the organizational unit.
+
++ Response 200 (application/json)
+
+        {
+            "code": "BANDUNG_UTARA",
+            "name": "Bandung Utara",
+            "type": "POOL",
+            "parent": {
+                "code": "GII",
+                "name": "Gereja Injili Indonesia"
+            },
+            "links": {
+                "self": {
+                    "href": "/api/v1/ous/BANDUNG_UTARA"
+                },
+                "parent": {
+                    "href": "/api/v1/ous/GII"
+                }
+            }
+        }
+
+#### Create an Organizational Unit [POST]
+
++ Request (application/json)
+
+        {
+            "code": "BANDUNG_UTARA",
+            "name": "Bandung Utara",
+            "type": "POOL",
+            "links": {
+                "parent": {
+                    "href": "/api/v1/ous/GII"
+                }
+            }
+        }
+        
++ Response 201 (application/json)
+
+    + Headers
+    
+            Location: /api/v1/ous/59068ce495
+            
+    + Body
+    
+            {
+                "code": "BANDUNG_UTARA",
+                "name": "Bandung Utara",
+                "type": "POOL",
+                "parent": {
+                    "code": "GII",
+                    "name": "Gereja Injili Indonesia"
+                },
+                "links": {
+                    "self": {
+                        "href": "/api/v1/ous/BANDUNG_UTARA"
+                    },
+                    "parent": {
+                        "href": "/api/v1/ous/GII"
+                    }
+                }
+            }
+
+#### Update an Organizational Unit [PUT /ous/{id}]
+
++ Parameters
+
+    + id:`BANDUNG_UTARA` (string)
+      Code of the organizational unit.
+
++ Request (application/json)
+
+        {
+            "name": "Bandung I"
+        }
+        
++ Response 200 (application/json)
+
+        {
+            "code": "BANDUNG_UTARA",
+            "name": "Bandung I",
+            "type": "POOL",
+            "parent": {
+                "code": "GII",
+                "name": "Gereja Injili Indonesia"
+            },
+            "links": {
+                "self": {
+                    "href": "/api/v1/ous/BANDUNG_UTARA"
+                },
+                "parent": {
+                    "href": "/api/v1/ous/GII"
+                }
+            }
+        }
+
+#### Archive an Organizational Unit [DELETE /ous/{id}]
+
++ Parameters
+
+    + id:`BANDUNG_UTARA` (string)
+      Code of the organizational unit.
+      
++ Response 200 (application/json)
+
+        {
+            "code": "BANDUNG_UTARA",
+            "name": "Bandung Utara",
+            "isArchived": true,
+            "type": "POOL",
+            "parent": {
+                "code": "GII",
+                "name": "Gereja Injili Indonesia"
+            },
+            "links": {
+                "self": {
+                    "href": "/api/v1/ous/BANDUNG_UTARA"
+                },
+                "parent": {
+                    "href": "/api/v1/ous/GII"
+                }
+            }
+        }
+
+### Services [/sites/{siteId}/services{?sort,commission,includeArchived}]
+
+This resource represents the services that people can take as their primary
+worship service across GII locations. This includes *regular Sunday Services*,
+*Teens service*, and *Sunday School sessions*. Fellowships and prayer meetings
+cannot be a person's primary worship service, and thus they are not represented
+by this resource.
+
+#### List Services [GET]
+
++ Parameters
+
+    + siteId:`SETRASARI` (string, required)
+      Church site where the service takes place.
+
+    + sort:`+startTime` (string, optional)
+      Ascending and descending sorting over a single field. If not specified,
+      the records have no guaranteed ordering.
+      
+    + commission:`ADULTS` (string, optional)
+      Filter for the commission that owns the service.
+      
+    + includeArchived: `false` (boolean, optional)
+      Whether to include services that have been marked as archived.
+        + Default: false
+        
++ Response 200 (application/json)
+
+        [
+            {
+                "code": "SETRASARI-1",
+                "name": "Kebaktian Umum 1",
+                "site": {
+                    "code": "SETRASARI",
+                    "name": "GII Setrasari"
+                },
+                "commission": "ADULTS",
+                "startTime": "07:30",
+                "links": {
+                    "self": {
+                        "href": "/api/v1/sites/SETRASARI/services/SETRASARI-1"
+                    },
+                    "site": {
+                        "href": "/api/v1/sites/SETRASARI"
+                    }
+                }
+            }
+        ]
+        
+#### Retrieve Service Info [GET /sites/{siteId}/services/{id}]
+
++ Parameters
+
+    + id:`SETRASARI-1` (string)
+      Code of the service.
+      
++ Response 200 (application/json)
+
+        {
+            "code": "SETRASARI-1",
+            "name": "Kebaktian Umum 1",
+            "site": {
+                "code": "SETRASARI",
+                "name": "GII Setrasari"
+            },
+            "commission": "ADULTS",
+            "startTime": "07:30",
+            "links": {
+                "self": {
+                    "href": "/api/v1/sites/SETRASARI/services/SETRASARI-1"
+                },
+                "site": {
+                    "href": "/api/v1/sites/SETRASARI"
+                }
+            }
+        }
+        
+#### Create a Service [POST]
+
++ Request (application/json)
+
+        {
+            "code": "SETRASARI-1",
+            "name": "Kebaktian Umum 1",
+            "commission": "ADULTS",
+            "startTime": "07:30"
+        }
+        
++ Response 201 (application/json)
+
+    + Headers
+    
+            Location: /api/v1/sites/SETRASARI/services/SETRASARI-1
+            
+    + Body
+    
+            {
+                "code": "SETRASARI-1",
+                "name": "Kebaktian Umum 1",
+                "site": {
+                    "code": "SETRASARI",
+                    "name": "GII Setrasari"
+                },
+                "commission": "ADULTS",
+                "startTime": "07:30",
+                "links": {
+                    "self": {
+                        "href": "/api/v1/sites/SETRASARI/services/SETRASARI-1"
+                    },
+                    "site": {
+                        "href": "/api/v1/sites/SETRASARI"
+                    }
+                }
+            }
+            
+#### Update a Service [PUT /sites/{siteId}/services/{id}]
+
++ Parameters
+
+    + id:`SETRASARI-2` (string)
+      Code of the service.
+
++ Request (application/json)
+
+        {
+            "startTime": "10:00"
+        }
+        
++ Response 200 (application/json)
+
+        {
+            "code": "SETRASARI-2",
+            "name": "Kebaktian Umum 2",
+            "site": {
+                "code": "SETRASARI",
+                "name": "GII Setrasari"
+            },
+            "commission": "ADULTS",
+            "startTime": "10:00",
+            "links": {
+                "self": {
+                    "href": "/api/v1/sites/SETRASARI/services/SETRASARI-2"
+                },
+                "site": {
+                    "href": "/api/v1/sites/SETRASARI"
+                }
+            }
+        }
+        
+#### Archive a Service [DELETE /sites/{siteId}/services/{id}]
+
++ Parameters
+
+    + id:`SETRASARI-4` (string)
+      Code of the service.
+      
++ Response 200 (application/json)
+
+        {
+            "code": "SETRASARI-4",
+            "name": "Kebaktian Umum 4",
+            "isArchived": true,
+            "site": {
+                "code": "SETRASARI",
+                "name": "GII Setrasari"
+            },
+            "commission": "ADULTS",
+            "startTime": "19:00",
+            "links": {
+                "self": {
+                    "href": "/api/v1/sites/SETRASARI/services/SETRASARI-4"
+                },
+                "site": {
+                    "href": "/api/v1/sites/SETRASARI"
+                }
+            }
+        }
+
+## Group Congregation
+
+These APIs provide actions to store and retrieve information about individuals
+in the congregation.
+
+### People [/people{?limit,offset,sort,q,address,site,service,status}]
+
+People refer to every individual that is of interest to the church in order to
+carry out services for the congregation. Besides members and visitors, the
+people recorded through this API include those who do not attend services in the
+church, but are related to one or more congregants. For example, family members
+attending another church can also be catalogued.
+
+#### Search for People [GET]
+
+People can be searched by their church site, default service, status, name
+(partial match), phone number, email address, identity card, and membership ID.
+The parameter `q` can be used for global search across attributes.
+
+The response does not include all attributes of a person, but only the basic
+info, including the person's system ID, a link to retrieve the complete record,
+and the fields that have resulted in a match.
+
+The following attributes are returned only if they match the search filter:
+- Phone number
+- Email address
+- Identity card number
+- Address
+
+The `meta` attribute provides match information for records that are included
+because of a match to the `q` or `address` query parameters.
+
++ Parameters
+    + limit:`10` (optional, number)
+      Maximum number of people to retrieve.
+      
+    + offset:`50` (optional, number)
+      Number of records to skip.
+      
+    + sort:`+fullName` (optional, string)
+      Ascending and descending sorting over a single field. If not specified,
+      the results will be ranked based on match score.
+      
+    + q:`jonathan puri` (optional, string)
+      Global search query. Searches across full name, nickname, alternate names,
+      church site (by name), current membership ID, email address, phone number,
+      and identity card numbers.
+    
+    + address:`Setra Duta Hegar` (optional, string)
+      Query for people with addresses within 10km radius of the given location.
+      The query must resolve into a valid geolocation to be processed.
+      
+    + site:`PURI` (optional, string)
+      Filter for Church site attribute. It must be a valid site ID.
+      
+    + service:`PURI-1` (optional, string)
+      Filter for default service attribute. It must be a valid service ID.
+      
+    + status:`ACTIVE` (optional, enum[string])
+      Filter for person status attribute.
+        + Members
+            + ACTIVE
+            + INACTIVE
+            + INACTIVE_PERMANENT
+
++ Response 200 (application/json)
+
+        [
+            {
+                "_id": "5077700222",
+                "primarySite": {
+                    "code": "SETRASARI",
+                    "name": "GII Setrasari"
+                },
+                "otherSites": [
+                    {
+                        "code": "PURI",
+                        "name": "GII Puri"
+                    }
+                ],
+                "primaryService": {
+                    "serviceId": "SETRASARI-2",
+                    "siteName": "GII Setrasari",
+                    "startTime": "09:00"
+                },
+                "status": "ACTIVE",
+                "currentMembership": {
+                    "type": "REGULAR",
+                    "memberId": "200220022",
+                    "startDate": {
+                        "dayOfMonth": 1,
+                        "month": 4,
+                        "year": 2007
+                    }
+                },
+                "title": "dr.",
+                "fullName": "Jonathan Setiadi",
+                "nickname": "Nathan",
+                "alternateNames": [
+                ],
+                "gender": "M",
+                "links": {
+                    "self": {
+                        "href": "/api/v1/people/5077700222"
+                    },
+                    "primarySite": {
+                        "href": "/api/v1/sites/SETRASARI"
+                    },
+                    "otherSites": [
+                        {
+                            "href": "/api/v1/sites/PURI"
+                        }
+                    ]
+                },
+                "meta": {
+                    "q": {
+                        "matchScore": 80,
+                        "matchingFields": [
+                            {
+                                "field": "nickname",
+                                "query": "nathan",
+                                "value": "Nathan"
+                            },
+                            {
+                                "field": "primarySiteName",
+                                "keyword": "setrasari",
+                                "value": "GII Setrasari"
+                            }
+                        ]
+                    }
+                }
+            }
+        ]
+
+#### Retrieve Person Details [GET /people/{id}]
+
+The complete information about a person can be retrieved using this action.
+The attributes that get returned depend on the access that the logged in user
+has. Some information, such as extended family ties, which retrieval will
+result in a separate audit log, will need to be fetched using the `links`
+that may be included in the response.
+
++ Parameters
+
+    + id:`674b03` (String, required)
+      Person system ID.
+      
++ Response 200 (application/json)
+
+        {
+            "_id": "5077700222",
+            "primarySite": {
+                "code": "SETRASARI",
+                "name": "GII Setrasari"
+            },
+            "otherSites": [
+                {
+                    "code": "PURI",
+                    "name": "GII Puri"
+                }
+            ],
+            "primaryService": {
+                "serviceId": "SETRASARI-2",
+                "siteName": "GII Setrasari",
+                "startTime": "09:00"
+            },
+            "status": "ACTIVE",
+            "currentMembership": {
+                "type": "REGULAR",
+                "memberId": "200220022",
+                "startDate": {
+                    "dayOfMonth": 1,
+                    "month": 4,
+                    "year": 2007
+                }
+            },
+            "pastMemberships": [
+                {
+                    "type": "GUEST",
+                    "memberId": "900220022",
+                    "isOtherChurchMember": false,
+                    "endDate": {
+                        "dayOfMonth": 1,
+                        "month": 4,
+                        "year": 2007
+                    }
+                }
+            ],
+            "title": "dr.",
+            "fullName": "Jonathan Setiadi",
+            "nickname": "Nathan",
+            "alternateNames": [
+                {
+                    "languageCode": "zho",
+                    "fullName": "陈志明",
+                    "romanization": "Chen Chee Meng"
+                }
+            ],
+            "gender": "M",
+            "race": "CHINESE",
+            "birthdate": {
+                "dayOfMonth": 12,
+                "month": 7,
+                "year": 1989
+            },
+            "legalBirthdate": "1989-07-15",
+            "birthPlace": "Bandung",
+            "bloodType": {
+                "group": "B",
+                "rhesus": "NEGATIVE"
+            },
+            "isBloodDonor": false,
+            "nationality": "ID",
+            "legalDocuments": [
+                {
+                    "category": "NATIONAL_ID",
+                    "documentId": "3502014702900002"
+                }
+            ],
+            "addresses": [
+                {
+                    "label": "HOME",
+                    "isPrimary": true,
+                    "street": "Jalan Surya Sumantri No. 91",
+                    "suite": "Majesty Apartment B3 #05-112",
+                    "city": "Bandung",
+                    "province": "Jawa Barat",
+                    "country": "Indonesia",
+                    "postalCode": "40164",
+                    "coordinates": [-6.8836378, 107.581214],
+                    "resolutionDate": "2017-03-24",
+                    "provider": "google",
+                    "resolvedLocation": {
+                        "formattedAddress": "Jl. Surya Sumantri No.91, Sukawarna, Sukajadi, Kota Bandung, Jawa Barat 40164, Indonesia",
+                        "administrativeLevels": [
+                            "Sukawarna",
+                            "Sukajadi",
+                            "Kota Bandung",
+                            "Jawa Barat"
+                        ],
+                        "streetNumber": "91",
+                        "streetName": "Jalan Surya Sumantri",
+                        "country": "Indonesia",
+                        "countryCode": "ID",
+                        "postalCode": "40164"
+                    }
+                }
+            ],
+            "emailAddresses": [
+                {
+                    "label": "PERSONAL",
+                    "isPrimary": true,
+                    "email": "jonathan.setiadi@example.com"
+                }
+            ],
+            "contactNumbers": [
+                {
+                    "label": "MOBILE",
+                    "isPrimary": true,
+                    "number": "817222333",
+                    "countryCode": "+62",
+                    "isMobilePhone": true,
+                    "isWhatsApp": true,
+                    "isLine": true
+                },
+                {
+                    "label": "HOME",
+                    "number": "2020333",
+                    "countryCode": "+62",
+                    "areaCode": "22",
+                    "isLandline": true,
+                    "isFax": true
+                }
+            ],
+            "employments": [
+                {
+                    "job": "PHYSICIAN",
+                    "position": "Dokter umum",
+                    "company": "RS Santo Borromeus",
+                    "location": "Bandung",
+                    "startDate": {
+                        "month": 7,
+                        "year": 2012
+                    }
+                }
+            ],
+            "educations": [
+                {
+                    "level": "BACHELORS",
+                    "major": "MEDICINE",
+                    "institution": "Universitas Kristen Maranatha",
+                    "startDate": {
+                        "month": 8,
+                        "year": 2006
+                    },
+                    "endDate": {
+                        "month": 6,
+                        "year": 2012
+                    }
+                },
+                {
+                    "level": "HIGH_SCHOOL",
+                    "institution": "SMAK 1 Penabur Bandung",
+                    "startDate": {
+                        "month": 7,
+                        "year": 2003
+                    },
+                    "endDate": {
+                        "month": 6,
+                        "year": 2006
+                    }
+                }
+            ],
+            "links": {
+                "self": {
+                    "href": "/api/v1/people/5077700222"
+                },
+                "primarySite": {
+                    "href": "/api/v1/sites/SETRASARI"
+                },
+                "otherSites": [
+                    {
+                        "href": "/api/v1/sites/PURI"
+                    }
+                ]
+            }
+        }
+
+#### Create a New Person [POST]
+
+A new person record can be created using this action. It requires all basic
+"must-have" attributes of a person to be specified.
+
+A person creation might be rejected because of a high degree of similarity with
+another person in the system, indicated with a response code of `400` and an
+error `err.hits.SIMILAR_RECORD_FOUND`. To force the creation of the record
+(i.e. after the similar record has been reviewed), include all `similar` links
+in the error as a `notDuplicate` link attribute, and retry the request.
+
+The current membership information of the person *must* be spcecified, upon
+creation, as follows:
+  
+- **New regular/Sunday School/Teens Service members**:
+  specify the membership type (`REGULAR`, `CHILD`, or `TEEN`), and start date
+  (optional). A new member ID will be generated and assigned.
+  
+- **New visitor**:
+  specify `GUEST` as membership type, `isOtherChurchMember`, and start date
+  (optional). A new guest ID will be generated based on `isOtherChurchMember`.
+  
+- **Non-congregant**:
+  specify `NC` as membership type and optionally `isOtherChurchMember`. Do not
+  specify other fields. A new non-congregant ID will be generated.
+  
+Though atypical, existing members and registered guests can be added too:
+
+- **Existing regular/Sunday School/Teens Service members**:
+  specify the membership type (`REGULAR`, `CHILD`, or `TEEN`), member ID, and
+  start date (optional).
+
+- **Existing registered visitor**:
+  specify `GUEST` as membership type, guest ID, and start date (optional).
+  The `isOtherChurchMember` field will be implied based on the guest ID.
+
+When specifying `pastMemberships`, the `memberId` must be specified. The
+system will not generate new member/guest/non-congregant ID for past
+memberships of a person.
+
+A person must be associated with one primary church site. If the person is a
+non-congregant, he should be associated to the primary church site of the
+congregant that he is most closely related to.
+
++ Request with minimal attributes (application/json)
+
+        {
+            "status": "ACTIVE",
+            "primarySite": {
+                "code": "SETRASARI",
+                "name": "GII Setrasari"
+            },
+            "currentMembership": {
+                "type": "REGULAR",
+                "startDate": {
+                    "dayOfMonth": 2,
+                    "month": 4,
+                    "year": 2017
+                }
+            },
+            "fullName": "Livia Setiadi",
+            "gender": "F",
+            "links": {
+                "primarySite": {
+                    "href": "/api/v1/sites/SETRASARI"
+                }
+            }
+        }
+        
++ Request with extra attributes and similar records (application/json)
+
+        {
+            "status": "ACTIVE",
+            "primarySite": {
+                "code": "SETRASARI",
+                "name": "GII Setrasari"
+            },
+            "currentMembership": {
+                "type": "REGULAR",
+                "startDate": {
+                    "dayOfMonth": 2,
+                    "month": 4,
+                    "year": 2017
+                }
+            },
+            "pastMemberships": [
+                {
+                    "type": "GUEST",
+                    "memberId": "900220021",
+                    "isOtherChurchMember": false,
+                    "endDate": {
+                        "dayOfMonth": 2,
+                        "month": 4,
+                        "year": 2017
+                    }
+                }
+            ],
+            "fullName": "Livia Setiadi",
+            "gender": "F",
+            "birthDate": {
+                "dayOfMonth": 8,
+                "month": 3,
+                "year": 1992
+            },
+            "links": {
+                "primarySite": {
+                    "href": "/api/v1/sites/SETRASARI"
+                },
+                "notDuplicate": [
+                    {
+                        "href": "/api/v1/people/5088800eee"
+                    }
+                ]
+            }
+        }
+
++ Response 201 (application/json)
+
+    + Headers
+
+            Location: /api/v1/people/5010000bbb
+
+    + Body
+
+            {
+                "_id": "5010000bbb",
+                "status": "ACTIVE",
+                "currentMembership": {
+                    "type": "REGULAR",
+                    "memberId": "203011022",
+                    "startDate": {
+                        "dayOfMonth": 2,
+                        "month": 4,
+                        "year": 2017
+                    }
+                },
+                "fullName": "Livia Setiadi",
+                "gender": "F",
+                "links": {
+                    "self": {
+                        "href": "/api/v1/people/5010000bbb"
+                    },
+                    "primarySite": {
+                        "href": "/api/v1/sites/SETRASARI"
+                    }
+                }
+            }
+            
++ Response 400 (application/json)
+
+        {
+            "code": "err.hits.SIMILAR_RECORD_FOUND",
+            "message": "Data perorangan tidak dapat ditambahkan karena ada data orang lain yang mirip.",
+            "possibleDuplicates": [
+                {
+                    "_id": "5010000bbb",
+                    "primarySite": {
+                        "code": "DAGO",
+                        "name": "GII Dago"
+                    },
+                    "primaryService": {
+                        "serviceId": "DAGO-2",
+                        "siteName": "GII Dago",
+                        "startTime": "08:00"
+                    },
+                    "status": "ACTIVE",
+                    "currentMembership": {
+                        "type": "REGULAR",
+                        "memberId": "200220022",
+                        "startDate": {
+                            "dayOfMonth": 1,
+                            "month": 4,
+                            "year": 2007
+                        }
+                    },
+                    "fullName": "Livia Setiadi",
+                    "gender": "F",
+                    "links": {
+                        "self": {
+                            "href": "/api/v1/people/5077700222"
+                        },
+                        "primarySite": {
+                            "href": "/api/v1/sites/SETRASARI"
+                        }
+                    }
+                }
+            ]
+        }
+
+#### Update a Person [PUT /people/{id}]
+
+To update a person, an *Edit* need to be created and applied on the record to
+be updated. Then, the edit can be referenced in this action. This action will
+automatically mark the Edit as *Resolved* with `ACCEPTED` as the resolution.
+An Edit that is already resolved cannot be effected into the person's record.
+Only office staffs can perform this action.
+
+The response to a successful commit of an edit contains the complete, updated
+person record.
+
++ Parameters
+
+    + id: `5077700222` (String, required)
+      Person system ID.
+      
++ Request (application/json)
+
+        {
+            "links": {
+                "edit": {
+                    "href": "/api/v1/profileEdits/5432112345",
+                }
+            }
+        }
+        
++ Response 200 (application/json)
+
+        {
+            "_id": "5077700222",
+            "primarySite": {
+                "code": "SETRASARI",
+                "name": "GII Setrasari"
+            },
+            "otherSites": [
+                {
+                    "code": "PURI",
+                    "name": "GII Puri"
+                }
+            ],
+            "primaryService": {
+                "serviceId": "SETRASARI-2",
+                "siteName": "GII Setrasari",
+                "startTime": "09:00"
+            },
+            "status": "ACTIVE",
+            "currentMembership": {
+                "type": "REGULAR",
+                "memberId": "200220022",
+                "startDate": {
+                    "dayOfMonth": 1,
+                    "month": 4,
+                    "year": 2007
+                }
+            },
+            "pastMemberships": [
+                {
+                    "type": "GUEST",
+                    "memberId": "900220022",
+                    "isOtherChurchMember": false,
+                    "endDate": {
+                        "dayOfMonth": 1,
+                        "month": 4,
+                        "year": 2007
+                    }
+                }
+            ],
+            "title": "dr.",
+            "fullName": "Jonathan Setiadi",
+            "nickname": "Nathan",
+            "alternateNames": [
+                {
+                    "languageCode": "zho",
+                    "fullName": "陈志明",
+                    "romanization": "Chen Chee Meng"
+                }
+            ],
+            "gender": "M",
+            "race": "CHINESE",
+            "birthdate": {
+                "dayOfMonth": 12,
+                "month": 7,
+                "year": 1989
+            },
+            "legalBirthdate": "1989-07-15",
+            "birthPlace": "Bandung",
+            "bloodType": {
+                "group": "B",
+                "rhesus": "NEGATIVE"
+            },
+            "isBloodDonor": false,
+            "nationality": "ID",
+            "legalDocuments": [
+                {
+                    "category": "NATIONAL_ID",
+                    "documentId": "3502014702900002"
+                }
+            ],
+            "addresses": [
+                {
+                    "label": "HOME",
+                    "isPrimary": true,
+                    "street": "Jalan Surya Sumantri No. 91",
+                    "suite": "Majesty Apartment B3 #05-112",
+                    "city": "Bandung",
+                    "province": "Jawa Barat",
+                    "country": "Indonesia",
+                    "postalCode": "40164",
+                    "coordinates": [-6.8836378, 107.581214],
+                    "resolutionDate": "2017-03-24",
+                    "provider": "google",
+                    "resolvedLocation": {
+                        "formattedAddress": "Jl. Surya Sumantri No.91, Sukawarna, Sukajadi, Kota Bandung, Jawa Barat 40164, Indonesia",
+                        "administrativeLevels": [
+                            "Sukawarna",
+                            "Sukajadi",
+                            "Kota Bandung",
+                            "Jawa Barat"
+                        ],
+                        "streetNumber": "91",
+                        "streetName": "Jalan Surya Sumantri",
+                        "country": "Indonesia",
+                        "countryCode": "ID",
+                        "postalCode": "40164"
+                    }
+                }
+            ],
+            "emailAddresses": [
+                {
+                    "label": "PERSONAL",
+                    "isPrimary": true,
+                    "email": "jonathan.setiadi@example.com"
+                }
+            ],
+            "contactNumbers": [
+                {
+                    "label": "MOBILE",
+                    "isPrimary": true,
+                    "number": "817222333",
+                    "countryCode": "+62",
+                    "isMobilePhone": true,
+                    "isWhatsApp": true,
+                    "isLine": true
+                },
+                {
+                    "label": "HOME",
+                    "number": "2020333",
+                    "countryCode": "+62",
+                    "areaCode": "22",
+                    "isLandline": true,
+                    "isFax": true
+                }
+            ],
+            "employments": [
+                {
+                    "job": "PHYSICIAN",
+                    "position": "Dokter umum",
+                    "company": "RS Santo Borromeus",
+                    "location": "Bandung",
+                    "startDate": {
+                        "month": 7,
+                        "year": 2012
+                    }
+                }
+            ],
+            "educations": [
+                {
+                    "level": "BACHELORS",
+                    "major": "MEDICINE",
+                    "institution": "Universitas Kristen Maranatha",
+                    "startDate": {
+                        "month": 8,
+                        "year": 2006
+                    },
+                    "endDate": {
+                        "month": 6,
+                        "year": 2012
+                    }
+                },
+                {
+                    "level": "HIGH_SCHOOL",
+                    "institution": "SMAK 1 Penabur Bandung",
+                    "startDate": {
+                        "month": 7,
+                        "year": 2003
+                    },
+                    "endDate": {
+                        "month": 6,
+                        "year": 2006
+                    }
+                }
+            ],
+            "links": {
+                "self": {
+                    "href": "/api/v1/people/5077700222"
+                },
+                "primarySite": {
+                    "href": "/api/v1/sites/SETRASARI"
+                },
+                "otherSites": [
+                    {
+                        "href": "/api/v1/sites/PURI"
+                    }
+                ]
+            }
+        }
+
+
+### Profile Edits [/profileEdits{?limit,offset,sort,status}]
+
+Profile edits are used to update a person's record. Congregants, ministers,
+and office staffs are allowed to create edits, but only office staffs can
+effect an edit into a profile.
+
+Historical edits are not deleted or archived through the API, but are pruned
+according to data retention policy.
+
+#### List Profile Edits [GET]
+
+Edits can be filtered by their status and the person they apply to. Typically
+only unresolved edits are of interest, but resolved edits may also be reviewed
+for historical purposes. Older resolved edits may get archived after
+satisfying the data retention policy, and will no longer be accessible from 
+this action.
+
+This action is not audited, but only provides the list of edits and their
+summary, if specified. The edit data needs to be retrieved separately.
+
++ Parameters
+
+    + limit:`10` (optional, number)
+      Maximum number of edits to retrieve.
+      
+    + offset:`50` (optional, number)
+      Number of edit records to skip.
+      
+    + sort:`+resolutionDate` (optional, string)
+      Ascending and descending sorting over a single field. If not specified,
+      the edits will be sorted based on the creation date.
+      
+    + status:`UNRESOLVED` (optional, enum[string])
+      Filter for edit status.
+        + Members
+            + UNRESOLVED
+            + RESOLVED
+            + ACCEPTED
+            + REJECTED
+            + CANCELLED
+
++ Response 200 (application/json)
+
+        [
+            {
+                "_id": "5432112345",
+                "person": {
+                    "personId": "5077700222",
+                    "personName": "Jonathan Setiadi"
+                },
+                "isResolved": false,
+                "creationDate": "2017-04-01",
+                "submitterName": "Jonathan Setiadi",
+                "links": {
+                    "self": {
+                        "href": "/api/v1/profileEdits/5432112345"
+                    },
+                    "person": {
+                        "href": "/api/v1/people/5077700222"
+                    },
+                    "submitter": {
+                        "href": "/api/v1/people/5115511551"
+                    }
+                }
+            },
+            {
+                "_id": "567a907c67",
+                "person": {
+                    "personId": "5077700222",
+                    "personName": "Jonathan Setiadi"
+                },
+                "isResolved": true,
+                "creationDate": "2017-03-28",
+                "resolutionDate": "2017-03-29",
+                "resolution": "ACCEPTED",
+                "submitterName": "Maria Magdalena",
+                "reviewerName": "Maria Magdalena",
+                "links": {
+                    "self": {
+                        "href": "/api/v1/profileEdits/5432112345"
+                    },
+                    "person": {
+                        "href": "/api/v1/people/5077700222"
+                    },
+                    "submitter": {
+                        "href": "/api/v1/people/5115511551"
+                    },
+                    "reviewer": {
+                        "href": "/api/v1/people/5115511551"
+                    }
+                }
+            }
+        ]
+
+#### Retrieve Edit Data [GET /edits/{id}]
+
+This action returns the complete edit data, usually for review purposes. If
+the user that makes the request does not have access to one or more fields
+in the edit, the response will be `403 Forbidden`, unlike getting people
+details, where the response get redacted. This is because the decision to
+accept or reject will apply to the entire edit, and thus a partial info is not
+good enough to make such a call.
+
++ Parameters
+
+    + id:`567a907c67` (required, string)
+      The identifier of the edit.
+
++ Response 200 (application/json)
+
+        {
+            "_id": "567a907c67",
+            "person": {
+                "personId": "5077700222",
+                "personName": "Jonathan Setiadi"
+            },
+            "isResolved": true,
+            "creationDate": "2017-03-28",
+            "resolutionDate": "2017-03-29",
+            "resolution": "ACCEPTED",
+            "submitterName": "Maria Magdalena",
+            "reviewerName": "Maria Magdalena",
+            "edit": {
+                "emailAddresses": [
+                    {
+                        "label": "PERSONAL",
+                        "isPrimary": true,
+                        "email": "jonathan.setiadi@example.com"
+                    },
+                    {
+                        "label": "WORK",
+                        "email": "jonathan.setiadi@hospital.com"
+                    }
+                ],
+                "links": {
+                    "primaryService": {
+                        "href": "/sites/SETRASARI/services/1"
+                    }
+                }
+            },
+            "links": {
+                "self": {
+                    "href": "/api/v1/profileEdits/5432112345"
+                },
+                "person": {
+                    "href": "/api/v1/people/5077700222"
+                },
+                "submitter": {
+                    "href": "/api/v1/people/5115511551"
+                },
+                "reviewer": {
+                    "href": "/api/v1/people/5115511551"
+                }
+            }
+        }
+
+#### Create an Edit [POST]
+
+This action creates a new edit towards a person's profile.
+
+**Note:** Edits that are submitted by people with the right to *review* edits
+(e.g. office staffs) will automatically be approved and effected.
+
++ Request (application/json)
+
+        {
+            "edit": {
+                "emailAddresses": [
+                    {
+                        "label": "PERSONAL",
+                        "isPrimary": true,
+                        "email": "jonathan.setiadi@example.com"
+                    },
+                    {
+                        "label": "WORK",
+                        "email": "jonathan.setiadi@hospital.com"
+                    }
+                ],
+                "links": {
+                    "primaryService": {
+                        "href": "/sites/SETRASARI/services/1"
+                    }
+                }
+            },
+            "links": {
+                "person": {
+                    "href": "/api/v1/people/5077700222"
+                }
+            }
+        }
+
++ Response 201 (application/json)
+
+    + Headers
+
+            Location: /api/v1/profileEdits/567a907c67
+
+    + Body
+
+            {
+                "_id": "567a907c67",
+                "person": {
+                    "personId": "5077700222",
+                    "personName": "Jonathan Setiadi"
+                },
+                "isResolved": true,
+                "creationDate": "2017-03-28",
+                "resolutionDate": "2017-03-29",
+                "resolution": "ACCEPTED",
+                "submitterName": "Maria Magdalena",
+                "reviewerName": "Maria Magdalena",
+                "edit": {
+                    "emailAddresses": [
+                        {
+                            "label": "PERSONAL",
+                            "isPrimary": true,
+                            "email": "jonathan.setiadi@example.com"
+                        },
+                        {
+                            "label": "WORK",
+                            "email": "jonathan.setiadi@hospital.com"
+                        }
+                    ],
+                    "links": {
+                        "primaryService": {
+                            "href": "/sites/SETRASARI/services/1"
+                        }
+                    }
+                },
+                "links": {
+                    "self": {
+                        "href": "/api/v1/profileEdits/5432112345"
+                    },
+                    "person": {
+                        "href": "/api/v1/people/5077700222"
+                    },
+                    "submitter": {
+                        "href": "/api/v1/people/5115511551"
+                    },
+                    "reviewer": {
+                        "href": "/api/v1/people/5115511551"
+                    }
+                }
+            }
+            
+#### Closing an Edit [PUT /profileEdits/{id}]
+
+To close an edit, change its resolution to `REJECTED` or `CANCELLED`, and
+optionally provide a justification. This action cannot be used for accepting
+an edit, which should be done using the `PUT /people/{id}` action instead.
+
+The response returns the edit, along with edit contents, with its new status.
+
++ Parameters
+
+    + id:`5181aa2b3b` (required, string)
+      The identifier of the edit.
+      
++ Request (application/json)
+
+        {
+            "resolution": "REJECTED",
+            "justification": "Alamat tidak jelas."
+        }
+        
++ Response 200 (application/json)
+
+        {
+            "_id": "5181aa2b3b",
+            "person": {
+                "personId": "5077700222",
+                "personName": "Jonathan Setiadi"
+            },
+            "isResolved": true,
+            "creationDate": "2017-04-19",
+            "resolutionDate": "2017-04-21",
+            "resolution": "REJECTED",
+            "justification": "Alamat tidak jelas.",
+            "reviewerName": "Maria Magdalena",
+            "submitterName": "Jonathan Setiadi",
+            "edit": {
+                {
+                    "label": "HOME",
+                    "isPrimary": true,
+                    "street": "Setra Duta",
+                    "city": "Bandung",
+                    "province": "Jawa Barat",
+                    "country": "Indonesia"
+                }
+            },
+            "links": {
+                "self": {
+                    "href": "/api/v1/profileEdits/5181aa2b3b"
+                },
+                "person": {
+                    "href": "/api/v1/people/5077700222"
+                },
+                "submitter": {
+                    "href": "/api/v1/people/5077700222"
+                },
+                "reviewer": {
+                    "href": "/api/v1/people/5115511551"
+                }
+            }
+        }
