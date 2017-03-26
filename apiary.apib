@@ -1715,3 +1715,351 @@ The response returns the edit, along with edit contents, with its new status.
                 }
             }
         }
+        
+## Group System
+
+### System session [/session]
+
+This endpoint uses a singular noun as it is not an endpoint for performing session
+management tasks, but only the current session between the HTTP client and the
+server, as identified by the `connect.sid` cookie.
+
+#### Get current session info [GET /session]
+
+This action returns the current session state, which includes:
+- Whether or not the session is authenticated, and if so, the logged in user.
+- The *flows* that are currently active in the session, for example, the user
+  registration flow.
+  
+The example is given to show the structure of the `user` data and a registration
+flow, although it is not possible to have both in reality.
+
++ Response 200 (application/json)
+
+        {
+            "isAuthenticated": true,
+            "user": {
+                "id": "58d54be250f0d4ee34ed44dd",
+                "fullName": "Maria Magdalena",
+                "nickname": "Maria",
+                "membershipId": "20.02.00200",
+                "_links": {
+                    "self": {
+                        "href": "/api/v1/systemUsers/58d54be250"
+                    },
+                    "owner": {
+                        "href": "/api/v1/people/5115511551"
+                    }
+                }
+            },
+            "flows": [
+                {
+                    "flow": "USER_REGISTRATION",
+                    "state": "PHONE_OTP_VERIFICATION",
+                    "data": {
+                        "phone": {
+                            "number": "8122001222",
+                            "countryCode": "+62"
+                        },
+                        "otpTimestamp": "2017-05-21T02:04:30Z"
+                    },
+                    "requestedInputs": {
+                        "otp": {
+                            "type": "String",
+                            "required": true
+                        }
+                    },
+                    "_links": {
+                        "self": {
+                            "href": "/api/v1/flows/550aa181c4"
+                        }
+                    }
+                }
+            ],
+            "_links": {
+                "self": {
+                    "href": "/api/v1/session"
+                },
+                "authentication": {
+                    "href": "/api/v1/session/auth"
+                }
+            }
+        }
+        
+#### Authenticate a session [POST /session/auth]
+
+Users can log in with the local registry using this action. Upon successful login,
+the current session will become authenticated, and the session information is
+sent in the response body.
+
++ Request (application/json)
+
+        {
+            "loginId": "200200200",
+            "password": "secret"
+        }
+        
++ Response 200 (application/json)
+
+        {
+            "isAuthenticated": true,
+            "user": {
+                "id": "58d54be250f0d4ee34ed44dd",
+                "fullName": "Maria Magdalena",
+                "nickname": "Maria",
+                "membershipId": "20.02.00200",
+                "_links": {
+                    "self": {
+                        "href": "/api/v1/systemUsers/58d54be250"
+                    },
+                    "owner": {
+                        "href": "/api/v1/people/5115511551"
+                    }
+                }
+            },
+            "_links": {
+                "self": {
+                    "href": "/api/v1/session"
+                }
+            }
+        }
+        
++ Response 401 (application/json)
+
+        {
+            "code": "err.hits.LOGIN_FAILED",
+            "message": "Login ID atau password salah."
+        }
+
+#### Reset the current session [DELETE /session]
+
+This action will discard authentication and flow data associated with the current
+session and generate a new session ID. A new `connect.sid` cookie will be sent
+along with the response. Use this action to log out.
+
++ Response 200 (application/json)
+
+        {
+            "isAuthenticated": false,
+            "_links": {
+                "authentication": {
+                    "href": "/api/v1/session/auth"
+                }
+            }
+        }
+
+### Action flows [/flows]
+
+Action flow is a session-specific execution of a multi-step interactive workflow,
+such as user registration. A flow typically consists of multiple states. State
+transition occurs when data is changed in the flow. For example, in the user
+registration flow, adding `otp` data in the `PHONE_OTP_VERIFICATION` state will
+cause a transition to the `KNOWN_PHONE_SIGNUP` or `PERSON_DATA_INPUT` state,
+depending on whether the phone number that was verified is found to be associated
+with a person or not.
+
+The server will reject invalid data updates and include the error code in the
+response. The invalid data will not be reflected in the `data` attribute, and it is
+not guaranteed that the invalid data will always be included in the error response.
+
+The current flows that are active in a session are retrieved through the
+`GET /session` action.
+
+#### Notes on client implementation
+
+- A client is not obliged to always reflect the current state of the flow. For
+example, given a ticket booking flow that consists of `TIME_SELECTION`,
+`SEAT_SELECTION`, and `PAYMENT` states, after selecting a concert time, the flow
+state will be `SEAT_SELECTION`, but the user might go back in the UI to revisit
+the concert time to attend. In this case, the state known to the server will not
+change, but the client is allowed to render the form associated to `TIME_SELECTION`
+state.
+
+- One session can hold multiple flows, so technically it is possible to support
+multiple things going on at once, e.g. a ticket booking wizard in one tab, and
+a service request on another. The server may reject creation of multiple flows that
+can fail to reach eventual consistency, such as two registration flows.
+
+#### Start a flow [POST]
+
+The client may provide as much data as it has in hand when starting a flow, and
+the server will determine at what state the flow would begin in.
+
+For example, in a ticket booking flow, a flow may start with no data, which will
+be at the `TIME_SELECTION` state, or start with concert timeslot and seat selection
+data, which will put it at the `PAYMENT` state, if the data is valid.
+
++ Request (application/json)
+
+        {
+            "flow": "USER_REGISTRATION",
+            "data": {
+                "phone": {
+                    "number": "8122001222",
+                    "countryCode": "+62"
+                }
+            }
+        }
+
++ Response 201 (application/json)
+
+    + Headers
+    
+            Location: /api/v1/flows/505ac1286e
+            
+    + Body
+    
+            {
+                "flow": "USER_REGISTRATION",
+                "state": "PHONE_OTP_VERIFICATION",
+                "data": {
+                    "phone": {
+                        "number": "8122001222",
+                        "countryCode": "+62"
+                    },
+                    "otpTimestamp": "2017-05-21T02:04:30Z"
+                },
+                "requestedInputs": {
+                    "otp": {
+                        "type": "String",
+                        "required": true
+                    }
+                },
+                "_links": {
+                    "self": {
+                        "href": "/api/v1/flows/550aa181c4"
+                    }
+                }
+            }
+
+#### Update flow data [PUT /flows/{id}]
+
+This action allows the client to update the flow data, which may cause a state
+transition. If a state transition occurs, the server may populate additional
+data to the flow, for example, after a successful phone OTP verification, the
+server will set the person information in the flow data, if the phone number is in
+the records.
+
+Some updates cause the server to perform an action without a state transition. For
+example, `{"otpTimestamp": null}` is an update that will be interpreted as
+resetting the OTP, and a new OTP will be sent to the phone in the flow data.
+
+*Note:* It is preferred to trigger an action by performing an update to a data
+field, but it is not always semantically possible. In such cases, an action may
+be requested by explicitly updating an `action` attribute into the flow.
+
+Unacceptable input always leads to `400` response, even if the data is related to
+authentication or authorization.
+
++ Parameters
+
+    + id:`550aa181c4` (required, string)
+      The identifier of the flow.
+
++ Request (application/json)
+
+        {
+            "otp": "123456"
+        }
+        
++ Response 200 (application/json)
+
+        {
+            "flow": "USER_REGISTRATION",
+            "state": "KNOWN_PHONE_SIGNUP",
+            "data": {
+                "phone": {
+                    "number": "817222333",
+                    "countryCode": "+62"
+                },
+                "person": {
+                    "fullName": "Jonathan Setiadi",
+                    "nickname": "Nathan",
+                    "alternateNames": [
+                        {
+                            "languageCode": "zho",
+                            "fullName": "陈志明",
+                            "romanization": "Chen Chee Meng"
+                        }
+                    ],
+                    "gender": "M",
+                    "primarySite": {
+                        "code": "SETRASARI",
+                        "name": "GII Setrasari"
+                    },
+                    "otherSites": [
+                        {
+                            "code": "PURI",
+                            "name": "GII Puri"
+                        }
+                    ],
+                    "status": "ACTIVE",
+                    "currentMembership": {
+                        "type": "REGULAR",
+                        "memberId": "200220022",
+                        "startDate": {
+                            "dayOfMonth": 1,
+                            "month": 4,
+                            "year": 2007
+                        }
+                    }
+                }
+            },
+            "requestedInputs": {
+                "email": {
+                    "type": "String",
+                    "required": true
+                },
+                "password": {
+                    "type": "String",
+                    "required": true
+                }
+            },
+            "_links": {
+                "self": {
+                    "href": "/api/v1/flows/550aa181c4"
+                }
+            }
+        }
+
++ Response 400 (application/json)
+
+        {
+            "flow": "USER_REGISTRATION",
+            "state": "PHONE_OTP_VERIFICATION",
+            "data": {
+                "phone": {
+                    "number": "8122001222",
+                    "countryCode": "+62"
+                },
+                "otpTimestamp": "2017-05-21T02:04:30Z"
+            },
+            "requestedInputs": {
+                "otp": {
+                    "type": "String",
+                    "required": true
+                }
+            },
+            "error": {
+                {
+                    "code": "err.hits.INCORRECT_PHONE_OTP",
+                    "message": "Kode verifikasi salah."
+                }
+            },
+            "_links": {
+                "self": {
+                    "href": "/api/v1/flows/550aa181c4"
+                }
+            }
+        }
+
+#### Terminate a flow [DELETE /flows/{id}]
+
+This action allows the client to cancel a flow.
+
++ Parameters
+
+    + id:`550aa181c4` (required, string)
+      The identifier of the flow.
+      
++ Response 204
