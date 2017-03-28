@@ -1905,11 +1905,12 @@ data, which will put it at the `PAYMENT` state, if the data is valid.
 
     + Headers
     
-            Location: /api/v1/flows/505ac1286e
+            Location: /api/v1/flows/550aa181c4
             
     + Body
     
             {
+                "id": "550aa181c4",
                 "flow": "USER_REGISTRATION",
                 "state": "PHONE_OTP_VERIFICATION",
                 "data": {
@@ -1965,6 +1966,7 @@ authentication or authorization.
 + Response 200 (application/json)
 
         {
+            "id": "550aa181c4",
             "flow": "USER_REGISTRATION",
             "state": "KNOWN_PHONE_SIGNUP",
             "data": {
