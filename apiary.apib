@@ -584,7 +584,7 @@ by this resource.
             }
         }
         
-#### Create a Service [POST]
+#### Create a Service [POST /services]
 
 + Request (application/json)
 
@@ -592,7 +592,12 @@ by this resource.
             "code": "SETRASARI-1",
             "name": "Kebaktian Umum 1",
             "commission": "ADULTS",
-            "startTime": "07:30"
+            "startTime": "07:30",
+            "_links": {
+                "site": {
+                    "href": "/api/v1/sites/SETRASARI"
+                }
+            }
         }
         
 + Response 201 (application/json)
@@ -622,7 +627,7 @@ by this resource.
                 }
             }
             
-#### Update a Service [PUT /sites/{siteId}/services/{id}]
+#### Update a Service [PUT /services/{id}]
 
 + Parameters
 
