@@ -690,6 +690,381 @@ by this resource.
             }
         }
 
+### ResidentialAreas [/residentialAreas{?sort,region,city,includeArchived}]
+This resource represents the residential areas that devided every city to 
+be a smaller areas with one or more coordinators whom responsible for the area.
+One residential areas can have more than one residential districts that devided
+areas into even smaller area, and each residential districts have one coordinator.
+These residential areas numbers on every city can be updated in the time being.
+
+#### List ResidentialAreas [GET]
+
++ Parameters
+
+    + region:`NORTH` (string, optional)
+      Area's region in the city.
+
+    + sort:`+code` (string, optional)
+      Ascending and descending sorting over a single field. If not specified,
+      the records have no guaranteed ordering.
+      
+    + city:`Bandung` (string, optional)
+      Filter for the city of the residential area.
+      
+    + includeArchived: `false` (boolean, optional)
+      Whether to include services that have been marked as archived.
+        + Default: false
+        
+        
++ Response 200 (application/json)
+
+        [
+            {
+                "isArchived": false,
+                "city": "Bandung",
+                "region": "NORTH",
+                "code": "BDG.01",
+                "_links": {
+                    "self": {
+                        "href": "/api/v1/residentialAreas/BDG.01"
+                    },
+                    "coordinators": [
+                        {
+                            "href": "/api/v1/people/58c177e773a7d31f5b000002"
+                        }
+                    ]
+                },
+                "name": "Bandung Utara",
+                "coordinators": [
+                    "58c177e773a7d31f5b000002"
+                ]
+            }
+            
+        ]
+
+#### Retrieve residentialArea Info [GET /residentialAreas/{code}]
+
++ Parameters
+
+    + code:`BDG.01` (string, required)
+      Code of the residential area.
+
++ Response 200 (application/json)
+        
+        {
+            "isArchived": false,
+            "city": "Bandung",
+            "region": "NORTH",
+            "code": "BDG.01",
+            "_links": {
+                "self": {
+                    "href": "/api/v1/residentialAreas/BDG.01"
+                },
+                "coordinators": [
+                    {
+                        "href": "/api/v1/people/58c177e773a7d31f5b000002"
+                    }
+                ]
+            },
+            "name": "Bandung Utara",
+            "coordinators": [
+                "58c177e773a7d31f5b000002"
+            ]
+        }
+
+
+#### Create a residentialArea [POST /residentialAreas]
+
++ Request (application/json)
+
+        {
+            "city" : "Surabaya",
+            "region" : "NORTH",
+            "code" : "SBY.02",
+            "name" : "Surabaya Utara",
+            "_links" : {
+                "coordinators" : [
+                    { "href" : "/api/v1/people/58c177e773a7d31f5b000002" }
+                ]
+            },
+        }
+        
++ Response 201 (application/json)
+
+    + Headers
+    
+            Location: /api/v1/residentialAreas/SBY.02
+            
+    + Body
+    
+            {
+                "city" : "Surabaya",
+                "region" : "NORTH",
+                "code" : "SBY.02",
+                "name" : "Surabaya Utara",
+                "coordinators" : [
+                    "58c177e773a7d31f5b000002"
+                ]
+                
+            }
+            
+#### Update a residentialArea [PUT /residentialAreas/{code}]
+
++ Parameters
+
+    + code:`SBY.02` (string)
+      Code of the residentialArea.
+
++ Request (application/json)
+
+        {
+            "name" : "Surabaya Tengah",
+        }
+        
++ Response 200 (application/json)
+
+        {
+            "city" : "Surabaya",
+            "region" : "NORTH",
+            "code" : "SBY.02",
+            "name" : "Surabaya Tengah",
+            "coordinators" : [
+                "58c177e773a7d31f5b000002"
+            ]
+            
+        }
+        
+#### Archive a residentialArea [DELETE /residentialAreas/{code}]
+
++ Parameters
+
+    + code:`SBY.02` (string)
+      Code of the residentialArea.
+      
++ Response 200 (application/json)
+
+        {
+            "city" : "Surabaya",
+            "region" : "NORTH",
+            "code" : "SBY.02",
+            "name" : "Surabaya Tengah",
+            "coordinators" : [
+                "58c177e773a7d31f5b000002"
+            ]
+            "isArchived" : true
+        }
+        
+### ResidentialDistricts [/residentialDistricts{?sort,name,coordinator,residentialArea,includeArchived}]
+This resource represents the residential districts that devided residential area 
+into smaller areas. a residential have one coordinator that responsible to all
+congregants within the area such as giving a calendar every year, be an observer
+of the congregants growth, etc. This districts will be assigned to every congregants
+based on where they lived ( for Bandung area ) and assigned based on where they worshiped
+( for non Bandung area ).
+
+#### List ResidentialDistricts [GET]
+
++ Parameters
+
+    + name (string, optional)
+      Area's districts name in the city.
+      
+    + coordinator:`58c177e773a7d31f5b000001` (ObjectId, optional)
+      coordinator who responsible on the districts.
+      
+    + residentialArea: `BDG.01` (string, optional)
+      code of the residential area to filter districts based on its area.
+      
+    + sort:`+name` (string, optional)
+      Ascending and descending sorting over a single field. If not specified,
+      the records have no guaranteed ordering.
+      
+    + includeArchived: `false` (boolean, optional)
+      Whether to include services that have been marked as archived.
+        + Default: false
+        
+        
++ Response 200 (application/json)
+
+        [
+            {
+                "isArchived": false,
+                "residentialArea": {
+                    "code": "BDG.01",
+                    "name": "Bandung Utara"
+                },
+                "_links": {
+                    "residentialArea": {
+                        "href": "/api/v1/residentialAreas/BDG.01"
+                    },
+                    "self": {
+                        "href": "/api/v1/residentialDistricts/BDG.0001"
+                    },
+                    "coordinator": {
+                        "href": "/api/v1/people/58c177e773a7d31f5b000001"
+                    }
+                },
+                "code": "BDG.0001",
+                "name": "Dago Pakar",
+                "coordinator": "58c177e773a7d31f5b000001"
+            },
+            {
+                "isArchived": false,
+                "residentialArea": {
+                    "code": "BDG.01",
+                    "name": "Bandung Utara"
+                },
+                "_links": {
+                    "residentialArea": {
+                        "href": "/api/v1/residentialAreas/BDG.01"
+                    },
+                    "self": {
+                        "href": "/api/v1/residentialDistricts/BDG.0003"
+                    },
+                    "coordinator": {
+                        "href": "/api/v1/people/58c177e773a7d31f5b000001"
+                    }
+                },
+                "code": "BDG.0003",
+                "name": "Mekar Wangi",
+                "coordinator": "58c177e773a7d31f5b000001"
+            },
+            {
+                "isArchived": false,
+                "residentialArea": {
+                    "code": "BDG.01",
+                    "name": "Bandung Utara"
+                },
+                "_links": {
+                    "residentialArea": {
+                        "href": "/api/v1/residentialAreas/BDG.01"
+                    },
+                    "self": {
+                        "href": "/api/v1/residentialDistricts/BDG.0002"
+                    },
+                    "coordinator": {
+                        "href": "/api/v1/people/58c177e773a7d31f5b000001"
+                    }
+                },
+                "code": "BDG.0002",
+                "name": "Setra Duta",
+                "coordinator": "58c177e773a7d31f5b000001"
+            }
+            
+        ]
+
+#### Retrieve residentialDistrict Info [GET /residentialDistrict/{code}]
+
++ Parameters
+
+    + code:`BDG.01.0001` (string, required)
+      Code of the residential area.
+
++ Response 200 (application/json)
+        
+        {
+            "isArchived": false,
+            "residentialArea": {
+                "code": "BDG.01",
+                "name": "Bandung Utara"
+            },
+            "_links": {
+                "residentialArea": {
+                    "href": "/api/v1/residentialAreas/BDG.01"
+                },
+                "self": {
+                    "href": "/api/v1/residentialDistricts/BDG.0001"
+                },
+                "coordinator": {
+                    "href": "/api/v1/people/58c177e773a7d31f5b000001"
+                }
+            },
+            "code": "BDG.0001",
+            "name": "Dago Pakar",
+            "coordinator": "58c177e773a7d31f5b000001"
+        }
+
+
+#### Create a residentialDistrict [POST /residentialDistricts]
+
++ Request (application/json)
+
+        {
+            "code" : "BDG.02.003",
+            "name" : "Soekano Hatta",
+            "_links" : {
+                "residentialArea" : {
+                    "href" : "/api/v1/residentialAreas/BDG.02"
+                },
+                "coordinator" : {
+                    "href" : "/api/v1/people/58c177e773a7d31f5b000001"
+                }
+            },
+        }
+        
++ Response 201 (application/json)
+
+    + Headers
+    
+            Location: /api/v1/residentialDistricts/BDG.02.003
+            
+    + Body
+    
+            {
+                "code" : "BDG.02.003",
+                "name" : "Soekano Hatta",
+                "residentialArea" : {
+                    "name" : "Bandung Barat",
+                    "code" : "BDG.02"
+                }
+                "coordinator" : "58c177e773a7d31f5b000001"
+            }
+            
+#### Update a residentialDistrict [PUT /residentialDistricts/{code}]
+
++ Parameters
+
+    + code:`BDG.02.003` (string)
+      Code of the residentialArea.
+
++ Request (application/json)
+
+            {
+                "name" : "Gatsu",
+            }
+        
++ Response 200 (application/json)
+
+            {
+                "code" : "BDG.02.003",
+                "name" : "Gatsu",
+                "residentialArea" : {
+                    "name" : "Bandung Barat",
+                    "code" : "BDG.02"
+                }
+                "coordinator" : "58c177e773a7d31f5b000001"
+            }
+        
+#### Archive a residentialDistrict [DELETE /residentialDistricts/{code}]
+
++ Parameters
+
+    + code:`BDG.02.003` (string)
+      Code of the residentialArea.
+      
++ Response 200 (application/json)
+
+            {
+                "code" : "BDG.02.003",
+                "name" : "Gatsu",
+                "residentialArea" : {
+                    "name" : "Bandung Barat",
+                    "code" : "BDG.02"
+                }
+                "coordinator" : "58c177e773a7d31f5b000001",
+                "isArchived" : true
+            }
+        
 ## Group Congregation
 
 These APIs provide actions to store and retrieve information about individuals
