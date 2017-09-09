@@ -35,7 +35,7 @@ results by default.
 These APIs are used to maintain the representation of the church organization
 in HITS.
 
-### Church Sites [/sites{?sort,poolCode,includeArchived}]
+### Church Sites [/api/v1/sites{?sort,poolCode,includeArchived}]
 
 This resource represents the multiple locations that GII as a multi-site church
 constitutes of. Most entities within HITS would be associated to a particular
@@ -99,7 +99,7 @@ church site, either directly or indirectly.
             }
         ]
 
-#### Retrieve Church Site Info [GET /sites/{id}]
+#### Retrieve Church Site Info [GET /api/v1/sites/{id}]
 
 + Parameters
 
@@ -226,7 +226,7 @@ church site, either directly or indirectly.
                 }
             }
 
-#### Update a Church Site [PUT /sites/{id}]
+#### Update a Church Site [PUT /api/v1/sites/{id}]
 
 + Parameters
 
@@ -280,7 +280,7 @@ church site, either directly or indirectly.
             }
         }
 
-#### Archive a Church Site [DELETE /sites/{id}]
+#### Archive a Church Site [DELETE /api/v1/sites/{id}]
 
 + Parameters
 
@@ -328,7 +328,7 @@ church site, either directly or indirectly.
             }
         }
 
-### Organizational Units [/ous{?sort,type,parentOUCode,includeArchived}]
+### Organizational Units [/api/v1/ous{?sort,type,parentOUCode,includeArchived}]
 
 Church locations in GII are grouped into pools. While currently there are no higher
 level intermediate grouping between pools and the synod, organizational units are
@@ -378,7 +378,7 @@ under the synod.
             }
         ]
 
-#### Retrieve Organizational Unit Info [GET /ous/{id}]
+#### Retrieve Organizational Unit Info [GET /api/v1/ous/{id}]
 
 + Parameters
 
@@ -446,7 +446,7 @@ under the synod.
                 }
             }
 
-#### Update an Organizational Unit [PUT /ous/{id}]
+#### Update an Organizational Unit [PUT /api/v1/ous/{id}]
 
 + Parameters
 
@@ -479,7 +479,7 @@ under the synod.
             }
         }
 
-#### Archive an Organizational Unit [DELETE /ous/{id}]
+#### Archive an Organizational Unit [DELETE /api/v1/ous/{id}]
 
 + Parameters
 
@@ -507,7 +507,7 @@ under the synod.
             }
         }
 
-### Services [/sites/{siteId}/services{?sort,commission,includeArchived}]
+### Services [/api/v1/sites/{siteId}/services{?sort,commission,includeArchived}]
 
 This resource represents the services that people can take as their primary
 worship service across GII locations. This includes *regular Sunday Services*,
@@ -556,7 +556,7 @@ by this resource.
             }
         ]
         
-#### Retrieve Service Info [GET /sites/{siteId}/services/{id}]
+#### Retrieve Service Info [GET /api/v1/sites/{siteId}/services/{id}]
 
 + Parameters
 
@@ -584,7 +584,7 @@ by this resource.
             }
         }
         
-#### Create a Service [POST /services]
+#### Create a Service [POST /api/v1/services]
 
 + Request (application/json)
 
@@ -627,7 +627,7 @@ by this resource.
                 }
             }
             
-#### Update a Service [PUT /services/{id}]
+#### Update a Service [PUT /api/v1/services/{id}]
 
 + Parameters
 
@@ -661,7 +661,7 @@ by this resource.
             }
         }
         
-#### Archive a Service [DELETE /sites/{siteId}/services/{id}]
+#### Archive a Service [DELETE /api/v1/sites/{siteId}/services/{id}]
 
 + Parameters
 
@@ -690,7 +690,7 @@ by this resource.
             }
         }
 
-### ResidentialAreas [/residentialAreas{?sort,region,city,includeArchived}]
+### ResidentialAreas [/api/v1/residentialAreas{?sort,region,city,includeArchived}]
 This resource represents the residential areas that devided every city to 
 be a smaller areas with one or more coordinators whom responsible for the area.
 One residential areas can have more than one residential districts that devided
@@ -742,7 +742,7 @@ These residential areas numbers on every city can be updated in the time being.
             
         ]
 
-#### Retrieve residentialArea Info [GET /residentialAreas/{code}]
+#### Retrieve residentialArea Info [GET /api/v1/residentialAreas/{code}]
 
 + Parameters
 
@@ -773,7 +773,7 @@ These residential areas numbers on every city can be updated in the time being.
         }
 
 
-#### Create a residentialArea [POST /residentialAreas]
+#### Create a residentialArea [POST /api/v1/residentialAreas]
 
 + Request (application/json)
 
@@ -808,7 +808,7 @@ These residential areas numbers on every city can be updated in the time being.
                 
             }
             
-#### Update a residentialArea [PUT /residentialAreas/{code}]
+#### Update a residentialArea [PUT /api/v1/residentialAreas/{code}]
 
 + Parameters
 
@@ -834,7 +834,7 @@ These residential areas numbers on every city can be updated in the time being.
             
         }
         
-#### Archive a residentialArea [DELETE /residentialAreas/{code}]
+#### Archive a residentialArea [DELETE /api/v1/residentialAreas/{code}]
 
 + Parameters
 
@@ -854,7 +854,7 @@ These residential areas numbers on every city can be updated in the time being.
             "isArchived" : true
         }
         
-### ResidentialDistricts [/residentialDistricts{?sort,name,coordinator,residentialArea,includeArchived}]
+### ResidentialDistricts [/api/v1/residentialDistricts{?sort,name,coordinator,residentialArea,includeArchived}]
 This resource represents the residential districts that devided residential area 
 into smaller areas. a residential have one coordinator that responsible to all
 congregants within the area such as giving a calendar every year, be an observer
@@ -953,7 +953,7 @@ based on where they lived ( for Bandung area ) and assigned based on where they 
             
         ]
 
-#### Retrieve residentialDistrict Info [GET /residentialDistrict/{code}]
+#### Retrieve residentialDistrict Info [GET /api/v1/residentialDistrict/{code}]
 
 + Parameters
 
@@ -985,7 +985,7 @@ based on where they lived ( for Bandung area ) and assigned based on where they 
         }
 
 
-#### Create a residentialDistrict [POST /residentialDistricts]
+#### Create a residentialDistrict [POST /api/v1/residentialDistricts]
 
 + Request (application/json)
 
@@ -1020,7 +1020,7 @@ based on where they lived ( for Bandung area ) and assigned based on where they 
                 "coordinator" : "58c177e773a7d31f5b000001"
             }
             
-#### Update a residentialDistrict [PUT /residentialDistricts/{code}]
+#### Update a residentialDistrict [PUT /api/v1/residentialDistricts/{code}]
 
 + Parameters
 
@@ -1045,7 +1045,7 @@ based on where they lived ( for Bandung area ) and assigned based on where they 
                 "coordinator" : "58c177e773a7d31f5b000001"
             }
         
-#### Archive a residentialDistrict [DELETE /residentialDistricts/{code}]
+#### Archive a residentialDistrict [DELETE /api/v1/residentialDistricts/{code}]
 
 + Parameters
 
@@ -1070,7 +1070,7 @@ based on where they lived ( for Bandung area ) and assigned based on where they 
 These APIs provide actions to store and retrieve information about individuals
 in the congregation.
 
-### People [/people{?limit,offset,sort,q,address,site,service,status}]
+### People [/api/v1/people{?queryId,limit,offset,sort,q,address,radius,condition}]
 
 People refer to every individual that is of interest to the church in order to
 carry out services for the congregation. Besides members and visitors, the
@@ -1080,126 +1080,112 @@ attending another church can also be catalogued.
 
 #### Search for People [GET]
 
-People can be searched by their church site, default service, status, name
-(partial match), phone number, email address, identity card, and membership ID.
-The parameter `q` can be used for global search across attributes.
+People can be searched in 3 ways:
 
-The response does not include all attributes of a person, but only the basic
-info, including the person's system ID, a link to retrieve the complete record,
-and the fields that have resulted in a match.
+1. By a free text search (`q`): performs partial match on church site, service,
+   full name, alternate names, nickname, and all address components; and case-
+   and format-insensitive exact match on email address, phone number, and
+   membership ID. Results are always sorted by match score. This is useful to
+   quickly find a person.
 
-The following attributes are returned only if they match the search filter:
-- Phone number
-- Email address
-- Identity card number
-- Address
+2. By location (`location`): performs geocoding match within the requested
+   radius of the given location. The location must resolve into valid
+   coordinates to be processed. The radius cannot exceed 20km and is defaulted
+   to 1km. Results are always sorted by proximity to the searched point. This is
+   useful to find people living in an area.
 
-The `_meta` attribute provides match information for records that are included
-because of a match to the `q` or `address` query parameters.
+3. By advanced query condition (`condition`): executes the query condition as a
+   MongoDB query condition. If any of the fields in the query is not allowed,
+   the entire query is rejected. This is useful for reporting.
+
+Only one of the query parameters may be specified at a time.
 
 + Parameters
-    + limit:`10` (optional, number)
+    + queryId: `1` (optional, string)
+      Client query ID, will be echoed back as Query-Id response header.
+
+    + limit: `10` (optional, number)
       Maximum number of people to retrieve.
       
-    + offset:`50` (optional, number)
+    + offset: `50` (optional, number)
       Number of records to skip.
       
-    + sort:`+fullName` (optional, string)
-      Ascending and descending sorting over a single field. If not specified,
-      the results will be ranked based on match score.
+    + sort: `+fullName` (optional, string)
+      Ascending and descending sorting over a single field. Only respected on
+      searches that use `condition`. 
       
-    + q:`jonathan puri` (optional, string)
-      Global search query. Searches across full name, nickname, alternate names,
-      church site (by name), current membership ID, email address, phone number,
-      and identity card numbers.
+    + q: `jonathan puri` (optional, string)
+      Free text search query.
     
-    + address:`Setra Duta Hegar` (optional, string)
-      Query for people with addresses within 10km radius of the given location.
-      The query must resolve into a valid geolocation to be processed.
-      
-    + site:`PURI` (optional, string)
-      Filter for Church site attribute. It must be a valid site ID.
-      
-    + service:`PURI-1` (optional, string)
-      Filter for default service attribute. It must be a valid service ID.
-      
-    + status:`ACTIVE` (optional, enum[string])
-      Filter for person status attribute.
-        + Members
-            + ACTIVE
-            + INACTIVE
-            + INACTIVE_PERMANENT
+    + address: `Setra Duta Hegar` (optional, string)
+      Location query.
+
+    + radius: `10` (optional, string)
+      Location query max radius in kilometers.
+
+    + condition: `{ "currentMembership.category": "TEEN" }` (optional, string)
+      Advanced query condition.
 
 + Response 200 (application/json)
 
-        [
-            {
-                "id": "5077700222",
-                "primarySite": {
-                    "code": "SETRASARI",
-                    "name": "GII Setrasari"
-                },
-                "otherSites": [
-                    {
-                        "code": "PURI",
-                        "name": "GII Puri"
-                    }
-                ],
-                "primaryService": {
-                    "serviceId": "SETRASARI-2",
-                    "siteName": "GII Setrasari",
-                    "startTime": "09:00"
-                },
-                "status": "ACTIVE",
-                "currentMembership": {
-                    "type": "REGULAR",
-                    "memberId": "200220022",
-                    "startDate": {
-                        "dayOfMonth": 1,
-                        "month": 4,
-                        "year": 2007
-                    }
-                },
-                "title": "dr.",
-                "fullName": "Jonathan Setiadi",
-                "nickname": "Nathan",
-                "alternateNames": [
-                ],
-                "gender": "M",
-                "_links": {
-                    "self": {
-                        "href": "/api/v1/people/5077700222"
-                    },
+    + Headers
+        
+            Query-Id: 1
+            Result-Total: 42
+
+    + Body
+
+            [
+                {
+                    "id": "5077700222",
                     "primarySite": {
-                        "href": "/api/v1/sites/SETRASARI"
+                        "code": "SETRASARI",
+                        "name": "GII Setrasari"
                     },
                     "otherSites": [
                         {
-                            "href": "/api/v1/sites/PURI"
+                            "code": "PURI",
+                            "name": "GII Puri"
                         }
-                    ]
-                },
-                "_meta": {
-                    "q": {
-                        "matchScore": 80,
-                        "matchingFields": [
+                    ],
+                    "primaryService": {
+                        "serviceId": "SETRASARI-2",
+                        "siteName": "GII Setrasari",
+                        "startTime": "09:00"
+                    },
+                    "status": "ACTIVE",
+                    "currentMembership": {
+                        "type": "REGULAR",
+                        "memberId": "200220022",
+                        "startDate": {
+                            "dayOfMonth": 1,
+                            "month": 4,
+                            "year": 2007
+                        }
+                    },
+                    "title": "dr.",
+                    "fullName": "Jonathan Setiadi",
+                    "nickname": "Nathan",
+                    "alternateNames": [
+                    ],
+                    "gender": "M",
+                    "_links": {
+                        "self": {
+                            "href": "/api/v1/people/5077700222"
+                        },
+                        "primarySite": {
+                            "href": "/api/v1/sites/SETRASARI"
+                        },
+                        "otherSites": [
                             {
-                                "field": "nickname",
-                                "query": "nathan",
-                                "value": "Nathan"
-                            },
-                            {
-                                "field": "primarySiteName",
-                                "keyword": "setrasari",
-                                "value": "GII Setrasari"
+                                "href": "/api/v1/sites/PURI"
                             }
                         ]
                     }
                 }
-            }
-        ]
+            ]
 
-#### Retrieve Person Details [GET /people/{id}]
+#### Retrieve Person Details [GET /api/v1/people/{id}]
 
 The complete information about a person can be retrieved using this action.
 The attributes that get returned depend on the access that the logged in user
@@ -1582,7 +1568,7 @@ congregant that he is most closely related to.
             ]
         }
 
-#### Update a Person [PUT /people/{id}]
+#### Update a Person [PUT /api/v1/people/{id}]
 
 To update a person, an *Edit* need to be created and applied on the record to
 be updated. Then, the Edit can be referenced in this action. This action will
@@ -1790,7 +1776,7 @@ person record.
         }
 
 
-### Profile Edits [/profileEdits{?limit,offset,sort,status}]
+### Profile Edits [/api/v1/profileEdits{?limit,offset,sort,status}]
 
 Profile edits are used to update a person's record. Congregants, ministers,
 and office staffs are allowed to create edits, but only office staffs can
@@ -1884,7 +1870,7 @@ summary, if specified. The edit data needs to be retrieved separately.
             }
         ]
 
-#### Retrieve Edit Data [GET /edits/{id}]
+#### Retrieve Edit Data [GET /api/v1/profileEdits/{id}]
 
 This action returns the complete edit data, usually for review purposes. If
 the user that makes the request does not have access to one or more fields
@@ -2098,21 +2084,15 @@ The response returns the edit, along with edit contents, with its new status.
         
 ## Group System
 
-### System session [/session]
+### System session [/api/v1/sessions]
 
-This endpoint uses a singular noun as it is not an endpoint for performing session
-management tasks, but only the current session between the HTTP client and the
-server, as identified by the `connect.sid` cookie.
+This endpoint allows users to login and logout. A session is identified by the
+`sessionId` cookie.
 
-#### Get current session info [GET /session]
+#### Get current session info [GET /api/v1/sessions/current]
 
-This action returns the current session state, which includes:
-- Whether or not the session is authenticated, and if so, the logged in user.
-- The *flows* that are currently active in the session, for example, the user
-  registration flow.
-  
-The example is given to show the structure of the `user` data and a registration
-flow, although it is not possible to have both in reality.
+This action returns the current session state, which states ehether or not the
+session is authenticated, and if so, the logged in user.
 
 + Response 200 (application/json)
 
@@ -2122,7 +2102,7 @@ flow, although it is not possible to have both in reality.
                 "id": "58d54be250f0d4ee34ed44dd",
                 "fullName": "Maria Magdalena",
                 "nickname": "Maria",
-                "membershipId": "20.02.00200",
+                "membershipId": "200200200",
                 "_links": {
                     "self": {
                         "href": "/api/v1/systemUsers/58d54be250"
@@ -2132,44 +2112,17 @@ flow, although it is not possible to have both in reality.
                     }
                 }
             },
-            "flows": [
-                {
-                    "flow": "USER_REGISTRATION",
-                    "state": "PHONE_OTP_VERIFICATION",
-                    "data": {
-                        "phone": {
-                            "number": "8122001222",
-                            "countryCode": "+62"
-                        },
-                        "otpTimestamp": "2017-05-21T02:04:30Z"
-                    },
-                    "requestedInputs": {
-                        "otp": {
-                            "type": "String",
-                            "required": true
-                        }
-                    },
-                    "_links": {
-                        "self": {
-                            "href": "/api/v1/flows/550aa181c4"
-                        }
-                    }
-                }
-            ],
             "_links": {
                 "self": {
                     "href": "/api/v1/session"
-                },
-                "authentication": {
-                    "href": "/api/v1/session/auth"
                 }
             }
         }
         
-#### Authenticate a session [POST /session/auth]
+#### Authenticate a session [POST]
 
-Users can log in with the local registry using this action. Upon successful login,
-the current session will become authenticated, and the session information is
+Users can log in with the local registry using this action. Upon successful
+login, the current session will become authenticated, and the session info is
 sent in the response body.
 
 + Request (application/json)
@@ -2187,7 +2140,7 @@ sent in the response body.
                 "id": "58d54be250f0d4ee34ed44dd",
                 "fullName": "Maria Magdalena",
                 "nickname": "Maria",
-                "membershipId": "20.02.00200",
+                "membershipId": "200200200",
                 "_links": {
                     "self": {
                         "href": "/api/v1/systemUsers/58d54be250"
@@ -2211,24 +2164,15 @@ sent in the response body.
             "message": "Login ID atau password salah."
         }
 
-#### Reset the current session [DELETE /session]
+#### Reset the current session [DELETE /api/v1/sessions/current]
 
-This action will discard authentication and flow data associated with the current
-session and generate a new session ID. A new `connect.sid` cookie will be sent
-along with the response. Use this action to log out.
+This action will discard authentication and flow data associated with the
+current session and generate a new session ID. A new `sessionId` cookie will
+be sent along with the response. Use this action to log out.
 
-+ Response 200 (application/json)
++ Response 204 (application/json)
 
-        {
-            "isAuthenticated": false,
-            "_links": {
-                "authentication": {
-                    "href": "/api/v1/session/auth"
-                }
-            }
-        }
-
-### Action flows [/flows]
+### Action flows [/api/v1/flows]
 
 Action flow is a session-specific execution of a multi-step interactive workflow,
 such as user registration. A flow typically consists of multiple states. State
@@ -2313,7 +2257,7 @@ data, which will put it at the `PAYMENT` state, if the data is valid.
                 }
             }
 
-#### Update flow data [PUT /flows/{id}]
+#### Update flow data [PUT /api/v1/flows/{id}]
 
 This action allows the client to update the flow data, which may cause a state
 transition. If a state transition occurs, the server may populate additional
@@ -2435,7 +2379,7 @@ authentication or authorization.
             }
         }
 
-#### Terminate a flow [DELETE /flows/{id}]
+#### Terminate a flow [DELETE /api/v1/flows/{id}]
 
 This action allows the client to cancel a flow.
 
@@ -2445,3 +2389,78 @@ This action allows the client to cancel a flow.
       The identifier of the flow.
       
 + Response 204
+
+## Group Statistics
+
+### Data Statistics [/api/v1/stats]
+
+This endpoint returns requested statistics. Some statistics may be cached, and
+unless the client explicitly requests for fresh data, cached information will
+be returned because collecting statistics can be taxing to the database.
+
+Most statistics only include people with `status: 'ACTIVE'`. All statistics only
+include entities that are not archived.
+
+The response contains a `groups` attribute that lists all groups in the data.
+Some statistics also contain `subgroups` attribute that lists the groups within
+each group of data. There are never more than 2 layers of grouping.
+
+#### Note on client implementation
+
+The client is at liberty to coarsely display the given stats as it sees fit. For
+example, when requesting for people by age, every possible age (in years) is
+returned. The client can choose to group this to age buckets.
+
+The group is ideal for forming slices in a pie chart or horizontal axis of a
+bar chart. The subgroup can be used for stacking bars or side-by-side bars in
+each category.
+
+#### Retrieve statistics [GET /api/v1/stats/{id}{?scope,condition}]
+
++ Parameters
+
+    + id: `PEOPLE_BY_AGE_AND_GENDER` (required, string)
+      The identifier of the statistics.
+
+    + scope: `SETRASARI:*:TEEN,REGULAR_ATTENDER` (optional, string)
+      Scope of entities for which the statistics is requested. It can contain
+      three scope descriptors: `<site>:<service>:<categories>`. To match all,
+      specify `*` for earlier parts of the descriptor. Later descriptors may be
+      completely omitted, e.g. `PURI` is a valid descriptor. Multiple categories
+      should be comma-separated.
+
+    + condition: `{ nationality: "SG" }` (optional, string)
+      MongoDB query condition to limit the statistics. If any of the fields is
+      not whitelisted, the request will be rejected.
+
++ Response 200 (application/json)
+
+    + Headers
+
+            Stats-Collected: ''
+
+    + Body
+
+            {
+                "groups": [ "0", "1", "2", ..., "97" ],
+                "subgroups": [ "M", "F" ],
+                "values": {
+                    "0": {
+                        "M": 0,
+                        "F": 0
+                    },
+                    "1": {
+                        "M": 0,
+                        "F": 0
+                    },
+                    "2": {
+                        "M": 6,
+                        "F": 8
+                    },
+                    "3": {
+                        "M": 14,
+                        "F": 13
+                    },
+                    ...
+                }
+            }
