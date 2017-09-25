@@ -2460,3 +2460,197 @@ each category.
                     }
                 }
             }
+            
+## Group Events and Ticketing
+
+### Events List [/api/v1/events]
+
+This endpoint returns list of all available events for congregants to join. 
+This API only include events that still available to join ( The event's date 
+haven't passed yet ) and only include entities that are not archived.
+
+Full list can be retrieved ( without worying about it has been passed,
+archived, and haven't published ) if it's specified manually by the requester 
+on the requet header. Filter such as city, sites, category is available to 
+make the search simpler.
+
+#### Retrieve events [GET /api/v1/events/{?sort,city,category,date,includeUnpublished,includeArchived,showElapsed}]
++ Parameters
+
+    + sort: `name` (optional, string)
+      Ascending and descending sorting over a single field. 
+      If not specified, the records have no guaranteed ordering.
+
+    + city: `Bandung` (optional, string)
+      Filter events by the city of the event's held.
+   
+    + category: `Natal` (optional, string)
+      Filter events by it's category.
+      
+    + date: `2017-12-25` (optional, string)
+      Filter events by it's category.
+      
+    + includeUnpublished: `false` (boolean, optional)
+      Whether to include events that haven't marked published yet.
+        + Default: false
+        
+    + includeArchived: `false` (boolean, optional)
+      Whether to include events that have been marked as archived.
+        + Default: false
+        
+    + showElapsed: `false` (boolean, optional)
+      Whether to include events that have been passed already.
+        + Default: false
+        
++ Response 200 (application/json)
+    + Body
+
+            [
+                {
+                    name: "Perayaan Natal Umum 2017",
+                    description: "Natal Umum tahunan yang diadakan oleh GII Hok Im Tong untuk membuat sebuah ibadah yang menyatukan semua lokasi"
+                    image: "/img/9876asd964eqwesad54sda8964sdak499.jpg",
+                    category: {
+                        id: "98g4as6fg4hsdh9e4td41621946",
+                        name: "Natal"
+                    },
+                    isPublished: true,
+                    venue: {
+                        isChurchSite: true,
+                        code: "DAGO",
+                        name: "GII Dago"
+                    },
+                    schedule: [
+                        {
+                            start: "2017-12-25 17:00:00",
+                            end: "2017-12-25 20:00:00"
+                        }
+                    ],
+                    commission: "ADULT",
+                    startingPrice: {
+                        price: "0",
+                        currency: "IDR"
+                    },
+                    availableSeats: 200,
+                }
+            ]
+            
+#### Retrieve event detail [GET /api/v1/events/{id}]
++ Parameters
+
+    + id: `986asd419716htn6vdqdg9467` (required, string)
+      Mongo random object ID of the event
+        
++ Response 200 (application/json)
+    + Body
+
+            {
+            
+                data: {
+                    name: "Perayaan Natal Umum 2017",
+                    description: "Natal Umum tahunan yang diadakan oleh GII Hok Im Tong untuk membuat sebuah ibadah yang menyatukan semua lokasi"
+                    image: "/img/9876asd964eqwesad54sda8964sdak499.jpg",
+                    category: {
+                        id: "98g4as6fg4hsdh9e4td41621946",
+                        name: "Natal"
+                    },
+                    isPublished: true,
+                    autoPublish: true,
+                    autoPublishDate: "2017-11-15",
+                    isArchived: false,
+                    autoArchive: true,
+                    autoArchiveDate: "2017-12-26",
+                    venue: {
+                        isChurchSite: true,
+                        code: "DAGO",
+                        name: "GII Dago"
+                    },
+                    schedule: [
+                        {
+                            start: "2017-12-25 17:00:00",
+                            end: "2017-12-25 20:00:00"
+                        }
+                    ],
+                    ticketClass: [
+                        {
+                            id: obectId,
+                            name: 'VVIP'
+                        },
+                        {
+                            id: obectId,
+                            name: 'VIP'
+                        },
+                        {
+                            id: obectId,
+                            name: 'Regular'
+                        }
+                    ]
+                    commission: "ADULT",
+                    committees: [
+                      {
+                        person: {
+                            id: ObjectId,
+                            fullName: "Maria Magdalena"
+                        },
+                        position: "EVENT_COORDINATOR"
+                      },
+                      {
+                        person: {
+                            id: ObjectId,
+                            fullName: "Yoshua"
+                        },
+                        position: "PROGRAMME_COORDINATOR"
+                      }
+                    ],
+                    contactInfo: {
+                        name: "Maria Magdalena",
+                        email: "maria@example.com",
+                        contact: [
+                            {
+                                label: "MOBILE",
+                                countryCode: "+62",
+                                isMobile: true,
+                                isLine: true,
+                                isWhatsApp: true,
+                                number: "817778887"
+                            }
+                        ]
+                    },
+                    ticketClass: [
+                        {
+                            name: "VIP",
+                            description: "Very Important Person",
+                            quantity: 200,
+                            cost: 500000,
+                            currency: "IDR",
+                            earlyBirdCost: 450000,
+                            earlyBirdDeadline: "2017-12-10",
+                            maxQuantity: 5,
+                            salesChannel: "ONLINE",
+                            salesStart: "2017-09-31",
+                            salesEnd: "2017-12-23"
+                        },
+                        {
+                            name: "Free",
+                            description: "Free tickets",
+                            quantity: 200,
+                            cost: 0,
+                            currency: "IDR",
+                            isFree: true,
+                            maxQuantity: 3,
+                            salesChannel: "ONLINE",
+                            salesStart: "2017-09-31",
+                            salesEnd: "2017-12-23"
+                        },
+                        ...
+                    ]
+                    startingPrice: {
+                        price: "0",
+                        currency: "IDR"
+                    },
+                    availableSeats: 200,
+                },
+                recommendedEvents: [
+                    ...
+                ]
+            }
