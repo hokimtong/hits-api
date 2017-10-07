@@ -24,6 +24,8 @@ a collection (i.e. `foo[1].bar.baz` is not an acceptable attribute path).
 
 Updates to references must be made using `_links` attribute.
 
+The same rules apply to requests submitted as `multipart/form-data`.
+
 ## Removals
 
 For most entities, `DELETE` verb will archive the record, instead of actually
@@ -2581,7 +2583,7 @@ Markdown, newlines and double quotes are escaped as `\n` and `\"` respectively.
                 }
             ]
             
-#### Retrieve event detail [GET /api/v1/events/{id}]
+#### Retrieve event details [GET /api/v1/events/{id}]
 
 + Parameters
 
@@ -2599,6 +2601,7 @@ Markdown, newlines and double quotes are escaped as `\n` and `\"` respectively.
                 "summary": "Natal Umum tahunan yang diadakan oleh GII Hok Im Tong untuk membuat sebuah ibadah yang menyatukan semua lokasi",
                 "description": "Natal Umum tahunan yang diadakan oleh GII Hok Im Tong untuk membuat sebuah ibadah yang menyatukan semua lokasi.\n\n# Tema\n\nChanged By Grace"
                 "image": "/img/9876asd964eqwesad54sda8964sdak499.jpg",
+                "ytVideoId": "M7lc1UVf-VE",
                 "tags": [ "CHRISTMAS" ],
                 "venue": {
                     "name": "GII Dago",
@@ -2670,7 +2673,42 @@ Markdown, newlines and double quotes are escaped as `\n` and `\"` respectively.
 
 ### Event Organizer APIs [/api/v1/eo]
 
-Endpoints under `/eo` are used to create and manage events.
+Endpoints under `/eo` are used to create and manage events. They have different
+access control behavior and provide different details from the `/events` API.
+Clients cannot assume the data structures provided by either one to be a subset
+of the other.
+
+Notes on payload to create/update event:
+
+- Event code can be specified, but must be globally unique. Schedule and
+  transport codes are always generated.
+
+- Event code cannot be changed.
+
+- Image URL will not be honored. To set the event image, upload an image using
+  multipart request.
+
+- Venues of events and transport options are not linked to church site address,
+  but are to be specified manually. The client may implement this by first
+  getting the list of church sites and their addresses, presenting this to the
+  user, and copying the details to the event creation request payload.
+
+- Tags are not free text, they must match one of the `EVENT_TAGS` enum. A tag
+  that does not match this enum will cause the entire request to be rejected.
+
+- Tags will be sorted alphabetically.
+
+- Event venue can be specified in event scope or in each of the schedules, but
+  not both. That is, one **cannot** specify the venue for "most" schedules in
+  the global scope and override it in some schedules.
+
+- An event can be created only if it has: `name`, `code`, and `organizer`.
+
+- In addition to those, an event can be *published* only if it has at least one
+  item in `schedules`, `coordinator`, and `venue` set either in the event scope
+  or in each of the schedules.
+
+- The organizer must either be a *Site* or an *Org Unit*.
 
 #### List Events [GET /api/v1/eo/events{?sort,limit,offset,name,city,tag,startDate,endDate,includeArchived}]
 
@@ -2713,7 +2751,7 @@ Endpoints under `/eo` are used to create and manage events.
                     "name": "Perayaan Natal Umum 2017",
                     "image": "/img/9876asd964eqwesad54sda8964sdak499.jpg",
                     "tags": [ "CHRISTMAS" ],
-                    "venues": {
+                    "venue": {
                         "name": "GII Dago",
                         "address": {
                             "street": "Jl. Cikapayang No. 2-4",
@@ -2726,20 +2764,18 @@ Endpoints under `/eo` are used to create and manage events.
                     },
                     "scheduleCount": 3,
                     "earliestSchedule": {
-                        "_id": "095059d4-71c4-4863-bb50-c20135d21fff",
+                        "code": "095059d4-71c4-4863-bb50-c20135d21fff",
                         "startTime": "2017-12-14T11:00:00Z",
                         "endTime": "2017-12-14T13:30:00Z"
                     },
                     "latestSchedule": {
-                        "_id": "eff136a6-677d-4c31-ab2e-dd760d927ebd",
+                        "code": "eff136a6-677d-4c31-ab2e-dd760d927ebd",
                         "startTime": "2017-12-16T11:00:00Z",
                         "endTime": "2017-12-16T13:30:00Z"
                     },
                     "chargeModel": "FREE",
                     "isPublished": true,
-                    "ticketsPublished": 2100,
-                    "ticketsReserved": 1573,
-                    "owner": {
+                    "organizer": {
                         "code": "GII",
                         "name": "Gereja Injili Indonesia"
                     },
@@ -2747,12 +2783,439 @@ Endpoints under `/eo` are used to create and manage events.
                         "self": {
                             "href": "/api/v1/eo/events/507f1f77bcf86cd799439011"
                         },
-                        "schedules": {
-                            "href": "/api/v1/eo/events/507f1f77bcf86cd799439011/schedules"
+                        "organizer": {
+                            "href": "/api/v1/ous/GII"
                         },
-                        "ticketClasses": {
-                            "href": "/api/v1/eo/events/507f1f77bcf86cd799439011/ticketClasses"
+                        "publicObject": {
+                            "href": "/api/v1/events/507f1f77bcf86cd799439011"
                         }
                     }
                 }
             ]
+
+#### Retrieve event details [GET /api/v1/eo/events/{id}]
+
++ Parameters
+
+    + id: `507f1f77bcf86cd799439011` (required, string)
+      Event ID.
+        
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "id": "507f1f77bcf86cd799439011",
+                "code": "xmas17",
+                "name": "Perayaan Natal Umum 2017",
+                "image": "/img/9876asd964eqwesad54sda8964sdak499.jpg",
+                "ytVideoId": "M7lc1UVf-VE",
+                "tags": [ "CHRISTMAS" ],
+                "venue": {
+                    "name": "GII Dago",
+                    "address": {
+                        "street": "Jl. Cikapayang No. 2-4",
+                        "city": "Bandung",
+                        "province": "Jawa Barat",
+                        "country": "Indonesia",
+                        "postalCode": "40116"
+                    },
+                    "room": "Main Worship Hall"
+                },
+                "schedules": [
+                    {
+                        "code": "095059d4-71c4-4863-bb50-c20135d21fff",
+                        "startTime": "2017-12-14T11:00:00Z",
+                        "endTime": "2017-12-14T13:30:00Z",
+                        "transportOptions": [
+                            {
+                                "code": "02e1ee28-a3ad-4dc1-8702-67058c7584de",
+                                "pickupLocation": {
+                                    "name": "GII Setrasari",
+                                    "address": {
+                                        "street": "Jl. Setrasari Plaza C-4",
+                                        "suite": "GSG Istana EGI Setrasari Mall",
+                                        "city": "Bandung",
+                                        "province": "Jawa Barat",
+                                        "country": "Indonesia",
+                                        "postalCode": "40162"
+                                    }
+                                },
+                                "departureTime": "2017-12-14T09:30:00Z"
+                            }
+                        ]
+                    }
+                ],
+                "chargeModel": "FREE",
+                "isPublished": true,
+                "organizer": {
+                    "code": "GII",
+                    "name": "Gereja Injili Indonesia"
+                },
+                "_links": {
+                    "self": {
+                        "href": "/api/v1/eo/events/507f1f77bcf86cd799439011"
+                    },
+                    "organizer": {
+                        "href": "/api/v1/ous/GII"
+                    },
+                    "publicObject": {
+                        "href": "/api/v1/events/507f1f77bcf86cd799439011"
+                    }
+                }
+            }
+
+#### Create an event [POST /api/v1/eo/events]
+
++ Request without image (application/json)
+
+        {
+            "code": "xmas17",
+            "name": "Perayaan Natal Umum 2017",
+            "summary": "Who would imagine a king?",
+            "description": "A shepherd or teacher is what you could be\nOr maybe a fisherman out on the sea\nOr maybe a carpenter building things\nBut who would imagine a king?",
+            "ytVideoId": "M7lc1UVf-VE",
+            "tags": [ "CHRISTMAS" ],
+            "venue": {
+                "name": "GII Dago",
+                "address": {
+                    "street": "Jl. Cikapayang No. 2-4",
+                    "city": "Bandung",
+                    "province": "Jawa Barat",
+                    "country": "Indonesia",
+                    "postalCode": "40116"
+                },
+                "room": "Main Worship Hall"
+            },
+            "ticketClasses": [
+                {
+                    "name": "Umum",
+                    "description": "Tiket umum",
+                    "price": {
+                        "nominal": 0,
+                        "currency": "IDR"
+                    },
+                    "maxOrder": 5,
+                    "salesChannel": "ONLINE",
+                    "isPublicBookingAllowed": true,
+                    "salesStart": "2017-11-26T08:00:00+07:00",
+                    "salesEnd": "2017-12-13T23:59:00+07:00"
+                },
+                {
+                    "name": "Langsung",
+                    "description": "Pada saat acara",
+                    "price": {
+                        "nominal": 0,
+                        "currency": "IDR"
+                    },
+                    "maxOrder": 1,
+                    "salesChannel": "MANUAL",
+                    "salesStart": "2017-12-14T12:00:00+07:00",
+                    "salesEnd": "2017-12-16T23:59:00+07:00"
+                }
+            ],
+            "schedules": [
+                {
+                    "startTime": "2017-12-14T18:00:00+07:00",
+                    "endTime": "2017-12-14T20:30:00Z+07:00",
+                    "transportOptions": [
+                        {
+                            "pickupLocation": {
+                                "name": "GII Setrasari",
+                                "address": {
+                                    "street": "Jl. Setrasari Plaza C-4",
+                                    "suite": "GSG Istana EGI Setrasari Mall",
+                                    "city": "Bandung",
+                                    "province": "Jawa Barat",
+                                    "country": "Indonesia",
+                                    "postalCode": "40162"
+                                }
+                            },
+                            "departureTime": "2017-12-14T16:30:00+07:00"
+                        }
+                    ]
+                }
+            ],
+            "isPublished": true,
+            "_links": {
+                "organizer": {
+                    "href": "/api/v1/ous/GII"
+                }
+            }
+        }
+
++ Request with image (multipart/form-data; boundary=---BOUNDARY)
+
+        -----BOUNDARY
+        Content-Disposition: form-data; name="code"
+        
+        joyofchristmas17
+        -----BOUNDARY
+        Content-Disposition: form-data; name="name"
+        
+        Joy of Christmas
+        -----BOUNDARY
+        Content-Disposition: form-data; name="tags"
+        
+        CHRISTMAS
+        -----BOUNDARY
+        Content-Disposition: form-data; name="tags"
+        
+        CONCERT
+        -----BOUNDARY
+        Content-Disposition: form-data; name="description"
+        
+        # Lyrics
+
+        I feel you Christmas
+        I know I've found you
+        You never fade away
+        The joy of Christmas
+        Stays here inside us
+        Fills each and every heart with love
+        -----BOUNDARY
+        Content-Disposition: form-data; name="venue[0][name]"
+        
+        GII Dago
+        -----BOUNDARY
+        Content-Disposition: form-data; name="venue[0][address][street]"
+        
+        Jl. Cikapayang No. 2-4
+        -----BOUNDARY
+        Content-Disposition: form-data; name="_links[organizer][href]"
+        
+        /api/v1/ous/GII
+        -----BOUNDARY
+        Content-Disposition: form-data; name="imageFile"; filename="joy banner.jpg"
+        Content-Type: image/jpeg
+
+        (Binary data)
+        
++ Response 201 (application/json)
+
+    + Headers
+    
+            Location: /api/v1/eo/events/507f1f77bcf86cd799439011
+            
+    + Body
+    
+            {
+                "id": "507f1f77bcf86cd799439011",
+                "code": "xmas17",
+                "name": "Perayaan Natal Umum 2017",
+                "summary": "Who would imagine a king?",
+                "description": "A shepherd or teacher is what you could be\nOr maybe a fisherman out on the sea\nOr maybe a carpenter building things\nBut who would imagine a king?",
+                "image": "/img/9876asd964eqwesad54sda8964sdak499.jpg",
+                "ytVideoId": "M7lc1UVf-VE",
+                "tags": [ "CHRISTMAS" ],
+                "venue": {
+                    "name": "GII Dago",
+                    "address": {
+                        "street": "Jl. Cikapayang No. 2-4",
+                        "city": "Bandung",
+                        "province": "Jawa Barat",
+                        "country": "Indonesia",
+                        "postalCode": "40116"
+                    },
+                    "room": "Main Worship Hall"
+                },
+                "schedules": [
+                    {
+                        "code": "095059d4-71c4-4863-bb50-c20135d21fff",
+                        "startTime": "2017-12-14T11:00:00Z",
+                        "endTime": "2017-12-14T13:30:00Z",
+                        "transportOptions": [
+                            {
+                                "code": "02e1ee28-a3ad-4dc1-8702-67058c7584de",
+                                "pickupLocation": {
+                                    "name": "GII Setrasari",
+                                    "address": {
+                                        "street": "Jl. Setrasari Plaza C-4",
+                                        "suite": "GSG Istana EGI Setrasari Mall",
+                                        "city": "Bandung",
+                                        "province": "Jawa Barat",
+                                        "country": "Indonesia",
+                                        "postalCode": "40162"
+                                    }
+                                },
+                                "departureTime": "2017-12-14T09:30:00Z"
+                            }
+                        ]
+                    }
+                ],
+                "chargeModel": "FREE",
+                "isPublished": true,
+                "organizer": {
+                    "code": "GII",
+                    "name": "Gereja Injili Indonesia"
+                },
+                "_links": {
+                    "self": {
+                        "href": "/api/v1/eo/events/507f1f77bcf86cd799439011"
+                    },
+                    "organizer": {
+                        "href": "/api/v1/ous/GII"
+                    },
+                    "publicObject": {
+                        "href": "/api/v1/events/507f1f77bcf86cd799439011"
+                    }
+                }
+            }
+
+#### Update an event [PUT /api/v1/eo/events/{id}]
+
++ Request without image update (application/json)
+
+        {
+            "ytVideoId": "M7lc1UVf-VE",
+            "tags": [ "CHRISTMAS" ],
+            "schedules": [
+                {
+                    "startTime": "2017-12-14T18:00:00+07:00",
+                    "endTime": "2017-12-14T20:30:00Z+07:00",
+                    "transportOptions": [
+                        {
+                            "pickupLocation": {
+                                "name": "GII Setrasari",
+                                "address": {
+                                    "street": "Jl. Setrasari Plaza C-4",
+                                    "suite": "GSG Istana EGI Setrasari Mall",
+                                    "city": "Bandung",
+                                    "province": "Jawa Barat",
+                                    "country": "Indonesia",
+                                    "postalCode": "40162"
+                                }
+                            },
+                            "departureTime": "2017-12-14T16:30:00+07:00"
+                        }
+                    ]
+                }
+            ],
+            "isPublished": true,
+            "_links": {
+                "organizer": {
+                    "href": "/api/v1/ous/GII"
+                }
+            }
+        }
+
++ Request with image update (multipart/form-data; boundary=---BOUNDARY)
+
+        -----BOUNDARY
+        Content-Disposition: form-data; name="tags"
+        
+        CHRISTMAS
+        -----BOUNDARY
+        Content-Disposition: form-data; name="tags"
+        
+        CONCERT
+        -----BOUNDARY
+        Content-Disposition: form-data; name="venue[0][name]"
+        
+        GII Dago
+        -----BOUNDARY
+        Content-Disposition: form-data; name="venue[0][address][street]"
+        
+        Jl. Cikapayang No. 2-4
+        -----BOUNDARY
+        Content-Disposition: form-data; name="_links[organizer][href]"
+        
+        /api/v1/ous/GII
+        -----BOUNDARY
+        Content-Disposition: form-data; name="imageFile"; filename="joy banner.jpg"
+        Content-Type: image/jpeg
+
+        (Binary data)
+
++ Response 200 (application/json)
+
+        {
+            "id": "507f1f77bcf86cd799439011",
+            "code": "xmas17",
+            "name": "Perayaan Natal Umum 2017",
+            "summary": "Who would imagine a king?",
+            "description": "A shepherd or teacher is what you could be\nOr maybe a fisherman out on the sea\nOr maybe a carpenter building things\nBut who would imagine a king?",
+            "image": "/img/9876asd964eqwesad54sda8964sdak499.jpg",
+            "ytVideoId": "M7lc1UVf-VE",
+            "tags": [ "CHRISTMAS" ],
+            "venue": {
+                "name": "GII Dago",
+                "address": {
+                    "street": "Jl. Cikapayang No. 2-4",
+                    "city": "Bandung",
+                    "province": "Jawa Barat",
+                    "country": "Indonesia",
+                    "postalCode": "40116"
+                },
+                "room": "Main Worship Hall"
+            },
+            "schedules": [
+                {
+                    "code": "095059d4-71c4-4863-bb50-c20135d21fff",
+                    "startTime": "2017-12-14T11:00:00Z",
+                    "endTime": "2017-12-14T13:30:00Z",
+                    "transportOptions": [
+                        {
+                            "code": "02e1ee28-a3ad-4dc1-8702-67058c7584de",
+                            "pickupLocation": {
+                                "name": "GII Setrasari",
+                                "address": {
+                                    "street": "Jl. Setrasari Plaza C-4",
+                                    "suite": "GSG Istana EGI Setrasari Mall",
+                                    "city": "Bandung",
+                                    "province": "Jawa Barat",
+                                    "country": "Indonesia",
+                                    "postalCode": "40162"
+                                }
+                            },
+                            "departureTime": "2017-12-14T09:30:00Z"
+                        }
+                    ]
+                }
+            ],
+            "chargeModel": "FREE",
+            "isPublished": true,
+            "organizer": {
+                "code": "GII",
+                "name": "Gereja Injili Indonesia"
+            },
+            "_links": {
+                "self": {
+                    "href": "/api/v1/eo/events/507f1f77bcf86cd799439011"
+                },
+                "organizer": {
+                    "href": "/api/v1/ous/GII"
+                },
+                "publicObject": {
+                    "href": "/api/v1/events/507f1f77bcf86cd799439011"
+                }
+            }
+        }
+
+#### Archive an event [DELETE /api/v1/eo/events/{id}]
+
++ Response 200 (application/json)
+
+        {
+            "id": "507f1f77bcf86cd799439011",
+            "code": "xmas17",
+            "name": "Perayaan Natal Umum 2017",
+            "summary": "Who would imagine a king?",
+            "isArchived": true,
+            "isPublished": true,
+            "organizer": {
+                "code": "GII",
+                "name": "Gereja Injili Indonesia"
+            },
+            "_links": {
+                "self": {
+                    "href": "/api/v1/eo/events/507f1f77bcf86cd799439011"
+                },
+                "organizer": {
+                    "href": "/api/v1/ous/GII"
+                },
+                "publicObject": {
+                    "href": "/api/v1/events/507f1f77bcf86cd799439011"
+                }
+            }
+        }
