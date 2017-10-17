@@ -2671,6 +2671,61 @@ Markdown, newlines and double quotes are escaped as `\n` and `\"` respectively.
                 }
             }
 
+#### Respond to an event [POST /api/v1/events/{id}/responses]
+
++ Parameters
+
+    + id: `507f1f77bcf86cd799439011` (required, string)
+      Event ID.
+
++ Request to indicate attendance (application/json)
+
+    + Body
+
+            {
+                "response": "ATTENDING",
+                "scheduleCode": "095059d4-71c4-4863-bb50-c20135d21fff"
+            }
+        
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "_links": {
+                    "self": {
+                        "href": "/api/v1/eventResponses/590a817c73a7d31f5b000018"
+                    },
+                    "event": {
+                        "href": "/api/v1/events/507f1f77bcf86cd799427641"
+                    }
+                },
+                "fullName": "Michelle Yunita",
+                "church": "IEC Singapore",
+                "primarySite": {
+                    "code": "SINGAPORE",
+                    "name": "IEC Singapore"
+                },
+                "currentMembership": {
+                    "type": "REGULAR_ATTENDEE",
+                    "memberId": "887481200"
+                },
+                "schedule": {
+                    "code": "c2eadc62-99e7-4e8f-aab2-1a1f0bea5607",
+                    "startTime": "2017-12-07T11:00:00Z",
+                    "endTime": "2017-12-07T13:30:00Z",
+                    "venue": {
+                        "name": "YMCA Orchard"
+                    }
+                },
+                "response": "ATTENDING",
+                "event": {
+                    "code": "whatasaviorsg",
+                    "name": "What a Savior"
+                }
+            }
+
+
 ### Event Organizer APIs [/api/v1/eo]
 
 Endpoints under `/eo` are used to create and manage events. They have different
@@ -2779,6 +2834,8 @@ Notes on payload to create/update event:
                         "code": "GII",
                         "name": "Gereja Injili Indonesia"
                     },
+                    "reserved": 3911,
+                    "quota": 7500,
                     "_links": {
                         "self": {
                             "href": "/api/v1/eo/events/507f1f77bcf86cd799439011"
@@ -2822,11 +2879,52 @@ Notes on payload to create/update event:
                     },
                     "room": "Main Worship Hall"
                 },
+                "ticketClasses": [
+                    {
+                        "code": "f58d42c2-2ea5-4d19-ae30-e39ae1d01fc6",
+                        "name": "Umum",
+                        "description": "Tiket umum",
+                        "price": {
+                            "nominal": 0,
+                            "currency": "IDR"
+                        },
+                        "maxOrder": 5,
+                        "salesChannel": "ONLINE",
+                        "isPublicBookingAllowed": true,
+                        "salesStart": "2017-11-26T08:00:00+07:00",
+                        "salesEnd": "2017-12-13T23:59:00+07:00"
+                    },
+                    {
+                        "code": "822be9f3-a070-4ce4-a5a5-b05043661901",
+                        "name": "Langsung",
+                        "description": "Pada saat acara",
+                        "price": {
+                            "nominal": 0,
+                            "currency": "IDR"
+                        },
+                        "maxOrder": 1,
+                        "salesChannel": "MANUAL",
+                        "salesStart": "2017-12-14T12:00:00+07:00",
+                        "salesEnd": "2017-12-16T23:59:00+07:00"
+                    }
+                ],
                 "schedules": [
                     {
                         "code": "095059d4-71c4-4863-bb50-c20135d21fff",
                         "startTime": "2017-12-14T11:00:00Z",
                         "endTime": "2017-12-14T13:30:00Z",
+                        "reservations": [
+                            {
+                                "ticketClassCode": "f58d42c2-2ea5-4d19-ae30-e39ae1d01fc6",
+                                "quota": 2000,
+                                "reserved": 1362
+                            },
+                            {
+                                "ticketClassCode": "822be9f3-a070-4ce4-a5a5-b05043661901",
+                                "quota": 200,
+                                "reserved": 92
+                            }
+                        ],
                         "transportOptions": [
                             {
                                 "code": "02e1ee28-a3ad-4dc1-8702-67058c7584de",
@@ -2841,13 +2939,20 @@ Notes on payload to create/update event:
                                         "postalCode": "40162"
                                     }
                                 },
-                                "departureTime": "2017-12-14T09:30:00Z"
+                                "departureTime": "2017-12-14T09:30:00Z",
+                                "quota": 240,
+                                "reserved": 170
                             }
                         ]
                     }
                 ],
                 "chargeModel": "FREE",
                 "isPublished": true,
+                "isPublic": true,
+                "displayCount": 13718,
+                "viewCount": 4207,
+                "reserved": 3911,
+                "quota": 7500,
                 "organizer": {
                     "code": "GII",
                     "name": "Gereja Injili Indonesia"
@@ -2864,6 +2969,161 @@ Notes on payload to create/update event:
                     }
                 }
             }
+
+#### List responses to an event [GET /api/v1/eo/events/{id}/responses{?sort,limit,offset,fullName,church,scheduleCode,transportCode,ticketClass,response}]
+
++ Parameters
+
+    + id: `507f1f77bcf86cd799439011` (required, string)
+      Event ID.
+
+    + sort: `+schedule` (optional, string)
+      Ascending and descending sorting over a single field. If not specified,
+      the records have no guaranteed ordering. Sorting by schedule orders
+      attendees by their schedule's start time.
+
+    + limit: `10` (optional, number)
+      Maximum number of attendees to retrieve.
+      
+    + offset: `50` (optional, number)
+      Number of records to skip.
+
+    + fullName: `maria` (optional, string)
+      Partial match of attendee's full name.
+
+    + church: `GII Setrasari` (optional, string)
+      Case-insensitive match of attendee's church name.
+
+    + scheduleCode: `095059d4-71c4-4863-bb50-c20135d21fff` (optional, string)
+      Exact match of the schedule code (including dashes, case-sensitive).
+
+    + transportCode: `02e1ee28-a3ad-4dc1-8702-67058c7584de` (optional, string)
+      Exact match of the transport code (including dashes, case-sensitive).
+      Only applicable for events that use tickets.
+
+    + ticketClass: `f58d42c2-2ea5-4d19-ae30-e39ae1d01fc6` (optional, string)
+      Filter the ticket class code. Only applicable for events that use tickets.
+
+    + response: `NOT_ATTENDING` (optional, string)
+      Filter the response. Only applicable for events that use RSVP.
+
++ Response 200 (application/json)
+
+    + Body
+
+            [  
+                {
+                    "_links": {
+                        "self": {
+                            "href": "/api/v1/eventResponses/590a817c73a7d31f5b00541c"
+                        },
+                        "person": {
+                            "href": "/api/v1/people/58c177e773a7d31f5b000002"
+                        },
+                        "event": {
+                            "href": "/api/v1/events/507f1f77bcf86cd799439011"
+                        },
+                        "ticket": {
+                            "href": "/api/v1/tickets/560abb45818ca2494c59182c"
+                        }
+                    },
+                    "person": {
+                        "id": "58c177e773a7d31f5b000002",
+                        "fullName": "Carol Gunadi Sutrisna",
+                        "church": "GII Setrasari",
+                        "primarySite": {
+                            "code": "SETRASARI",
+                            "name": "GII Setrasari"
+                        },
+                        "currentMembership": {
+                            "type": "REGULAR",
+                            "memberId": "201000188"
+                        }
+                    },
+                    "event": {
+                        "code": "xmas17",
+                        "name": "Perayaan Natal Umum 2017"
+                    },
+                    "schedule": {
+                        "code": "095059d4-71c4-4863-bb50-c20135d21fff",
+                        "startTime": "2017-12-14T11:00:00Z",
+                        "endTime": "2017-12-14T13:30:00Z",
+                        "venue": {
+                            "name": "GII Dago"
+                        }
+                    },
+                    "transport": {
+                        "code": "02e1ee28-a3ad-4dc1-8702-67058c7584de",
+                        "pickupLocation": {
+                            "name": "GII Setrasari"
+                        },
+                        "departureTime": "2017-12-14T09:30:00Z"
+                    },
+                    "ticketId": "560abb45818ca2494c59182c",
+                    "ticketClass": {
+                        "code": "f58d42c2-2ea5-4d19-ae30-e39ae1d01fc6",
+                        "name": "Umum"
+                    }
+                },
+                {
+                    "_links": {
+                        "self": {
+                            "href": "/api/v1/eventResponses/590a817c73a7d31f5b00541c"
+                        },
+                        "person": {
+                            "href": "/api/v1/people/58c177e773a7d31f5b000002"
+                        },
+                        "event": {
+                            "href": "/api/v1/events/507f1f77bcf86cd799439011"
+                        },
+                        "orderer": {
+                            "href": "/api/v1/people/58c177e773a7d31f5b000002"
+                        },
+                        "ticket": {
+                            "href": "/api/v1/tickets/572afdd2b33c46c79bc6b1a7"
+                        }
+                    },
+                    "person": {
+                        "fullName": "Melanie Sudyanti Ang",
+                        "church": "GRII Bandung",
+                        "currentMembership": {
+                            "type": "NC"
+                        }
+                    },
+                    "event": {
+                        "code": "xmas17",
+                        "name": "Perayaan Natal Umum 2017"
+                    },
+                    "schedule": {
+                        "code": "095059d4-71c4-4863-bb50-c20135d21fff",
+                        "startTime": "2017-12-14T11:00:00Z",
+                        "endTime": "2017-12-14T13:30:00Z",
+                        "venue": {
+                            "name": "GII Dago"
+                        }
+                    },
+                    "transport": {
+                        "code": "02e1ee28-a3ad-4dc1-8702-67058c7584de",
+                        "pickupLocation": {
+                            "name": "GII Setrasari"
+                        },
+                        "departureTime": "2017-12-14T09:30:00Z"
+                    },
+                    "ticketId": "572afdd2b33c46c79bc6b1a7",
+                    "ticketClass": {
+                        "code": "f58d42c2-2ea5-4d19-ae30-e39ae1d01fc6",
+                        "name": "Umum"
+                    },
+                    "orderer": {
+                        "id": "58c177e773a7d31f5b000002",
+                        "fullName": "Carol Gunadi Sutrisna",
+                        "primarySite": {
+                            "code": "SETRASARI",
+                            "name": "GII Setrasari"
+                        }
+                    }
+                }
+            ]
 
 #### Create an event [POST /api/v1/eo/events]
 
