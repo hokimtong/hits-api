@@ -2463,6 +2463,92 @@ each category.
                 }
             }
             
+## Group Reporting
+
+### Reports [/api/v1/reports]
+
+This endpoint returns requested data reports based on specific queries. Some returned data will be cached, and unless the client requests for fresh data, cached information will be returned because running reports' queries can be costly to the database.
+
+
+This reporting mechanism only allows indexed fields to be retrieved and it returns an array of JSON objects.
+
+### Retrieve People [POST /api/v1/reports/people]
+
++ Request (application/json)
+
+        {
+            "settings": {
+                "limit": "10",
+                "sort": {
+                    "field": "fullName",
+                    "direction": "1"
+                },
+                currentPage: "2"
+            },
+            "criterias": {
+                "fullName": "Maria Magdalena",
+                "nickname": "Maria",
+                "gender": "F",
+                "siteName": "GII Setrasari",
+                "serviceName": "Kebaktian Umum 1",
+                "status": "active",
+                "noAnggota": "200200200",
+                "email": "maria@example.com"
+            },
+            "fields": [
+                "fullName",
+                "nickname",
+                "primarySite.name",
+                "primaryService.name",
+                "currentMembership.memberId",
+                "emailAddresses.email",
+                "addresses.street"
+            ]
+        }
+
++ Response 201 (application/json)
+
+    + Headers
+    
+            Location: /api/v1/reports/people
+            
+    + Body
+    
+            {
+                "id": "550aa181c4",
+                "fullName": "Maria Magdalena",
+                "nickname": "Maria",
+                "primarySite": {
+                    "name": "GII Setrasari"
+                },
+                "primaryService": {
+                    "name": "Kebaktian Umum 1"
+                },
+                "currentMembership": {
+                    "memberId": "200200200"
+                }
+                "emailAddresses": {
+                    "email": "maria@example.com"
+                },
+                "addresses": {
+                    "street" : "Jl. Terusan Prof. DR. Sutami No. 23"
+                }
+                "_links": {
+                    "self": {
+                        "href": "/api/v1/people/550aa181c4"
+                    },
+                    "primarySite": {
+                        "href": "/api/v1/sites/SETRASARI"
+                    },
+                    "otherSites": [
+                        {
+                        "href": "/api/v1/sites/PURI"
+                        }
+                    ]
+                }
+            }
+    
+            
 ## Group Events and Ticketing
 
 ### Events [/api/v1/events]
@@ -2684,7 +2770,9 @@ Markdown, newlines and double quotes are escaped as `\n` and `\"` respectively.
 
             {
                 "response": "ATTENDING",
-                "scheduleCode": "095059d4-71c4-4863-bb50-c20135d21fff"
+                "schedule": {
+                    "code" : "095059d4-71c4-4863-bb50-c20135d21fff"
+                }
             }
         
 + Response 200 (application/json)
