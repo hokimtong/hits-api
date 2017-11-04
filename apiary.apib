@@ -2738,18 +2738,19 @@ Markdown, newlines and double quotes are escaped as `\n` and `\"` respectively.
                 "chargeModel": "FREE",
                 "availableTicketClasses": [
                     {
-                        "code": "89859896-5ca2-4146-9bcb-8ac1324fbbd0",
+                        "code": "GENERAL",
                         "name": "Tiket umum",
                         "price": {
                             "nominal": 0,
                             "currency": "IDR"
                         },
-                        "maxQuantity": 3,
                         "salesChannel": "ONLINE",
                         "salesStart": "2017-11-12T12:00:00+07:00",
                         "salesEnd": "2017-12-13T23:59:59+07:00"
                     }
                 ],
+                "ownerQuota": 1,
+                "ordererQuota": 5,
                 "_links": {
                     "self": {
                         "href": "/api/v1/events/507f1f77bcf86cd799439011"
@@ -2972,28 +2973,26 @@ Notes on payload to create/update event:
                 },
                 "ticketClasses": [
                     {
-                        "code": "f58d42c2-2ea5-4d19-ae30-e39ae1d01fc6",
+                        "code": "GENERAL",
                         "name": "Umum",
                         "description": "Tiket umum",
                         "price": {
                             "nominal": 0,
                             "currency": "IDR"
                         },
-                        "maxOrder": 5,
                         "salesChannel": "ONLINE",
                         "isPublicBookingAllowed": true,
                         "salesStart": "2017-11-26T08:00:00+07:00",
                         "salesEnd": "2017-12-13T23:59:00+07:00"
                     },
                     {
-                        "code": "822be9f3-a070-4ce4-a5a5-b05043661901",
+                        "code": "ADHOC",
                         "name": "Langsung",
                         "description": "Pada saat acara",
                         "price": {
                             "nominal": 0,
                             "currency": "IDR"
                         },
-                        "maxOrder": 1,
                         "salesChannel": "MANUAL",
                         "salesStart": "2017-12-14T12:00:00+07:00",
                         "salesEnd": "2017-12-16T23:59:00+07:00"
@@ -3004,14 +3003,14 @@ Notes on payload to create/update event:
                         "code": "095059d4-71c4-4863-bb50-c20135d21fff",
                         "startTime": "2017-12-14T11:00:00Z",
                         "endTime": "2017-12-14T13:30:00Z",
-                        "reservations": [
+                        "ticketClasses": [
                             {
-                                "ticketClassCode": "f58d42c2-2ea5-4d19-ae30-e39ae1d01fc6",
+                                "code": "GENERAL",
                                 "quota": 2000,
                                 "reserved": 1362
                             },
                             {
-                                "ticketClassCode": "822be9f3-a070-4ce4-a5a5-b05043661901",
+                                "code": "ADHOC",
                                 "quota": 200,
                                 "reserved": 92
                             }
@@ -3044,6 +3043,8 @@ Notes on payload to create/update event:
                 "viewCount": 4207,
                 "reserved": 3911,
                 "quota": 7500,
+                "ownerQuota": 1,
+                "ordererQuota": 5,
                 "organizer": {
                     "code": "GII",
                     "name": "Gereja Injili Indonesia"
@@ -3152,7 +3153,7 @@ Notes on payload to create/update event:
                     },
                     "ticketId": "560abb45818ca2494c59182c",
                     "ticketClass": {
-                        "code": "f58d42c2-2ea5-4d19-ae30-e39ae1d01fc6",
+                        "code": "GENERAL",
                         "name": "Umum"
                     }
                 },
@@ -3202,7 +3203,7 @@ Notes on payload to create/update event:
                     },
                     "ticketId": "572afdd2b33c46c79bc6b1a7",
                     "ticketClass": {
-                        "code": "f58d42c2-2ea5-4d19-ae30-e39ae1d01fc6",
+                        "code": "GENERAL",
                         "name": "Umum"
                     },
                     "orderer": {
@@ -3240,26 +3241,26 @@ Notes on payload to create/update event:
             },
             "ticketClasses": [
                 {
+                    "code": "GENERAL",
                     "name": "Umum",
                     "description": "Tiket umum",
                     "price": {
                         "nominal": 0,
                         "currency": "IDR"
                     },
-                    "maxOrder": 5,
                     "salesChannel": "ONLINE",
                     "isPublicBookingAllowed": true,
                     "salesStart": "2017-11-26T08:00:00+07:00",
                     "salesEnd": "2017-12-13T23:59:00+07:00"
                 },
                 {
+                    "code": "ADHOC",
                     "name": "Langsung",
                     "description": "Pada saat acara",
                     "price": {
                         "nominal": 0,
                         "currency": "IDR"
                     },
-                    "maxOrder": 1,
                     "salesChannel": "MANUAL",
                     "salesStart": "2017-12-14T12:00:00+07:00",
                     "salesEnd": "2017-12-16T23:59:00+07:00"
@@ -3282,12 +3283,25 @@ Notes on payload to create/update event:
                                     "postalCode": "40162"
                                 }
                             },
-                            "departureTime": "2017-12-14T16:30:00+07:00"
+                            "departureTime": "2017-12-14T16:30:00+07:00",
+                            "quota": 250
+                        }
+                    ],
+                    "ticketClasses": [
+                        {
+                            "code": "GENERAL",
+                            "quota": 2000
+                        },
+                        {
+                            "code": "ADHOC",
+                            "quota": 200
                         }
                     ]
                 }
             ],
             "isPublished": true,
+            "ownerQuota": 1,
+            "ordererQuota": 5,
             "_links": {
                 "organizer": {
                     "href": "/api/v1/ous/GII"
@@ -3393,6 +3407,18 @@ Notes on payload to create/update event:
                                     }
                                 },
                                 "departureTime": "2017-12-14T09:30:00Z"
+                                "quota": 250,
+                                "reserved": 0
+                            }
+                        ],
+                        "ticketClasses": [
+                            {
+                                "code": "GENERAL",
+                                "quota": 2000
+                            },
+                            {
+                                "code": "ADHOC",
+                                "quota": 200
                             }
                         ]
                     }
@@ -3403,6 +3429,8 @@ Notes on payload to create/update event:
                     "code": "GII",
                     "name": "Gereja Injili Indonesia"
                 },
+                "ownerQuota": 1,
+                "ordererQuota": 5,
                 "_links": {
                     "self": {
                         "href": "/api/v1/eo/events/507f1f77bcf86cd799439011"
@@ -3440,7 +3468,18 @@ Notes on payload to create/update event:
                                     "postalCode": "40162"
                                 }
                             },
-                            "departureTime": "2017-12-14T16:30:00+07:00"
+                            "departureTime": "2017-12-14T16:30:00+07:00",
+                            "quota": 250
+                        }
+                    ],
+                    "ticketClasses": [
+                        {
+                            "code": "GENERAL",
+                            "quota": 2000
+                        },
+                        {
+                            "code": "ADHOC",
+                            "quota": 200
                         }
                     ]
                 }
@@ -3525,7 +3564,21 @@ Notes on payload to create/update event:
                                     "postalCode": "40162"
                                 }
                             },
-                            "departureTime": "2017-12-14T09:30:00Z"
+                            "departureTime": "2017-12-14T09:30:00Z",
+                            "quota": 250,
+                            "reserved": 0
+                        }
+                    ],
+                    "ticketClasses": [
+                        {
+                            "code": "GENERAL",
+                            "quota": 2000,
+                            "reserved": 0
+                        },
+                        {
+                            "code": "ADHOC",
+                            "quota": 200,
+                            "reserved": 0
                         }
                     ]
                 }
@@ -3536,6 +3589,8 @@ Notes on payload to create/update event:
                 "code": "GII",
                 "name": "Gereja Injili Indonesia"
             },
+            "ownerQuota": 1,
+            "ordererQuota": 5,
             "_links": {
                 "self": {
                     "href": "/api/v1/eo/events/507f1f77bcf86cd799439011"
