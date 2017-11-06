@@ -2820,6 +2820,207 @@ Markdown, newlines and double quotes are escaped as `\n` and `\"` respectively.
                 }
             }
 
+### Event Tickets [/api/v1/eventTickets]
+
+A user can manage the tickets that she owns or ordered. When a user does not
+order a ticket herself, for example, when the ticket is ordered by a family
+member, the ticket can be managed by both the owner and the orderer.
+
+A ticket is considered to be a "past" ticket (affected by the `includePast`)
+parameter when its schedule has ended for more than 2 hours. This 2 hours
+delay is meant to accomodate post-event activities, such as souvenir claims
+and return transport.
+
+Listing tickets require authentication, but given a ticket code, its details
+can be retrieved publicly.
+
+#### Get the list of owned or ordered tickets [GET /api/v1/eventTickets{?eventId,onlyOwn,includePast}]
+
++ Parameters
+
+    + eventId: `507f1f77bcf86cd799439011` (optional, string)
+      Only include tickets for this event ID.
+
+    + onlyOwn: `false` (optional, string)
+      Only include own tickets (exclude ordered tickets that belong to others).
+
+    + includePast: `false` (optional, string)
+      Include tickets for schedules that have ended for more than 2 hours.
+
++ Response 200 (application/json)
+
+        [
+            {
+                "code": "HHWVVHXD",
+                "_links": {
+                    "self": {
+                        "href": "/api/v1/eventTickets/HHWVVHXD"
+                    },
+                    "event": {
+                        "href": "/api/v1/events/507f1f77bcf86cd799439011"
+                    },
+                    "owner": {
+                        "href": "/api/v1/people/58c177e773a7d31f5b000001"
+                    },
+                    "orderedBy": {
+                        "href": "/api/v1/people/58c177e773a7d31f5b000001"
+                    }
+                },
+                "event": {
+                    "id": "507f1f77bcf86cd799439011",
+                    "code": "xmas17",
+                    "name": "Perayaan Natal Umum 2017"
+                },
+                "ticketClass": {
+                    "code": "GENERAL",
+                    "name": "Tiket Umum",
+                    "price": {
+                        "nominal": 0,
+                        "currency": "IDR"
+                    }
+                },
+                "schedule": {
+                    "code": "095059d4-71c4-4863-bb50-c20135d21fff",
+                    "startTime": "2017-12-14T11:00:00Z",
+                    "endTime": "2017-12-14T13:30:00Z"
+                },
+                "transport": {
+                    "code": "02e1ee28-a3ad-4dc1-8702-67058c7584de",
+                    "departureTime": "2017-12-14T09:30:00Z",
+                    "pickupLocation": {
+                        "name": "GII Setrasari"
+                    }
+                },
+                "owner": {
+                    "id": "58c177e773a7d31f5b000001",
+                    "fullName": "Stephen Wirawan",
+                    "primarySite": {
+                        "code": "GARDUJATI",
+                        "name": "GII Gardujati"
+                    },
+                    "currentMembership": {
+                        "category": "MEMBER",
+                        "memberId": "201000800",
+                        "startDate": {
+                            "dayOfMonth": 15,
+                            "month": 9,
+                            "year": 2010
+                        }
+                    },
+                    "homeChurch": "GII Gardujati",
+                    "email": "stephen@example.com",
+                    "phoneNumber": "+6281790012345"
+                },
+                "selfOrdered": true,
+                "orderedBy": {
+                    "id": "58c177e773a7d31f5b000001",
+                    "fullName": "Stephen Wirawan",
+                    "primarySite": {
+                        "code": "GARDUJATI",
+                        "name": "GII Gardujati"
+                    },
+                    "currentMembership": {
+                        "category": "MEMBER",
+                        "memberId": "201000800",
+                        "startDate": {
+                            "dayOfMonth": 15,
+                            "month": 9,
+                            "year": 2010
+                        }
+                    }
+                }
+            }
+        ]
+
+#### Get ticket info [GET /api/v1/eventTickets/{code}]
+
++ Parameters
+
+    + code: `HHWVVHXD` (required, string)
+
++ Response 200 (application/json)
+
+        {
+            "code": "HHWVVHXD",
+            "_links": {
+                "self": {
+                    "href": "/api/v1/eventTickets/HHWVVHXD"
+                },
+                "event": {
+                    "href": "/api/v1/events/507f1f77bcf86cd799439011"
+                },
+                "owner": {
+                    "href": "/api/v1/people/58c177e773a7d31f5b000001"
+                },
+                "orderedBy": {
+                    "href": "/api/v1/people/58c177e773a7d31f5b000001"
+                }
+            },
+            "event": {
+                "id": "507f1f77bcf86cd799439011",
+                "code": "xmas17",
+                "name": "Perayaan Natal Umum 2017"
+            },
+            "ticketClass": {
+                "code": "GENERAL",
+                "name": "Tiket Umum",
+                "price": {
+                    "nominal": 0,
+                    "currency": "IDR"
+                }
+            },
+            "schedule": {
+                "code": "095059d4-71c4-4863-bb50-c20135d21fff",
+                "startTime": "2017-12-14T11:00:00Z",
+                "endTime": "2017-12-14T13:30:00Z"
+            },
+            "transport": {
+                "code": "02e1ee28-a3ad-4dc1-8702-67058c7584de",
+                "departureTime": "2017-12-14T09:30:00Z",
+                "pickupLocation": {
+                    "name": "GII Setrasari"
+                }
+            },
+            "owner": {
+                "id": "58c177e773a7d31f5b000001",
+                "fullName": "Stephen Wirawan",
+                "primarySite": {
+                    "code": "GARDUJATI",
+                    "name": "GII Gardujati"
+                },
+                "currentMembership": {
+                    "category": "MEMBER",
+                    "memberId": "201000800",
+                    "startDate": {
+                        "dayOfMonth": 15,
+                        "month": 9,
+                        "year": 2010
+                    }
+                },
+                "homeChurch": "GII Gardujati",
+                "email": "stephen@example.com",
+                "phoneNumber": "+6281790012345"
+            },
+            "selfOrdered": true,
+            "orderedBy": {
+                "id": "58c177e773a7d31f5b000001",
+                "fullName": "Stephen Wirawan",
+                "primarySite": {
+                    "code": "GARDUJATI",
+                    "name": "GII Gardujati"
+                },
+                "currentMembership": {
+                    "category": "MEMBER",
+                    "memberId": "201000800",
+                    "startDate": {
+                        "dayOfMonth": 15,
+                        "month": 9,
+                        "year": 2010
+                    }
+                }
+            }
+        }
+
 
 ### Event Organizer APIs [/api/v1/eo]
 
