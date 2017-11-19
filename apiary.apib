@@ -3838,3 +3838,202 @@ Notes on payload to create/update event:
                 }
             }
         }
+
+#### Check in an event ticket [POST /api/v1/eo/checkIns]
+
++ Request (application/json)
+
+    + Body
+
+            {
+                "ticketCode": "",
+                "part": "EVENT"
+            }
+
+    + Schema
+
+            {
+                "$schema": "http://json-schema.org/draft-o4/schema#"
+                "type": "object",
+                "properties": {
+                    "ticketCode": {
+                        "type": "string"
+                    },
+                    "part": {
+                        "type": "string",
+                        "enum": [ "EVENT", "TICKET_TO_EVENT", "TICKET_FROM_EVENT" ]
+                    }
+                }
+            }
+
++ Response 200 (application/json)
+
+        {
+            "eventCheckInTime": "2017-12-14T10:32:59.330Z",
+            "eventCheckedInBy": "58c177e773a7d31f5b000001",
+            "transportCheckInTime": null,
+            "transportCheckedInBy": null,
+            "returnTransportCheckInTime": null,
+            "returnTransportCheckedInBy": null,
+            "code": "ABCDEFGH",
+            "event": {
+                "id": "5a113b1edf68706853544757",
+                "code": "xmas17",
+                "name": "Perayaan Natal Umum 2017",
+                "image": "/img/9876asd964eqwesad54sda8964sdak499.jpg"
+            },
+            "ticketClass": {
+                "code": "GENERAL",
+                "name": "Tiket Umum",
+                "price": {
+                    "nominal": 0,
+                    "currency": "IDR"
+                }
+            },
+            "schedule": {
+                "code": "095059d4-71c4-4863-bb50-c20135d21fff",
+                "startTime": "2017-12-14T11:00:00Z",
+                "endTime": "2017-12-14T13:30:00Z",
+                "venue": {
+                    "name": "GII Dago",
+                    "address": {
+                        "street": "Jl. Cikapayang No. 2-4",
+                        "city": "Bandung",
+                        "province": "Jawa Barat",
+                        "country": "Indonesia",
+                        "postalCode": "40116"
+                    },
+                    "room": "Main Worship Hall"
+                }
+            },
+            "transport": {
+                "code": "02e1ee28-a3ad-4dc1-8702-67058c7584de",
+                "pickupLocation": {
+                    "name": "GII Setrasari",
+                    "address": {
+                        "street": "Jl. Setrasari Plaza C-4",
+                        "suite": "GSG Istana EGI Setrasari Mall",
+                        "city": "Bandung",
+                        "province": "Jawa Barat",
+                        "country": "Indonesia",
+                        "postalCode": "40162"
+                    }
+                },
+                "departureTime": "2017-12-14T09:30:00Z"
+            },
+            "owner": {
+                "fullName": "Daniel Wijaya",
+                "primarySite": null
+                "currentMembership": null
+                "homeChurch": "GKI Kebonjati",
+                "email": "daniel@example.com",
+                "phoneNumber": "+6281120005555",
+                "allowFollowUp": true
+            },
+            "selfOrdered": false,
+            "orderedBy": {
+                "id": "591f096c000c40e8ac64790a",
+                "fullName": "Jonathan Setiadi",
+                "primarySite": {
+                    "code": "SETRASARI",
+                    "name": "GII Setrasari"
+                },
+                "currentMembership": {
+                    "type": "REGULAR",
+                    "memberId": "200220022"
+                },
+                "email": "jonathan.setiadi@example.com",
+                "phoneNumber": "+62817222333"
+            }
+        }
+
++ Response 400 (application/json)
+
+        {
+            "status": 400,
+            "data": {
+                "name": "err.hits.ALREADY_CHECKED_IN",
+                "description": "The ticket has already been checked in for [EVENT]",
+                "details": {
+                    "part": "EVENT",
+                    "ticket": {
+                        "eventCheckInTime": "2017-12-14T10:32:59.330Z",
+                        "eventCheckedInBy": "58c177e773a7d31f5b000001",
+                        "transportCheckInTime": null,
+                        "transportCheckedInBy": null,
+                        "returnTransportCheckInTime": null,
+                        "returnTransportCheckedInBy": null,
+                        "code": "ABCDEFGH",
+                        "event": {
+                            "id": "5a113b1edf68706853544757",
+                            "code": "xmas17",
+                            "name": "Perayaan Natal Umum 2017",
+                            "image": "/img/9876asd964eqwesad54sda8964sdak499.jpg"
+                        },
+                        "ticketClass": {
+                            "code": "GENERAL",
+                            "name": "Tiket Umum",
+                            "price": {
+                                "nominal": 0,
+                                "currency": "IDR"
+                            }
+                        },
+                        "schedule": {
+                            "code": "095059d4-71c4-4863-bb50-c20135d21fff",
+                            "startTime": "2017-12-14T11:00:00Z",
+                            "endTime": "2017-12-14T13:30:00Z",
+                            "venue": {
+                                "name": "GII Dago",
+                                "address": {
+                                    "street": "Jl. Cikapayang No. 2-4",
+                                    "city": "Bandung",
+                                    "province": "Jawa Barat",
+                                    "country": "Indonesia",
+                                    "postalCode": "40116"
+                                },
+                                "room": "Main Worship Hall"
+                            }
+                        },
+                        "transport": {
+                            "code": "02e1ee28-a3ad-4dc1-8702-67058c7584de",
+                            "pickupLocation": {
+                                "name": "GII Setrasari",
+                                "address": {
+                                    "street": "Jl. Setrasari Plaza C-4",
+                                    "suite": "GSG Istana EGI Setrasari Mall",
+                                    "city": "Bandung",
+                                    "province": "Jawa Barat",
+                                    "country": "Indonesia",
+                                    "postalCode": "40162"
+                                }
+                            },
+                            "departureTime": "2017-12-14T09:30:00Z"
+                        },
+                        "owner": {
+                            "fullName": "Daniel Wijaya",
+                            "primarySite": null
+                            "currentMembership": null
+                            "homeChurch": "GKI Kebonjati",
+                            "email": "daniel@example.com",
+                            "phoneNumber": "+6281120005555",
+                            "allowFollowUp": true
+                        },
+                        "selfOrdered": false,
+                        "orderedBy": {
+                            "id": "591f096c000c40e8ac64790a",
+                            "fullName": "Jonathan Setiadi",
+                            "primarySite": {
+                                "code": "SETRASARI",
+                                "name": "GII Setrasari"
+                            },
+                            "currentMembership": {
+                                "type": "REGULAR",
+                                "memberId": "200220022"
+                            },
+                            "email": "jonathan.setiadi@example.com",
+                            "phoneNumber": "+62817222333"
+                        }
+                    }
+                }
+            }
+        }
