@@ -3020,8 +3020,7 @@ can be retrieved publicly.
                 }
             }
         }
-
-
+        
 ### Event Organizer APIs [/api/v1/eo]
 
 Endpoints under `/eo` are used to create and manage events. They have different
@@ -4037,3 +4036,517 @@ Notes on payload to create/update event:
                 }
             }
         }
+        
+#### Check in tasks [GET /api/v1/eo/checkInTasks/]
+
++ Response 200 (application/json)
+
+        [
+            {
+                "id": "5a0876ec132eed00100d36db",
+                "code": "xmas17",
+                "name": "Perayaan Natal 2017",
+                "tags": ["CHRISTMAS"],
+                "schedules": [
+                    {
+                        "code": "5cf405b9-7b31-4c70-9025-e20fc919e4bf",
+                        "startTime": "2017-12-22T11:00:00.000Z",
+                        "endTime": "2017-12-22T13:30:00.000Z",
+                        "venue": {
+                            "address": {
+                                "isGeocodingAttempted": true,
+                                "isResolved": false,
+                                "coordinates": [107.6117428, -6.899009899999999],
+                                "postalCode": "40116",
+                                "country": "ID",
+                                "city": "Bandung",
+                                "suite": "GII Dago",
+                                "street": "Jalan Cikapayang No. 2-4"
+                            },
+                        "name": "GII Dago"
+                    },
+                    "parts": [
+                        {
+                            "scheduleCode": "5cf405b9-7b31-4c70-9025-e20fc919e4bf",
+                            "name": "Acara",
+                            "part": "EVENT"
+                        },
+                        {
+                            "transportCode": "d1bb59a3-0049-40a8-a46a-065a99b7c2dc",
+                            "name": "Berangkat - GII Setrasari",
+                            "part": "TRANSPORT_TO_EVENT"
+                        },
+                        {
+                            "transportCode": "80998994-d420-417e-aeed-4599e93923c6",
+                            "name": "Berangkat - GII Mekarwangi",
+                            "part": "TRANSPORT_TO_EVENT"
+                        },
+                        {
+                            "transportCode": "d1bb59a3-0049-40a8-a46a-065a99b7c2dc",
+                            "name": "Pulang - GII Setrasari",
+                            "part": "TRANSPORT_FROM_EVENT"
+                        },
+                        {
+                            "transportCode": "80998994-d420-417e-aeed-4599e93923c6",
+                            "name": "Pulang - GII Mekarwangi",
+                            "part": "TRANSPORT_FROM_EVENT"
+                        }
+                    ]
+                },
+                {
+                    "code": "96439c68-4f48-498b-9cd0-e4e5b4a993b7",
+                    "startTime": "2017-12-23T11:00:00.000Z",
+                    "endTime": "2017-12-23T13:30:00.000Z",
+                    "venue": {
+                        "address": {
+                            "isGeocodingAttempted": true,
+                            "isResolved": false,
+                            "coordinates": [107.6117428, -6.899009899999999],
+                            "postalCode": "40116",
+                            "country": "ID",
+                            "city": "Bandung",
+                            "suite": "GII Dago",
+                            "street": "Jalan Cikapayang No. 2-4"
+                        },
+                        "name": "GII Dago"
+                    },
+                    "parts": [
+                        {
+                            "scheduleCode": "96439c68-4f48-498b-9cd0-e4e5b4a993b7",
+                            "name": "Acara",
+                            "part": "EVENT"
+                        },
+                        {
+                            "transportCode": "040ed584-cd04-46cf-b492-f7af6b39cfd5",
+                            "name": "Berangkat - GII Setrasari",
+                            "part": "TRANSPORT_TO_EVENT"
+                        },
+                        {
+                            "transportCode": "c3a642d3-53c0-4e57-b1e5-a946b1463ae5",
+                            "name": "Berangkat - GII Mekarwangi",
+                            "part": "TRANSPORT_TO_EVENT"
+                        },
+                        { 
+                            "transportCode": "040ed584-cd04-46cf-b492-f7af6b39cfd5",
+                            "name": "Pulang - GII Setrasari",
+                            "part": "TRANSPORT_FROM_EVENT"
+                        },
+                        {
+                            "transportCode": "c3a642d3-53c0-4e57-b1e5-a946b1463ae5",
+                            "name": "Pulang - GII Mekarwangi",
+                            "part": "TRANSPORT_FROM_EVENT"
+                        }
+                    ]
+                }
+            }
+        ]
+
+#### Order ticket [POST /api/v1/eo/eventTickets/]
+
++ Request (application/json)
+
+    Book regular ticket for non member
+    
+    + Body
+    
+            {
+                "eventId": "5a0876ec132eed00100d36db",
+                "tickets": [
+                    {
+                        "subjectType": "FRIEND",
+                        "ticketClass": "GENERAL",
+                        "email": "jhonny@gmail.com",
+                        "fullName": "Jhonny Andrean",
+                        "homeChurch": "GBI Aruna",
+                        "phoneNumber": "+62845645645",
+                        "schedule": "a7c34b9797a242198cd11d796ce8be2e",
+                        "transport" : "02e1ee28-a3ad-4dc1-8702-67058c7584de"
+                    }
+                ]
+            }
+            
++ Response 200 (application/json)
+
+        [
+            {
+                "eventCheckInTime": null,
+                "eventCheckedInBy": null,
+                "transportCheckInTime": null,
+                "transportCheckedInBy": null,
+                "returnTransportCheckInTime": null,
+                "returnTransportCheckedInBy": null,
+                "code": "ABCDEFGH",
+                "event": {
+                    "id": "5a113b1edf68706853544757",
+                    "code": "xmas17",
+                    "name": "Perayaan Natal Umum 2017",
+                    "image": "/img/9876asd964eqwesad54sda8964sdak499.jpg"
+                },
+                "ticketClass": {
+                    "code": "GENERAL",
+                    "name": "Tiket Umum",
+                    "price": {
+                        "nominal": 0,
+                        "currency": "IDR"
+                    }
+                },
+                "schedule": {
+                    "code": "a7c34b9797a242198cd11d796ce8be2e",
+                    "startTime": "2017-12-14T11:00:00Z",
+                    "endTime": "2017-12-14T13:30:00Z",
+                    "venue": {
+                        "name": "GII Dago",
+                        "address": {
+                            "street": "Jl. Cikapayang No. 2-4",
+                            "city": "Bandung",
+                            "province": "Jawa Barat",
+                            "country": "Indonesia",
+                            "postalCode": "40116"
+                        },
+                        "room": "Main Worship Hall"
+                    }
+                },
+                "transport": {
+                    "code": "02e1ee28-a3ad-4dc1-8702-67058c7584de",
+                    "pickupLocation": {
+                        "name": "GII Setrasari",
+                        "address": {
+                            "street": "Jl. Setrasari Plaza C-4",
+                            "suite": "GSG Istana EGI Setrasari Mall",
+                            "city": "Bandung",
+                            "province": "Jawa Barat",
+                            "country": "Indonesia",
+                            "postalCode": "40162"
+                        }
+                    },
+                    "departureTime": "2017-12-14T09:30:00Z"
+                },
+                "owner": {
+                    "fullName": "Jhonny Andrean",
+                    "homeChurch": "GBI Aruna",
+                    "email": "jhonny@gmail.com",
+                    "phoneNumber": "+62845645645",
+                    "allowFollowUp": true
+                },
+                "selfOrdered": false,
+                "orderedBy": {
+                    "id": "591f096c000c40e8ac64790a",
+                    "fullName": "Jonathan Setiadi",
+                    "primarySite": {
+                        "code": "SETRASARI",
+                        "name": "GII Setrasari"
+                    },
+                    "currentMembership": {
+                        "type": "REGULAR",
+                        "memberId": "200220022"
+                    },
+                    "email": "jonathan.setiadi@example.com",
+                    "phoneNumber": "+62817222333"
+                }
+            }
+        ]
+        
++ Request (application/json)
+
+    Book regular ticket for member
+    
+    + Body
+    
+            {
+                "eventId": "5a0876ec132eed00100d36db",
+                "tickets": [
+                    {
+                        "subjectType": "FRIEND",
+                        "ticketClass": "GENERAL",
+                        "memberId": "200200200",
+                        "schedule": "a7c34b9797a242198cd11d796ce8be2e",
+                        "transport" : "02e1ee28-a3ad-4dc1-8702-67058c7584de"
+                    }
+                ]
+            }
+            
++ Response 200 (application/json)
+
+        [
+            {
+                "eventCheckInTime": null,
+                "eventCheckedInBy": null,
+                "transportCheckInTime": null,
+                "transportCheckedInBy": null,
+                "returnTransportCheckInTime": null,
+                "returnTransportCheckedInBy": null,
+                "code": "ABCDEFGH",
+                "event": {
+                    "id": "5a113b1edf68706853544757",
+                    "code": "xmas17",
+                    "name": "Perayaan Natal Umum 2017",
+                    "image": "/img/9876asd964eqwesad54sda8964sdak499.jpg"
+                },
+                "ticketClass": {
+                    "code": "GENERAL",
+                    "name": "Tiket Umum",
+                    "price": {
+                        "nominal": 0,
+                        "currency": "IDR"
+                    }
+                },
+                "schedule": {
+                    "code": "a7c34b9797a242198cd11d796ce8be2e",
+                    "startTime": "2017-12-14T11:00:00Z",
+                    "endTime": "2017-12-14T13:30:00Z",
+                    "venue": {
+                        "name": "GII Dago",
+                        "address": {
+                            "street": "Jl. Cikapayang No. 2-4",
+                            "city": "Bandung",
+                            "province": "Jawa Barat",
+                            "country": "Indonesia",
+                            "postalCode": "40116"
+                        },
+                        "room": "Main Worship Hall"
+                    }
+                },
+                "transport": {
+                    "code": "02e1ee28-a3ad-4dc1-8702-67058c7584de",
+                    "pickupLocation": {
+                        "name": "GII Setrasari",
+                        "address": {
+                            "street": "Jl. Setrasari Plaza C-4",
+                            "suite": "GSG Istana EGI Setrasari Mall",
+                            "city": "Bandung",
+                            "province": "Jawa Barat",
+                            "country": "Indonesia",
+                            "postalCode": "40162"
+                        }
+                    },
+                    "departureTime": "2017-12-14T09:30:00Z"
+                },
+                "owner": {
+                    "fullName": "Maria Magdalena",
+                    "primarySite": {
+                        "code": "SETRASARI",
+                        "name": "GII Setrasari"
+                    },
+                    "currentMembership": {
+                        "type": "REGULAR",
+                        "memberId": "200200200"
+                    },
+                    "homeChurch": "GII Setrasari",
+                    "email": "maria@example.com",
+                },
+                "selfOrdered": false,
+                "orderedBy": {
+                    "id": "591f096c000c40e8ac64790a",
+                    "fullName": "Jonathan Setiadi",
+                    "primarySite": {
+                        "code": "SETRASARI",
+                        "name": "GII Setrasari"
+                    },
+                    "currentMembership": {
+                        "type": "REGULAR",
+                        "memberId": "200220022"
+                    },
+                    "email": "jonathan.setiadi@example.com",
+                    "phoneNumber": "+62817222333"
+                }
+            }
+        ]
+        
++ Request (application/json)
+
+    Book `ADHOC` ticket for member
+    
+    + Body
+    
+            {
+                "eventId": "5a0876ec132eed00100d36db",
+                "tickets": [
+                    {
+                        "subjectType": "FRIEND",
+                        "ticketClass": "ADHOC",
+                        "memberId": "200200200",
+                        "schedule": "a7c34b9797a242198cd11d796ce8be2e",
+                        "transport" : "02e1ee28-a3ad-4dc1-8702-67058c7584de"
+                    }
+                ]
+            }
+            
++ Response 200 (application/json)
+
+        [
+            {
+                "eventCheckInTime": null,
+                "eventCheckedInBy": null,
+                "transportCheckInTime": null,
+                "transportCheckedInBy": null,
+                "returnTransportCheckInTime": null,
+                "returnTransportCheckedInBy": null,
+                "code": "ABCDEFGH",
+                "event": {
+                    "id": "5a113b1edf68706853544757",
+                    "code": "xmas17",
+                    "name": "Perayaan Natal Umum 2017",
+                    "image": "/img/9876asd964eqwesad54sda8964sdak499.jpg"
+                },
+                "ticketClass": {
+                    "code": "ADHOC",
+                    "name": "Tiket Umum - Adhoc",
+                    "price": {
+                        "nominal": 0,
+                        "currency": "IDR"
+                    }
+                },
+                "schedule": {
+                    "code": "a7c34b9797a242198cd11d796ce8be2e",
+                    "startTime": "2017-12-14T11:00:00Z",
+                    "endTime": "2017-12-14T13:30:00Z",
+                    "venue": {
+                        "name": "GII Dago",
+                        "address": {
+                            "street": "Jl. Cikapayang No. 2-4",
+                            "city": "Bandung",
+                            "province": "Jawa Barat",
+                            "country": "Indonesia",
+                            "postalCode": "40116"
+                        },
+                        "room": "Main Worship Hall"
+                    }
+                },
+                "transport": {
+                    "code": "02e1ee28-a3ad-4dc1-8702-67058c7584de",
+                    "pickupLocation": {
+                        "name": "GII Setrasari",
+                        "address": {
+                            "street": "Jl. Setrasari Plaza C-4",
+                            "suite": "GSG Istana EGI Setrasari Mall",
+                            "city": "Bandung",
+                            "province": "Jawa Barat",
+                            "country": "Indonesia",
+                            "postalCode": "40162"
+                        }
+                    },
+                    "departureTime": "2017-12-14T09:30:00Z"
+                },
+                "owner": {
+                    "fullName": "Maria Magdalena",
+                    "primarySite": {
+                        "code": "SETRASARI",
+                        "name": "GII Setrasari"
+                    },
+                    "currentMembership": {
+                        "type": "REGULAR",
+                        "memberId": "200200200"
+                    },
+                    "homeChurch": "GII Setrasari",
+                    "email": "maria@example.com",
+                },
+                "selfOrdered": false,
+                "orderedBy": {
+                    "id": "591f096c000c40e8ac64790a",
+                    "fullName": "Jonathan Setiadi",
+                    "primarySite": {
+                        "code": "SETRASARI",
+                        "name": "GII Setrasari"
+                    },
+                    "currentMembership": {
+                        "type": "REGULAR",
+                        "memberId": "200220022"
+                    },
+                    "email": "jonathan.setiadi@example.com",
+                    "phoneNumber": "+62817222333"
+                }
+            }
+        ]
+        
+#### Cancel ticket [PUT /api/v1/eo/eventTickets/{code}/cancel]
+
++ Parameters
+    + code: `HHWVVHXD` (required, string)
+    
++ Response 200 (application/json)
+
+        [
+            {
+                "isCancelled": true,
+                "eventCheckInTime": null,
+                "eventCheckedInBy": null,
+                "transportCheckInTime": null,
+                "transportCheckedInBy": null,
+                "returnTransportCheckInTime": null,
+                "returnTransportCheckedInBy": null,
+                "code": "HHWVVHXDEO ",
+                "event": {
+                    "id": "5a113b1edf68706853544757",
+                    "code": "xmas17",
+                    "name": "Perayaan Natal Umum 2017",
+                    "image": "/img/9876asd964eqwesad54sda8964sdak499.jpg"
+                },
+                "ticketClass": {
+                    "code": "ADHOC",
+                    "name": "Tiket Umum - Adhoc",
+                    "price": {
+                        "nominal": 0,
+                        "currency": "IDR"
+                    }
+                },
+                "schedule": {
+                    "code": "a7c34b9797a242198cd11d796ce8be2e",
+                    "startTime": "2017-12-14T11:00:00Z",
+                    "endTime": "2017-12-14T13:30:00Z",
+                    "venue": {
+                        "name": "GII Dago",
+                        "address": {
+                            "street": "Jl. Cikapayang No. 2-4",
+                            "city": "Bandung",
+                            "province": "Jawa Barat",
+                            "country": "Indonesia",
+                            "postalCode": "40116"
+                        },
+                        "room": "Main Worship Hall"
+                    }
+                },
+                "transport": {
+                    "code": "02e1ee28-a3ad-4dc1-8702-67058c7584de",
+                    "pickupLocation": {
+                        "name": "GII Setrasari",
+                        "address": {
+                            "street": "Jl. Setrasari Plaza C-4",
+                            "suite": "GSG Istana EGI Setrasari Mall",
+                            "city": "Bandung",
+                            "province": "Jawa Barat",
+                            "country": "Indonesia",
+                            "postalCode": "40162"
+                        }
+                    },
+                    "departureTime": "2017-12-14T09:30:00Z"
+                },
+                "owner": {
+                    "fullName": "Maria Magdalena",
+                    "primarySite": {
+                        "code": "SETRASARI",
+                        "name": "GII Setrasari"
+                    },
+                    "currentMembership": {
+                        "type": "REGULAR",
+                        "memberId": "200200200"
+                    },
+                    "homeChurch": "GII Setrasari",
+                    "email": "maria@example.com",
+                },
+                "selfOrdered": false,
+                "orderedBy": {
+                    "id": "591f096c000c40e8ac64790a",
+                    "fullName": "Jonathan Setiadi",
+                    "primarySite": {
+                        "code": "SETRASARI",
+                        "name": "GII Setrasari"
+                    },
+                    "currentMembership": {
+                        "type": "REGULAR",
+                        "memberId": "200220022"
+                    },
+                    "email": "jonathan.setiadi@example.com",
+                    "phoneNumber": "+62817222333"
+                }
+            }
+        ]
