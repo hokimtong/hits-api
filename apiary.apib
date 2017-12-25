@@ -2472,6 +2472,99 @@ This endpoint returns requested data reports based on specific queries. Some ret
 
 This reporting mechanism only allows indexed fields to be retrieved and it returns an array of JSON objects.
 
+### Retrieve People [POST /api/v1/reports/save]
+
++ Request (application/json)
+
+        {
+            "name": "Umur Jemaat",
+            "description": "Laporan umur jemaat per jenis keanggotaan",
+            "targetModel" : "people",
+            "grouping" : ["currentMembership.category"],
+            "sort" : ["fullName"],
+            "query": {
+                "fullName": "Maria Magdalena",
+                "nickname": "Maria",
+                "gender": "F",
+                "siteName": "GII Setrasari",
+                "serviceName": "Kebaktian Umum 1",
+                "status": "active",
+                "noAnggota": "200200200",
+                "email": "maria@example.com"
+            },
+            "fields": [
+                "fullName",
+                "nickname",
+                "primarySite.name",
+                "primaryService.name",
+                "currentMembership.memberId",
+                "emailAddresses.email",
+                "addresses.street"
+            ],
+            "shares": {
+                "people": ["58c177e773a7d31f5b000001"],
+                "orgUnit": ["SETRASARI"]
+            }
+        }
+
++ Response 201 (application/json)
+
+    + Headers
+    
+            Location: /api/v1/reports/save
+            
+    + Body
+    
+            {
+                "name": "Umur Jemaat",
+                "description": "Laporan umur jemaat per jenis keanggotaan",
+                "targetModel" : "people",
+                "grouping" : ["currentMembership.category"],
+                "sort" : ["fullName"],
+                "query": {
+                    "fullName": "Maria Magdalena",
+                    "nickname": "Maria",
+                    "gender": "F",
+                    "siteName": "GII Setrasari",
+                    "serviceName": "Kebaktian Umum 1",
+                    "status": "active",
+                    "noAnggota": "200200200",
+                    "email": "maria@example.com"
+                },
+                "fields": [
+                    "fullName",
+                    "nickname",
+                    "primarySite.name",
+                    "primaryService.name",
+                    "currentMembership.memberId",
+                    "emailAddresses.email",
+                    "addresses.street"
+                ],
+                "shares": {
+                    "people": ["58c177e773a7d31f5b000001"],
+                    "orgUnit": ["SETRASARI"]
+                },
+                "createdBy" : "58c177e773a7d31f5b000001"
+                "_links": {
+                    "shares": {
+                        "people": [
+                            {
+                                "href" : "/api/v1/people/58c177e773a7d31f5b000001"
+                            }
+                        ],
+                        "orgUnit": [
+                            {
+                                "href" : "/api/v1/sites/SETRASARI"
+                            }
+                        ]
+                    },
+                    "createdBy" : {
+                        "href": "/api/v1/people/58c177e773a7d31f5b000001"
+                    }
+                   
+                }
+            }
+            
 ### Retrieve People [POST /api/v1/reports/people]
 
 + Request (application/json)
