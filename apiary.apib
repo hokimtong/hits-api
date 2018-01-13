@@ -2469,19 +2469,53 @@ each category.
 
 This endpoint returns requested data reports based on specific queries. Some returned data will be cached, and unless the client requests for fresh data, cached information will be returned because running reports' queries can be costly to the database.
 
-
 This reporting mechanism only allows indexed fields to be retrieved and it returns an array of JSON objects.
 
-### Retrieve People [POST /api/v1/reports/save]
+#### Retrieve Report List [GET /api/v1/reports{?name,sort,limit,offset}]
+
++ Parameters
+
+    + name: `jemaat` (optional, string)
+      Partial match for report name.
+
+    + sort: `-name` (optional, string)
+      Ascending or descending ordering over a single field.
+
+    + limit: `10` (required, number)
+      Maximum number of records to be fetched, used for pagination.
+
+    + offset: `30` (required, number)
+      Number of records to be skipped, used for pagination.
+
++ Response 200 (application/json)
+
+        [
+            {
+                "name": "Umur Jemaat",
+                "description": "Laporan umur jemaat per jenis keanggotaan",
+                "targetModel": "people",
+                "createdBy": {
+                    "_id": "58c177e773a7d31f5b000001",
+                    "fullName": "Maria Magdalena"
+                },
+                "_links": {
+                    "createdBy": {
+                        "href": "/api/v1/people/58c177e773a7d31f5b000001"
+                    }
+                }
+            }
+        ]
+
+#### Save a Report [POST]
 
 + Request (application/json)
 
         {
             "name": "Umur Jemaat",
             "description": "Laporan umur jemaat per jenis keanggotaan",
-            "targetModel" : "people",
-            "grouping" : ["currentMembership.category"],
-            "sort" : ["fullName"],
+            "targetModel": "people",
+            "grouping": ["currentMembership.category"],
+            "sort": ["fullName"],
             "query": {
                 "fullName": "Maria Magdalena",
                 "nickname": "Maria",
@@ -2501,9 +2535,24 @@ This reporting mechanism only allows indexed fields to be retrieved and it retur
                 "emailAddresses.email",
                 "addresses.street"
             ],
-            "shares": {
-                "people": ["58c177e773a7d31f5b000001"],
-                "orgUnit": ["SETRASARI"]
+            "createdBy": {
+                "_id": "58c177e773a7d31f5b000001",
+                "fullName": "Maria Magdalena"
+            },
+            "_links": {
+                "sharedWithPeople": [
+                    {
+                        "href": "/api/v1/people/58c177e773a7d31f5b000001"
+                    }
+                ],
+                "sharedWithOrgUnits": [
+                    {
+                        "href": "/api/v1/sites/SETRASARI"
+                    }
+                ],
+                "createdBy": {
+                    "href": "/api/v1/people/58c177e773a7d31f5b000001"
+                }
             }
         }
 
@@ -2511,16 +2560,17 @@ This reporting mechanism only allows indexed fields to be retrieved and it retur
 
     + Headers
     
-            Location: /api/v1/reports/save
+            Location: /api/v1/reports/58bf40468d3a3f85da1b02f8
             
     + Body
     
             {
+                "_id": "58bf40468d3a3f85da1b02f8"
                 "name": "Umur Jemaat",
                 "description": "Laporan umur jemaat per jenis keanggotaan",
-                "targetModel" : "people",
-                "grouping" : ["currentMembership.category"],
-                "sort" : ["fullName"],
+                "targetModel": "people",
+                "grouping": ["currentMembership.category"],
+                "sort": ["fullName"],
                 "query": {
                     "fullName": "Maria Magdalena",
                     "nickname": "Maria",
@@ -2540,45 +2590,91 @@ This reporting mechanism only allows indexed fields to be retrieved and it retur
                     "emailAddresses.email",
                     "addresses.street"
                 ],
-                "shares": {
-                    "people": ["58c177e773a7d31f5b000001"],
-                    "orgUnit": ["SETRASARI"]
-                },
-                "createdBy" : "58c177e773a7d31f5b000001"
                 "_links": {
-                    "shares": {
-                        "people": [
-                            {
-                                "href" : "/api/v1/people/58c177e773a7d31f5b000001"
-                            }
-                        ],
-                        "orgUnit": [
-                            {
-                                "href" : "/api/v1/sites/SETRASARI"
-                            }
-                        ]
-                    },
-                    "createdBy" : {
+                    "sharedWithPeople": [
+                        {
+                            "href": "/api/v1/people/58c177e773a7d31f5b000001"
+                        }
+                    ],
+                    "sharedWithOrgUnits": [
+                        {
+                            "href": "/api/v1/sites/SETRASARI"
+                        }
+                    ],
+                    "createdBy": {
                         "href": "/api/v1/people/58c177e773a7d31f5b000001"
                     }
-                   
                 }
             }
-            
-### Retrieve People [POST /api/v1/reports/people]
+
+#### Run a Saved Report [GET /api/v1/reports/{id}/result{?limit,offset,sort}]
+
++ Parameters
+
+    + limit: `10` (required, number)
+      Maximum number of records to be fetched, used for pagination.
+
+    + offset: `30` (required, number)
+      Number of records to be skipped, used for pagination.
+
+    + sort: `-serviceName` (optional, string)
+      Override the sort defined in the report.
+
++ Response 200 (application/json)
+
+        [
+            {
+                "id": "58c177e773a7d31f5b000001",
+                "fullName": "Maria Magdalena",
+                "nickname": "Maria",
+                "primarySite": {
+                    "name": "GII Setrasari"
+                },
+                "primaryService": {
+                    "name": "Kebaktian Umum 1"
+                },
+                "currentMembership": {
+                    "memberId": "200200200"
+                }
+                "emailAddresses": {
+                    "email": "maria@example.com"
+                },
+                "addresses": {
+                    "street": "Jl. Terusan Prof. DR. Sutami No. 23"
+                }
+                "_links": {
+                    "self": {
+                        "href": "/api/v1/people/550aa181c4"
+                    },
+                    "primarySite": {
+                        "href": "/api/v1/sites/SETRASARI"
+                    },
+                    "otherSites": [
+                        {
+                            "href": "/api/v1/sites/PURI"
+                        }
+                    ]
+                }
+            }
+        ]
+
+#### Run an Ad Hoc Report [POST /api/v1/reports/result{?limit,offset}]
+
++ Parameters
+
+    + limit: `10` (required, number)
+      Maximum number of records to be fetched, used for pagination.
+
+    + offset: `30` (required, number)
+      Number of records to be skipped, used for pagination.
 
 + Request (application/json)
 
         {
-            "settings": {
-                "limit": "10",
-                "sort": {
-                    "field": "fullName",
-                    "direction": "1"
-                },
-                currentPage: "2"
-            },
-            "criterias": {
+            "targetModel": "people",
+            "grouping": ["currentMembership.category"],
+            "sort": ["fullName"],
+            "query": {
                 "fullName": "Maria Magdalena",
                 "nickname": "Maria",
                 "gender": "F",
@@ -2599,16 +2695,11 @@ This reporting mechanism only allows indexed fields to be retrieved and it retur
             ]
         }
 
-+ Response 201 (application/json)
++ Response 200 (application/json)
 
-    + Headers
-    
-            Location: /api/v1/reports/people
-            
-    + Body
-    
+        [
             {
-                "id": "550aa181c4",
+                "id": "58c177e773a7d31f5b000001",
                 "fullName": "Maria Magdalena",
                 "nickname": "Maria",
                 "primarySite": {
@@ -2624,7 +2715,7 @@ This reporting mechanism only allows indexed fields to be retrieved and it retur
                     "email": "maria@example.com"
                 },
                 "addresses": {
-                    "street" : "Jl. Terusan Prof. DR. Sutami No. 23"
+                    "street": "Jl. Terusan Prof. DR. Sutami No. 23"
                 }
                 "_links": {
                     "self": {
@@ -2635,12 +2726,98 @@ This reporting mechanism only allows indexed fields to be retrieved and it retur
                     },
                     "otherSites": [
                         {
-                        "href": "/api/v1/sites/PURI"
+                            "href": "/api/v1/sites/PURI"
                         }
                     ]
                 }
             }
-    
+        ]
+
+#### Edit a Saved Report [PUT /api/v1/reports/{id}]
+
++ Parameters
+
+    + id:`58bf40468d3a3f85da1b02f8` (string)
+      Report ID
+
++ Request (application/json)
+
+        {
+            "query": {
+                "fullName": "Maria Magdalena",
+                "nickname": "Maria",
+                "gender": "F",
+                "siteName": "GII Setrasari",
+                "serviceName": "Kebaktian Umum 1",
+                "status": "active",
+                "noAnggota": "200200200",
+                "email": "maria@example.com"
+            },
+            "fields": [
+                "fullName",
+                "nickname",
+                "primarySite.name",
+                "primaryService.name",
+                "currentMembership.memberId",
+                "emailAddresses.email",
+                "addresses.street"
+            ]
+        }
+
++ Response 200 (application/json)
+
+        {
+            "_id": "58bf40468d3a3f85da1b02f8"
+            "name": "Umur Jemaat",
+            "description": "Laporan umur jemaat per jenis keanggotaan",
+            "targetModel": "people",
+            "grouping": ["currentMembership.category"],
+            "sort": ["fullName"],
+            "query": {
+                "fullName": "Maria Magdalena",
+                "nickname": "Maria",
+                "gender": "F",
+                "siteName": "GII Setrasari",
+                "serviceName": "Kebaktian Umum 1",
+                "status": "active",
+                "noAnggota": "200200200",
+                "email": "maria@example.com"
+            },
+            "fields": [
+                "fullName",
+                "nickname",
+                "primarySite.name",
+                "primaryService.name",
+                "currentMembership.memberId",
+                "emailAddresses.email",
+                "addresses.street"
+            ],
+            "_links": {
+                "sharedWithPeople": [
+                    {
+                        "href": "/api/v1/people/58c177e773a7d31f5b000001"
+                    }
+                ],
+                "sharedWithOrgUnits": [
+                    {
+                        "href": "/api/v1/sites/SETRASARI"
+                    }
+                ],
+                "createdBy": {
+                    "href": "/api/v1/people/58c177e773a7d31f5b000001"
+                }
+            }
+        }
+
+### Delete a Saved Report [DELETE /api/v1/reports/{id}]
+
++ Parameters
+
+    + id:`58bf40468d3a3f85da1b02f8` (string)
+      Report ID
+
++ Response 204
+
             
 ## Group Events and Ticketing
 
