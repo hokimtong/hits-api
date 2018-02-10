@@ -4815,3 +4815,744 @@ Notes on payload to create/update event:
                 }
             }
         ]
+
+
+## Group Pledges
+
+These APIs are used to manage pledge forms and pledges made by congregants.
+
+### Pledge Forms [/api/v1/pledgeForms]
+
+This resource represents pledges that can be made by congregants. Each pledge
+form can contain multiple commitment items and one monetary giving value. The
+form carries the necessary translations for showing to end users.
+
+Only pledge forms that are accepting submissions or are active will be included
+in the response. In addition, the list will be filtered to only include pledges
+that are profiled for the logged in user.
+
+#### List Available Pledge Forms [GET]
+
++ Response 200 (application/json)
+
+        [
+            {
+                "id": "500000000000123456789041",
+                "code": "pmpi42",
+                "image": "https://storage.googleapi.com/hits/123456789041.jpg",
+                "title": "PMPI 42",
+                "submissionStart": "2018-02-25T06:00:00+07:00",
+                "submissionEnd": "2018-03-19T00:00:00+07:00",
+                "pledgeStart": "2018-03-01T00:00:00+07:00",
+                "pledgeEnd": "2019-03-01T00:00:00+07:00",
+                "_links": {
+                    "self": {
+                        "href": "/api/v1/pledgeForms/pmpi42"
+                    },
+                    "pledges": {
+                        "href": "/api/v1/pledgeForms/pmpi42/pledges"
+                    }
+                }
+            }
+        ]
+
+#### Retrieve a Pledge Form [GET /api/v1/pledgeForms/{code}]
+
++ Parameters
+
+    + code:`pmpi42sg` (required, string)
+      Code of the pledge form.
+
++ Response 200 (application/json)
+
+        [
+            {
+                "id": "500000000000123456789042",
+                "code": "pmpi42sg",
+                "image": "https://storage.googleapi.com/hits/123456789042.jpg",
+                "title": "PMPI 42 (Singapore)",
+                "submissionStart": "2018-02-25T09:00:00+08:00",
+                "submissionEnd": "2018-03-19T00:00:00+08:00",
+                "pledgeStart": "2018-03-01T00:00:00+08:00",
+                "pledgeEnd": "2019-03-01T00:00:00+08:00",
+                "caption": {
+                    "id": "Janji iman Pekan Misi Pekabaran Injil ke-42",
+                    "en": "Pledge for the 42nd Mission Week",
+                    "zh": "为第42个使命周作出承诺"
+                },
+                "commitmentOptions": [
+                    {
+                        "value": "MISSION_PRAYER",
+                        "label": {
+                            "id": "Menjadi bagian dari Tim Doa Misi",
+                            "en": "Join the Mission Prayer Team",
+                            "zh": "加入任务祈祷团队"
+                        },
+                        "tag": {
+                            "id": "Doa",
+                            "en": "Pray",
+                            "zh": "祈祷"
+                        }
+                    },
+                    {
+                        "value": "EVANGELISM_TRAINING",
+                        "label": {
+                            "id": "Diperlengkapi untuk pekabaran Injil",
+                            "en": "Be equipped for evangelism",
+                            "zh": "配备传福音"
+                        },
+                        "tag": {
+                            "id": "Menginjil",
+                            "en": "Evangelize",
+                            "zh": "福音主义"
+                        }
+                    }
+                ],
+                "fundName": {
+                    "id": "Dana Misi",
+                    "en": "Mission Fund",
+                    "zh": "任务基金"
+                },
+                "fundDuration": {
+                    "min": 1,
+                    "max": 12,
+                    "defaultValue": 12,
+                    "unit": "MONTH"
+                },
+                "fundCurrency": "SGD",
+                "fundOptions": [
+                    10,
+                    20,
+                    50,
+                    100,
+                    200,
+                    500,
+                    1000
+                ],
+                "allowCustomFundNominal": true,
+                "_links": {
+                    "self": {
+                        "href": "/api/v1/pledgeForms/pmpi42sg"
+                    }
+                }
+            }
+        ]
+
+### Pledges [/api/v1/pledges]
+
+This resource represent pldege submissions. The endpoint is used by end users.
+
+#### List Own Pledges [GET /api/v1/pledges{?pledgeForm,sort}]
+
++ Parameters
+
+    + pledgeForm:`pmpi42` (optional, string)
+      Only include submissions for this pledge form.
+
++ Response 200 (application/json)
+
+        [
+            {
+                "id": "5000000000005678901234001",
+                "pledgeForm": "pmpi42",
+                "commitments": [
+                    "MISSION_PRAYER"
+                ],
+                "committedFund": {
+                    "nominal": 100000,
+                    "currency": "IDR"
+                },
+                "fundRecurrence": {
+                    "repeat": 12,
+                    "unit": "MONTH"
+                },
+                "_links": {
+                    "self": {
+                        "href": "/api/v1/pledges/5000000000005678901234001"
+                    }
+                }
+            }
+        ]
+
+#### Retrieve Own Pledge [GET /api/v1/pledges/{id}]
+
++ Parameters
+
+    + id:`5000000000005678901234001` (string, required)
+      Pledge submission ID.
+
++ Response 200 (application/json)
+
+        {
+            "id": "5000000000005678901234001",
+            "pledgeForm": "pmpi42",
+            "commitments": [
+                "MISSION_PRAYER"
+            ],
+            "committedFund": {
+                "nominal": 100000,
+                "currency": "IDR"
+            },
+            "fundRecurrence": {
+                "count": 12,
+                "unit": "MONTH"
+            },
+            "_links": {
+                "self": {
+                    "href": "/api/v1/pledges/5000000000005678901234001"
+                }
+            }
+        }
+
+#### Create a pledge [POST /api/v1/pledges]
+
++ Request (application/json)
+
+        {
+            "commitments": [
+                "MISSION_PRAYER"
+            ],
+            "committedFund": {
+                "nominal": 100000,
+                "currency": "IDR"
+            },
+            "fundRecurrence": {
+                "count": 12,
+                "unit": "MONTH"
+            },
+            "_links": {
+                "pledgeForm": {
+                    "href": "/api/v1/pledgeForms/pmpi42"
+                }
+            }
+        }
+
++ Response 201 (application/json)
+
+    + Headers
+    
+            Location: /api/v1/pledges/5000000000005678901234001
+            
+    + Body
+    
+            {
+                "id": "5000000000005678901234001",
+                "pledgeForm": "pmpi42",
+                "commitments": [
+                    "MISSION_PRAYER"
+                ],
+                "committedFund": {
+                    "nominal": 100000,
+                    "currency": "IDR"
+                },
+                "fundRecurrence": {
+                    "count": 12,
+                    "unit": "MONTH"
+                },
+                "_links": {
+                    "self": {
+                        "href": "/api/v1/pledges/5000000000005678901234001"
+                    }
+                }
+            }
+
+### Pledge Forms Administration [/api/v1/admin/pledgeForms]
+
+This resource represents pledge forms that have been defined in the system. This
+endpoint allows an administrator to see the statistics on an ongoing pledge form
+and to make edits to the form.
+
+#### List Pledge Forms for Administration [GET /api/v1/admin/pledgeForms{?title,sort,includeArchived}]
+
++ Parameters
+
+    + title:`Pmpi` (optional, string)
+      Only include pledge forms which title partially match this
+      (case-insensitive).
+
+    + sort:`+submissions` (optional, string)
+      Ascending or descending sort over 1 field (allowed: `title`,
+      `submissions`, `fundCommitted.nominal`, `fundReceived.nominal`)
+
+    + includeArchived:`true` (optional, boolean)
+      Whether to include pledge forms that have been marked as archived.
+        + Default: false
+
++ Response 200 (application/json)
+
+        [
+            {
+                "id": "500000000000123456789041",
+                "code": "pmpi42",
+                "image": "https://storage.googleapi.com/hits/123456789041.jpg",
+                "title": "PMPI 42",
+                "submissionStart": "2018-02-25T06:00:00+07:00",
+                "submissionEnd": "2018-03-19T00:00:00+07:00",
+                "pledgeStart": "2018-03-01T00:00:00+07:00",
+                "pledgeEnd": "2019-03-01T00:00:00+07:00",
+                "submissions": 6500,
+                "fundCommitted": {
+                    "currency": "IDR",
+                    "nominal": "5625500000"
+                },
+                "fundReceived": {
+                    "currency": "IDR",
+                    "nominal": "153750000"
+                },
+                "_links": {
+                    "self": {
+                        "href": "/api/v1/admin/pledgeForms/pmpi42"
+                    }
+                }
+            }
+        ]
+
+#### Retrieve a Pledge Form for Administration [GET /api/v1/admin/pldegeForms/{code}]
+
++ Response 200 (application/json)
+
+        [
+            {
+                "id": "500000000000123456789042",
+                "code": "pmpi42sg",
+                "image": "https://storage.googleapi.com/hits/123456789042.jpg",
+                "title": "PMPI 42 (Singapore)",
+                "submissionStart": "2018-02-25T09:00:00+08:00",
+                "submissionEnd": "2018-03-19T00:00:00+08:00",
+                "pledgeStart": "2018-03-01T00:00:00+08:00",
+                "pledgeEnd": "2019-03-01T00:00:00+08:00",
+                "caption": {
+                    "id": "Janji iman Pekan Misi Pekabaran Injil ke-42",
+                    "en": "Pledge for the 42nd Mission Week",
+                    "zh": "为第42个使命周作出承诺"
+                },
+                "commitmentOptions": [
+                    {
+                        "value": "MISSION_PRAYER",
+                        "label": {
+                            "id": "Menjadi bagian dari Tim Doa Misi",
+                            "en": "Join the Mission Prayer Team",
+                            "zh": "加入任务祈祷团队"
+                        },
+                        "tag": {
+                            "id": "Doa",
+                            "en": "Pray",
+                            "zh": "祈祷"
+                        }
+                    },
+                    {
+                        "value": "EVANGELISM_TRAINING",
+                        "label": {
+                            "id": "Diperlengkapi untuk pekabaran Injil",
+                            "en": "Be equipped for evangelism",
+                            "zh": "配备传福音"
+                        },
+                        "tag": {
+                            "id": "Menginjil",
+                            "en": "Evangelize",
+                            "zh": "福音主义"
+                        }
+                    }
+                ],
+                "fundName": {
+                    "id": "Dana Misi",
+                    "en": "Mission Fund",
+                    "zh": "任务基金"
+                },
+                "fundDuration": {
+                    "min": 1,
+                    "max": 12,
+                    "defaultValue": 12,
+                    "unit": "MONTH"
+                },
+                "fundCurrency": "SGD",
+                "fundOptions": [
+                    10,
+                    20,
+                    50,
+                    100,
+                    200,
+                    500,
+                    1000
+                ],
+                "allowCustomFundNominal": true,
+                "submissions": 80,
+                "fundCommitted": {
+                    "currency": "SGD",
+                    "nominal": "15250"
+                },
+                "fundReceived": {
+                    "currency": "SGD",
+                    "nominal": "1350"
+                },
+                "_links": {
+                    "self": {
+                        "href": "/api/v1/pledgeForms/pmpi42sg"
+                    }
+                }
+            }
+        ]
+
+### Pledges Administration [/api/v1/admin/pledges]
+
+#### List Pledge Submissions [GET /api/v1/admin/pledges{?pledgeForm,fullName,primarySite,sort,includeArchived}]
+
++ Parameters
+
+    + pledgeForm:`pmpi42` (required, string)
+      Only include submissions for this pledge form.
+
+    + fullName:`stephen` (optional, string)
+      Only includes submissions from people whose names partially match this
+      (case-insensitive).
+
+    + primarySite:`setrasari` (optional, string)
+      Only includes submissions from people whose primary site name partially
+      matches this (case-insensitive).
+
+    + sort:`+committedFund.nominal` (optional, string)
+      Ascending or descending sort over one field (allowed: `owner.fullName`,
+      `owner.primarySite`, `committedFund.nominal`, `receivedFund.nominal`)
+
+    + includeArchived:`true` (optional, boolean)
+      Whether to include pledge submissions that have been marked as archived.
+        + Default: false
+
++ Response 200 (application/json)
+
+        [
+            {
+                "id": "5000000000005678901234001",
+                "pledgeForm": "pmpi42",
+                "commitments": [
+                    "MISSION_PRAYER"
+                ],
+                "committedFund": {
+                    "nominal": 100000,
+                    "currency": "IDR"
+                },
+                "fundRecurrence": {
+                    "count": 12,
+                    "unit": "MONTH"
+                },
+                "receivedFund": {
+                    "nominal": 200000,
+                    "currency": "IDR"
+                },
+                "owner": {
+                    "id": "58c177e773a7d31f5b000001",
+                    "fullName": "Stephen Wirawan",
+                    "primarySite": {
+                        "code": "GARDUJATI",
+                        "name": "GII Gardujati"
+                    },
+                    "currentMembership": {
+                        "category": "MEMBER",
+                        "memberId": "201000800",
+                        "startDate": {
+                            "dayOfMonth": 15,
+                            "month": 9,
+                            "year": 2010
+                        }
+                    },
+                    "homeChurch": "GII Gardujati",
+                    "email": "stephen@example.com",
+                    "phoneNumber": "+6281790012345"
+                },
+                "_links": {
+                    "self": {
+                        "href": "/api/v1/admin/pledges/5000000000005678901234001"
+                    },
+                    "pledgeForm": {
+                        "href": "/api/v1/admin/pledgeForms/pmpi42"
+                    },
+                    "owner": {
+                        "href": "/api/v1/people/58c177e773a7d31f5b000001"
+                    }
+                }
+            }
+        ]
+
+#### Retrieve a Pledge Submission [GET /api/v1/admin/pledges/{id}]
+
++ Parameters
+
+    + id:`5000000000005678901234001` (string, required)
+      Pledge submission ID.
+
++ Response 200 (application/json)
+
+        {
+            "id": "5000000000005678901234001",
+            "pledgeForm": "pmpi42",
+            "commitments": [
+                "MISSION_PRAYER"
+            ],
+            "committedFund": {
+                "nominal": 100000,
+                "currency": "IDR"
+            },
+            "fundRecurrence": {
+                "count": 12,
+                "unit": "MONTH"
+            },
+            "receivedFund": {
+                "nominal": 200000,
+                "currency": "IDR"
+            },
+            "owner": {
+                "id": "58c177e773a7d31f5b000001",
+                "fullName": "Stephen Wirawan",
+                "primarySite": {
+                    "code": "GARDUJATI",
+                    "name": "GII Gardujati"
+                },
+                "currentMembership": {
+                    "category": "MEMBER",
+                    "memberId": "201000800",
+                    "startDate": {
+                        "dayOfMonth": 15,
+                        "month": 9,
+                        "year": 2010
+                    }
+                },
+                "homeChurch": "GII Gardujati",
+                "email": "stephen@example.com",
+                "phoneNumber": "+6281790012345"
+            },
+            "_links": {
+                "self": {
+                    "href": "/api/v1/admin/pledges/5000000000005678901234001"
+                },
+                "pledgeForm": {
+                    "href": "/api/v1/admin/pledgeForms/pmpi42"
+                },
+                "owner": {
+                    "href": "/api/v1/people/58c177e773a7d31f5b000001"
+                }
+            }
+        }
+
+#### Create a Pledge Submission [POST /api/v1/admin/pledges]
+
++ Request (application/json)
+
+        {
+            "commitments": [
+                "MISSION_PRAYER"
+            ],
+            "committedFund": {
+                "nominal": 100000,
+                "currency": "IDR"
+            },
+            "fundRecurrence": {
+                "count": 12,
+                "unit": "MONTH"
+            },
+            "_links": {
+                "pledgeForm": {
+                    "href": "/api/v1/admin/pledgeForms/pmpi42"
+                },
+                "owner": {
+                    "href": "/api/v1/people/58c177e773a7d31f5b000001"
+                }
+            }
+        }
+
++ Response 201 (application/json)
+
+    + Headers
+    
+            Location: /api/v1/admin/pledges/5000000000005678901234001
+            
+    + Body
+    
+            {
+                "id": "5000000000005678901234001",
+                "pledgeForm": "pmpi42",
+                "commitments": [
+                    "MISSION_PRAYER"
+                ],
+                "committedFund": {
+                    "nominal": 100000,
+                    "currency": "IDR"
+                },
+                "fundRecurrence": {
+                    "count": 12,
+                    "unit": "MONTH"
+                },
+                "receivedFund": {
+                    "nominal": 200000,
+                    "currency": "IDR"
+                },
+                "owner": {
+                    "id": "58c177e773a7d31f5b000001",
+                    "fullName": "Stephen Wirawan",
+                    "primarySite": {
+                        "code": "GARDUJATI",
+                        "name": "GII Gardujati"
+                    },
+                    "currentMembership": {
+                        "category": "MEMBER",
+                        "memberId": "201000800",
+                        "startDate": {
+                            "dayOfMonth": 15,
+                            "month": 9,
+                            "year": 2010
+                        }
+                    },
+                    "homeChurch": "GII Gardujati",
+                    "email": "stephen@example.com",
+                    "phoneNumber": "+6281790012345"
+                },
+                "_links": {
+                    "self": {
+                        "href": "/api/v1/admin/pledges/5000000000005678901234001"
+                    },
+                    "pledgeForm": {
+                        "href": "/api/v1/admin/pledgeForms/pmpi42"
+                    },
+                    "owner": {
+                        "href": "/api/v1/people/58c177e773a7d31f5b000001"
+                    }
+                }
+            }
+
+#### Edit a Pledge Submission [PUT /api/v1/admin/pledges/{id}]
+
++ Parameters
+
+    + id:`5000000000005678901234001` (string, required)
+      Pledge submission ID.
+
++ Request (application/json)
+
+        {
+            "commitments": [
+                "MISSION_PRAYER",
+                "EVANGELISM_TRAINING"
+            ],
+            "committedFund": {
+                "nominal": 200000,
+                "currency": "IDR"
+            },
+            "fundRecurrence": {
+                "count": 12,
+                "unit": "MONTH"
+            }
+        }
+
++ Response 200 (application/json)
+    
+        {
+            "id": "5000000000005678901234001",
+            "pledgeForm": "pmpi42",
+            "commitments": [
+                "MISSION_PRAYER",
+                "EVANGELISM_TRAINING"
+            ],
+            "committedFund": {
+                "nominal": 200000,
+                "currency": "IDR"
+            },
+            "fundRecurrence": {
+                "count": 12,
+                "unit": "MONTH"
+            },
+            "receivedFund": {
+                "nominal": 200000,
+                "currency": "IDR"
+            },
+            "owner": {
+                "id": "58c177e773a7d31f5b000001",
+                "fullName": "Stephen Wirawan",
+                "primarySite": {
+                    "code": "GARDUJATI",
+                    "name": "GII Gardujati"
+                },
+                "currentMembership": {
+                    "category": "MEMBER",
+                    "memberId": "201000800",
+                    "startDate": {
+                        "dayOfMonth": 15,
+                        "month": 9,
+                        "year": 2010
+                    }
+                },
+                "homeChurch": "GII Gardujati",
+                "email": "stephen@example.com",
+                "phoneNumber": "+6281790012345"
+            },
+            "_links": {
+                "self": {
+                    "href": "/api/v1/admin/pledges/5000000000005678901234001"
+                },
+                "pledgeForm": {
+                    "href": "/api/v1/admin/pledgeForms/pmpi42"
+                },
+                "owner": {
+                    "href": "/api/v1/people/58c177e773a7d31f5b000001"
+                }
+            }
+        }
+
+#### Archive a Pledge Submission [DELETE /api/v1/admin/pledges/{id}]
+
++ Parameters
+
+    + id:`5000000000005678901234001` (string, required)
+      Pledge submission ID.
+
++ Response 200 (application/json)
+
+        {
+            "id": "5000000000005678901234001",
+            "isArchived": true,
+            "pledgeForm": "pmpi42",
+            "commitments": [
+                "MISSION_PRAYER"
+            ],
+            "committedFund": {
+                "nominal": 100000,
+                "currency": "IDR"
+            },
+            "fundRecurrence": {
+                "count": 12,
+                "unit": "MONTH"
+            },
+            "receivedFund": {
+                "nominal": 200000,
+                "currency": "IDR"
+            },
+            "owner": {
+                "id": "58c177e773a7d31f5b000001",
+                "fullName": "Stephen Wirawan",
+                "primarySite": {
+                    "code": "GARDUJATI",
+                    "name": "GII Gardujati"
+                },
+                "currentMembership": {
+                    "category": "MEMBER",
+                    "memberId": "201000800",
+                    "startDate": {
+                        "dayOfMonth": 15,
+                        "month": 9,
+                        "year": 2010
+                    }
+                },
+                "homeChurch": "GII Gardujati",
+                "email": "stephen@example.com",
+                "phoneNumber": "+6281790012345"
+            },
+            "_links": {
+                "self": {
+                    "href": "/api/v1/admin/pledges/5000000000005678901234001"
+                },
+                "pledgeForm": {
+                    "href": "/api/v1/admin/pledgeForms/pmpi42"
+                },
+                "owner": {
+                    "href": "/api/v1/people/58c177e773a7d31f5b000001"
+                }
+            }
+        }
