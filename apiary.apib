@@ -4831,7 +4831,19 @@ Only pledge forms that are accepting submissions or are active will be included
 in the response. In addition, the list will be filtered to only include pledges
 that are profiled for the logged in user.
 
-#### List Available Pledge Forms [GET]
+#### List Available Pledge Forms [GET /api/v1/pledgeForms{?limit, offset, sort}]
+
++ Parameters
+
+    + limit: `10` (optional, number)
+      Maximum number of pledge forms to retrieve.
+      
+    + offset: `50` (optional, number)
+      Number of records to skip.
+      
+    + sort: `+submissionEnd` (optional, string)
+      Ascending and descending sorting over a single field. Allowed sort:
+      `title`, `submissionStart`, `submissionEnd`, `pledgeStart`, `pledgeEnd`
 
 + Response 200 (application/json)
 
@@ -4847,9 +4859,6 @@ that are profiled for the logged in user.
                 "_links": {
                     "self": {
                         "href": "/api/v1/pledgeForms/pmpi42"
-                    },
-                    "pledges": {
-                        "href": "/api/v1/pledgeForms/pmpi42/pledges"
                     }
                 }
             }
@@ -5060,13 +5069,19 @@ This resource represents pledge forms that have been defined in the system. This
 endpoint allows an administrator to see the statistics on an ongoing pledge form
 and to make edits to the form.
 
-#### List Pledge Forms for Administration [GET /api/v1/admin/pledgeForms{?title,sort,includeArchived}]
+#### List Pledge Forms for Administration [GET /api/v1/admin/pledgeForms{?title,limit,offset,sort,includeArchived}]
 
 + Parameters
 
     + title:`Pmpi` (optional, string)
       Only include pledge forms which title partially match this
       (case-insensitive).
+
+    + limit: `10` (optional, number)
+      Maximum number of pledge forms to retrieve.
+      
+    + offset: `50` (optional, number)
+      Number of records to skip.
 
     + sort:`+submissions` (optional, string)
       Ascending or descending sort over 1 field (allowed: `title`,
@@ -5099,6 +5114,9 @@ and to make edits to the form.
                 "_links": {
                     "self": {
                         "href": "/api/v1/admin/pledgeForms/pmpi42"
+                    },
+                    "publicObject": {
+                        "href": "/api/v1/pledgeForms/pmpi42"
                     }
                 }
             }
@@ -5191,7 +5209,7 @@ and to make edits to the form.
 
 ### Pledges Administration [/api/v1/admin/pledges]
 
-#### List Pledge Submissions [GET /api/v1/admin/pledges{?pledgeForm,fullName,primarySite,sort,includeArchived}]
+#### List Pledge Submissions [GET /api/v1/admin/pledges{?pledgeForm,fullName,primarySite,limit,offset,sort,includeArchived}]
 
 + Parameters
 
@@ -5205,6 +5223,12 @@ and to make edits to the form.
     + primarySite:`setrasari` (optional, string)
       Only includes submissions from people whose primary site name partially
       matches this (case-insensitive).
+
+    + limit: `10` (optional, number)
+      Maximum number of pledges to retrieve.
+      
+    + offset: `50` (optional, number)
+      Number of records to skip.
 
     + sort:`+committedFund.nominal` (optional, string)
       Ascending or descending sort over one field (allowed: `owner.fullName`,
