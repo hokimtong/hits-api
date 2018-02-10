@@ -4306,7 +4306,7 @@ Notes on payload to create/update event:
                 }
             }
         }
-        
+
 #### Check in tasks [GET /api/v1/eo/checkInTasks/]
 
 + Response 200 (application/json)
@@ -4333,89 +4333,88 @@ Notes on payload to create/update event:
                                 "suite": "GII Dago",
                                 "street": "Jalan Cikapayang No. 2-4"
                             },
-                        "name": "GII Dago"
-                    },
-                    "parts": [
-                        {
-                            "scheduleCode": "5cf405b9-7b31-4c70-9025-e20fc919e4bf",
-                            "name": "Acara",
-                            "part": "EVENT"
-                        },
-                        {
-                            "transportCode": "d1bb59a3-0049-40a8-a46a-065a99b7c2dc",
-                            "name": "Berangkat - GII Setrasari",
-                            "part": "TRANSPORT_TO_EVENT"
-                        },
-                        {
-                            "transportCode": "80998994-d420-417e-aeed-4599e93923c6",
-                            "name": "Berangkat - GII Mekarwangi",
-                            "part": "TRANSPORT_TO_EVENT"
-                        },
-                        {
-                            "transportCode": "d1bb59a3-0049-40a8-a46a-065a99b7c2dc",
-                            "name": "Pulang - GII Setrasari",
-                            "part": "TRANSPORT_FROM_EVENT"
-                        },
-                        {
-                            "transportCode": "80998994-d420-417e-aeed-4599e93923c6",
-                            "name": "Pulang - GII Mekarwangi",
-                            "part": "TRANSPORT_FROM_EVENT"
+                            "name": "GII Dago"
                         }
-                    ]
+                    }
+                ],
+                "parts": [
+                    {
+                        "scheduleCode": "5cf405b9-7b31-4c70-9025-e20fc919e4bf",
+                        "name": "Acara",
+                        "part": "EVENT"
+                    },
+                    {
+                        "transportCode": "d1bb59a3-0049-40a8-a46a-065a99b7c2dc",
+                        "name": "Berangkat - GII Setrasari",
+                        "part": "TRANSPORT_TO_EVENT"
+                    },
+                    {
+                        "transportCode": "80998994-d420-417e-aeed-4599e93923c6",
+                        "name": "Berangkat - GII Mekarwangi",
+                        "part": "TRANSPORT_TO_EVENT"
+                    },
+                    {
+                        "transportCode": "d1bb59a3-0049-40a8-a46a-065a99b7c2dc",
+                        "name": "Pulang - GII Setrasari",
+                        "part": "TRANSPORT_FROM_EVENT"
+                    },
+                    {
+                        "transportCode": "80998994-d420-417e-aeed-4599e93923c6",
+                        "name": "Pulang - GII Mekarwangi",
+                        "part": "TRANSPORT_FROM_EVENT"
+                    }
+                ]
+            },
+            {
+                "code": "96439c68-4f48-498b-9cd0-e4e5b4a993b7",
+                "startTime": "2017-12-23T11:00:00.000Z",
+                "endTime": "2017-12-23T13:30:00.000Z",
+                "venue": {
+                    "address": {
+                        "isGeocodingAttempted": true,
+                        "isResolved": false,
+                        "coordinates": [107.6117428, -6.899009899999999],
+                        "postalCode": "40116",
+                        "country": "ID",
+                        "city": "Bandung",
+                        "suite": "GII Dago",
+                        "street": "Jalan Cikapayang No. 2-4"
+                    },
+                    "name": "GII Dago"
                 },
-                {
-                    "code": "96439c68-4f48-498b-9cd0-e4e5b4a993b7",
-                    "startTime": "2017-12-23T11:00:00.000Z",
-                    "endTime": "2017-12-23T13:30:00.000Z",
-                    "venue": {
-                        "address": {
-                            "isGeocodingAttempted": true,
-                            "isResolved": false,
-                            "coordinates": [107.6117428, -6.899009899999999],
-                            "postalCode": "40116",
-                            "country": "ID",
-                            "city": "Bandung",
-                            "suite": "GII Dago",
-                            "street": "Jalan Cikapayang No. 2-4"
-                        },
-                        "name": "GII Dago"
+                "parts": [
+                    {
+                        "scheduleCode": "96439c68-4f48-498b-9cd0-e4e5b4a993b7",
+                        "name": "Acara",
+                        "part": "EVENT"
                     },
-                    "parts": [
-                        {
-                            "scheduleCode": "96439c68-4f48-498b-9cd0-e4e5b4a993b7",
-                            "name": "Acara",
-                            "part": "EVENT"
-                        },
-                        {
-                            "transportCode": "040ed584-cd04-46cf-b492-f7af6b39cfd5",
-                            "name": "Berangkat - GII Setrasari",
-                            "part": "TRANSPORT_TO_EVENT"
-                        },
-                        {
-                            "transportCode": "c3a642d3-53c0-4e57-b1e5-a946b1463ae5",
-                            "name": "Berangkat - GII Mekarwangi",
-                            "part": "TRANSPORT_TO_EVENT"
-                        },
-                        { 
-                            "transportCode": "040ed584-cd04-46cf-b492-f7af6b39cfd5",
-                            "name": "Pulang - GII Setrasari",
-                            "part": "TRANSPORT_FROM_EVENT"
-                        },
-                        {
-                            "transportCode": "c3a642d3-53c0-4e57-b1e5-a946b1463ae5",
-                            "name": "Pulang - GII Mekarwangi",
-                            "part": "TRANSPORT_FROM_EVENT"
-                        }
-                    ]
-                }
+                    {
+                        "transportCode": "040ed584-cd04-46cf-b492-f7af6b39cfd5",
+                        "name": "Berangkat - GII Setrasari",
+                        "part": "TRANSPORT_TO_EVENT"
+                    },
+                    {
+                        "transportCode": "c3a642d3-53c0-4e57-b1e5-a946b1463ae5",
+                        "name": "Berangkat - GII Mekarwangi",
+                        "part": "TRANSPORT_TO_EVENT"
+                    },
+                    { 
+                        "transportCode": "040ed584-cd04-46cf-b492-f7af6b39cfd5",
+                        "name": "Pulang - GII Setrasari",
+                        "part": "TRANSPORT_FROM_EVENT"
+                    },
+                    {
+                        "transportCode": "c3a642d3-53c0-4e57-b1e5-a946b1463ae5",
+                        "name": "Pulang - GII Mekarwangi",
+                        "part": "TRANSPORT_FROM_EVENT"
+                    }
+                ]
             }
         ]
-
+        
 #### Order ticket [POST /api/v1/eo/eventTickets/]
 
-+ Request (application/json)
-
-    Book regular ticket for non member
++ Request for non member (application/json)
     
     + Body
     
@@ -4516,9 +4515,7 @@ Notes on payload to create/update event:
             }
         ]
         
-+ Request (application/json)
-
-    Book regular ticket for member
++ Request for member (application/json)
     
     + Body
     
@@ -4622,9 +4619,7 @@ Notes on payload to create/update event:
             }
         ]
         
-+ Request (application/json)
-
-    Book `ADHOC` ticket for member
++ Request for member adhoc ticket (application/json)
     
     + Body
     
