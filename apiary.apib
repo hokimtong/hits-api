@@ -4873,77 +4873,75 @@ that are profiled for the logged in user.
 
 + Response 200 (application/json)
 
-        [
-            {
-                "code": "pmpi42sg",
-                "image": "https://storage.googleapi.com/hits/123456789042.jpg",
-                "title": "PMPI 42 (Singapore)",
-                "submissionStart": "2018-02-25T09:00:00+08:00",
-                "submissionEnd": "2018-03-19T00:00:00+08:00",
-                "pledgeStart": "2018-03-01T00:00:00+08:00",
-                "pledgeEnd": "2019-03-01T00:00:00+08:00",
-                "caption": {
-                    "id": "Janji iman Pekan Misi Pekabaran Injil ke-42",
-                    "en": "Pledge for the 42nd Mission Week",
-                    "zh": "为第42个使命周作出承诺"
-                },
-                "commitmentOptions": [
-                    {
-                        "value": "MISSION_PRAYER",
-                        "label": {
-                            "id": "Menjadi bagian dari Tim Doa Misi",
-                            "en": "Join the Mission Prayer Team",
-                            "zh": "加入任务祈祷团队"
-                        },
-                        "tag": {
-                            "id": "Doa",
-                            "en": "Pray",
-                            "zh": "祈祷"
-                        }
+        {
+            "code": "pmpi42sg",
+            "image": "https://storage.googleapi.com/hits/123456789042.jpg",
+            "title": "PMPI 42 (Singapore)",
+            "submissionStart": "2018-02-25T09:00:00+08:00",
+            "submissionEnd": "2018-03-19T00:00:00+08:00",
+            "pledgeStart": "2018-03-01T00:00:00+08:00",
+            "pledgeEnd": "2019-03-01T00:00:00+08:00",
+            "caption": {
+                "id": "Janji iman Pekan Misi Pekabaran Injil ke-42",
+                "en": "Pledge for the 42nd Mission Week",
+                "zh": "为第42个使命周作出承诺"
+            },
+            "commitmentOptions": [
+                {
+                    "value": "MISSION_PRAYER",
+                    "label": {
+                        "id": "Menjadi bagian dari Tim Doa Misi",
+                        "en": "Join the Mission Prayer Team",
+                        "zh": "加入任务祈祷团队"
                     },
-                    {
-                        "value": "EVANGELISM_TRAINING",
-                        "label": {
-                            "id": "Diperlengkapi untuk pekabaran Injil",
-                            "en": "Be equipped for evangelism",
-                            "zh": "配备传福音"
-                        },
-                        "tag": {
-                            "id": "Menginjil",
-                            "en": "Evangelize",
-                            "zh": "福音主义"
-                        }
+                    "tag": {
+                        "id": "Doa",
+                        "en": "Pray",
+                        "zh": "祈祷"
                     }
-                ],
-                "fundName": {
-                    "id": "Dana Misi",
-                    "en": "Mission Fund",
-                    "zh": "任务基金"
                 },
-                "fundDuration": {
-                    "min": 1,
-                    "max": 12,
-                    "defaultValue": 12,
-                    "unit": "MONTH"
-                },
-                "fundCurrency": "SGD",
-                "fundOptions": [
-                    10,
-                    20,
-                    50,
-                    100,
-                    200,
-                    500,
-                    1000
-                ],
-                "allowCustomFundNominal": true,
-                "_links": {
-                    "self": {
-                        "href": "/api/v1/pledgeForms/pmpi42sg"
+                {
+                    "value": "EVANGELISM_TRAINING",
+                    "label": {
+                        "id": "Diperlengkapi untuk pekabaran Injil",
+                        "en": "Be equipped for evangelism",
+                        "zh": "配备传福音"
+                    },
+                    "tag": {
+                        "id": "Menginjil",
+                        "en": "Evangelize",
+                        "zh": "福音主义"
                     }
                 }
+            ],
+            "fundName": {
+                "id": "Dana Misi",
+                "en": "Mission Fund",
+                "zh": "任务基金"
+            },
+            "fundDuration": {
+                "min": 1,
+                "max": 12,
+                "defaultValue": 12,
+                "unit": "MONTH"
+            },
+            "fundCurrency": "SGD",
+            "fundOptions": [
+                10,
+                20,
+                50,
+                100,
+                200,
+                500,
+                1000
+            ],
+            "allowCustomFundNominal": true,
+            "_links": {
+                "self": {
+                    "href": "/api/v1/pledgeForms/pmpi42sg"
+                }
             }
-        ]
+        }
 
 ### Pledges [/api/v1/pledges]
 
@@ -5085,7 +5083,7 @@ and to make edits to the form.
 
     + sort:`+submissions` (optional, string)
       Ascending or descending sort over 1 field (allowed: `title`,
-      `submissions`, `fundCommitted.nominal`, `fundReceived.nominal`)
+      `submissionStart`, `submissionEnd`, `pledgeStart`, `pledgeEnd`)
 
     + includeArchived:`true` (optional, boolean)
       Whether to include pledge forms that have been marked as archived.
@@ -5102,14 +5100,16 @@ and to make edits to the form.
                 "submissionEnd": "2018-03-19T00:00:00+07:00",
                 "pledgeStart": "2018-03-01T00:00:00+07:00",
                 "pledgeEnd": "2019-03-01T00:00:00+07:00",
-                "submissions": 6500,
-                "fundCommitted": {
-                    "currency": "IDR",
-                    "nominal": "5625500000"
-                },
-                "fundReceived": {
-                    "currency": "IDR",
-                    "nominal": "153750000"
+                "statistics": {
+                    "submissions": 6500,
+                    "fundCommitted": {
+                        "currency": "IDR",
+                        "nominal": "5625500000"
+                    },
+                    "fundReceived": {
+                        "currency": "IDR",
+                        "nominal": "153750000"
+                    }
                 },
                 "_links": {
                     "self": {
@@ -5190,14 +5190,16 @@ and to make edits to the form.
                     1000
                 ],
                 "allowCustomFundNominal": true,
-                "submissions": 80,
-                "fundCommitted": {
-                    "currency": "SGD",
-                    "nominal": "15250"
-                },
-                "fundReceived": {
-                    "currency": "SGD",
-                    "nominal": "1350"
+                "statistics": {
+                    "submissions": 80,
+                    "fundCommitted": {
+                        "currency": "SGD",
+                        "nominal": "15250"
+                    },
+                    "fundReceived": {
+                        "currency": "SGD",
+                        "nominal": "1350"
+                    }
                 },
                 "_links": {
                     "self": {
