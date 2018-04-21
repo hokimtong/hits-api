@@ -5578,3 +5578,257 @@ and to make edits to the form.
                 }
             }
         }
+
+## Group Activities
+
+These APIs are used to manage and report activities in the church, which may
+include regular Sunday services, special services, prayer meetings, events,
+fellowships, practices, and so on.
+
+Every service/event that requires reporting will have a corresponding activity
+created, against which check-ins and headcounts will be recorded. Legacy events
+currently do not have activities associated to them, and will be eventually
+migrated to have a consistent model.
+
+### Activities [/api/v1/activities]
+
+This resource represents a single session of service or event that people can
+attend, where a person's attendance towards it is considered to be either whole
+or none, i.e. there is no notion of attending half an activity. If such needs
+to be recorded, then the event is better represented using multiple activities.
+
+Each activity may be associated to an event, a regular service, or nothing.
+Activities for events and regular services are automatically created. When
+updating a recurring activity, it is possible to also update all future
+occurrences of the activity. For example, when a service time is changed.
+
++ Attributes
+    - id (string)
+    - type: SERVICE, EVENT, FELLOWSHIP, PRACTICE, MEETING, MISC (enum)
+    - name: Kebaktian Umum 3 (string)
+    - date: 2018-05-27 (string) - Date in local time, yyyy-mm-dd format
+    - startTime: 16:30 (string) - Start time in local time, HH:mm format
+    - timeZone: +0700 (string) - Time zone offset from UTC
+    - checkInEnabled: true (boolean)
+    - commission: ADULTS, TEENS, CHILDREN (enum) - Commission that owns the activity
+    - coordinator
+        - fullName: Jonathan Setiadi (string)
+        - id (string)
+    - organizer (object) - Site or org unit that runs the activity
+        - name: GII Setrasari (string)
+        - code: SETRASARI (string)
+    - stats (object) - Activity statistics
+        - headcounts
+            - male: 20 (number)
+            - female: 22 (number)
+            - total: 42 (number)
+        - checkIns: 21 (number)
+        - changePercent: -3.0 (number)
+    - reporter
+        - fullName: Yani Suteja (string)
+        - id (string)
+    - service (object, optional) - Associated service
+        - name: Kebaktian Umum 3 (string)
+        - code: SETRASARI-3 (string)
+    - event (object, optional) - Associated event
+        - name: Perayaan Natal Umum 2018 (string)
+        - code: natal2018 (string)
+
+#### List Activities [GET /api/v1/activities{?sort,limit,offset,type,name,organizer,startDate,endDate,includeArchived}]
+
++ Parameters
+
+    + sort: `+startTime` (optional, string)
+      Ascending and descending sorting over a single field. If not specified,
+      the records have no guaranteed ordering.
+
+    + limit: `10` (optional, number)
+      Maximum number of records to retrieve.
+      
+    + offset: `50` (optional, number)
+      Number of records to skip.
+
+    + type: `SERVICE` (optional, string)
+      Filter activities by type.
+
+    + name: `Kebaktian umum` (optional, string)
+      Filter activities by partial name (case-insensitive).
+
+    + organizer: `SETRASARI` (optional, string)
+      Filter activities by church site or org unit that own them.
+      
+    + startDate: `2017-12-01` (optional, string)
+      Only include activities that start on or after the date.
+      If no time is specified, it is defaulted to 0000hrs.
+
+    + endDate: `2017-12-31T18:30:00` (optional, string)
+      Only include activities that end on or after the date.
+      If no time is specified, it is defaulted to 2359hrs.
+
+    + includeArchived: `false` (optional, boolean)
+      Whether to include activities that have been marked as archived.
+       + Default: false
+
++ Response 200 (application/json)
+
+        [
+            {
+                "id": "51111122222333330000001",
+                "type": "SERVICE",
+                "name": "Kebaktian Umum 1",
+                "date": "2018-05-27",
+                "startTime": "07:30",
+                "timeZone": "+0700",
+                "checkInEnabled": true,
+                "commission": "ADULTS",
+                "coordinator": {
+                    "fullName": "Jonathan Setiadi",
+                    "id": "51234512345123450000222"
+                },
+                "organizer": {
+                    "code": "SETRASARI",
+                    "name": "GII Setrasari"
+                },
+                "service": {
+                    "code": "SETRASARI-1",
+                    "name": "Kebaktian Umum 1"
+                },
+                "stats": {
+                    "headcounts": {
+                        "male": 20,
+                        "female": 22,
+                        "total": 42
+                    },
+                    "checkIns": 21,
+                    "changePercent": -3.0
+                },
+                "reporter": {
+                    "fullName": "Yani Suteja",
+                    "id": "51234512345123450000888"
+                },
+                "_links": {
+                    "self": {
+                        "href": "/api/v1/activities/51111122222333330000001"
+                    },
+                    "coordinator": {
+                        "href": "/api/v1/people/51234512345123450000222"
+                    },
+                    "organizer": {
+                        "href": "/api/v1/sites/SETRASARI"
+                    },
+                    "service": {
+                        "href": "/api/v1/services/SETRASARI-1"
+                    },
+                    "reporter": {
+                        "href": "/api/v1/people/51234512345123450000888"
+                    }
+                }
+            }
+        ]
+
+#### Retrieve an Activity [GET /api/v1/activities/{id}]
+
++ Parameters
+
+    + id:`51111122222333330000001` (string, required)
+      Activity ID.
+
++ Response 200 (application/json)
+
+#### Create an Activity [POST /api/v1/activities]
+
+Activities tied to events and services CANNOT be created manually.
+Service activities are created 3 months in advance, while event activities
+are created immediately after the event is created.
+
+Statistics cannot be specified while creating the activity.
+
++ Request (application/json)
+
+        {
+            "type": "FELLOWSHIP",
+            "name": "Youth Care Group",
+            "date": "2018-05-26",
+            "startTime": "16:00",
+            "timeZone": "+0800",
+            "checkInEnabled": true,
+            "commission": "ADULTS",
+            "_links": {
+                "coordinator": {
+                    "href": "/api/v1/people/51234512345123450000357"
+                },
+                "organizer": {
+                    "href": "/api/v1/sites/SINGAPORE"
+                }
+            }
+        }
+
++ Response 201 (application/json)
+
+    + Headers
+    
+            Location: /api/v1/activities/51111122222333330000528
+
+#### Edit an Activity [PATCH /api/v1/activities/{id}]
+
+Note that:
+
+- Activity statistics can only be updated through the `/stats` API, not by
+  submitting a patch to the `stats` attribute.
+
+- Updating start time only affects already created instances of an activity,
+  which are created 3 months in advance. If a week later, the service is not
+  updated, the next activity will still follow the service's timing. As such,
+  the update should only be performed after the final service on the old
+  timing is completed.
+
++ Parameters
+
+    + id:`51111122222333330000001` (string, required)
+      Activity ID.
+
++ Request (application/json)
+
+    + Headers
+
+            Apply-To: THIS_AND_FUTURE_OCCURRENCES
+
+    + Body
+
+            {
+                "startTime": "08:30"
+            }
+
++ Response 200 (application/json)
+
+    + Headers
+
+            Updated-Count: 13
+
+#### Archive an Activity [DELETE /api/v1/activities/{id}]
+
++ Parameters
+
+    + id:`51111122222333330000001` (string, required)
+      Activity ID.
+
++ Response 204
+
+#### Update Activity Statistics [PATCH /api/v1/activities/{id}/stats]
+
+This action is used to update statistics for an activity, mainly used for
+reporting headcounts. Check-ins are linked into the stats and the value cannot
+be directly updated from this API.
+
+The response includes the entire activity resource.
+
++ Request (application/json)
+
+        {
+            "headcounts": {
+                "male": 20,
+                "female": 22
+            }
+        }
+
++ Response 200 (application/json)
