@@ -5659,11 +5659,11 @@ occurrences of the activity. For example, when a service time is changed.
       
     + startDate: `2017-12-01` (optional, string)
       Only include activities that start on or after the date.
-      If no time is specified, it is defaulted to 0000hrs.
+      Time of day is not considered even when specified.
 
-    + endDate: `2017-12-31T18:30:00` (optional, string)
-      Only include activities that end on or after the date.
-      If no time is specified, it is defaulted to 2359hrs.
+    + endDate: `2017-12-31` (optional, string)
+      Only include activities that end on or before the date.
+      Time of day is not considered even when specified.
 
     + includeArchived: `false` (optional, boolean)
       Whether to include activities that have been marked as archived.
@@ -5789,10 +5789,6 @@ Note that:
 
 + Request (application/json)
 
-    + Headers
-
-            Apply-To: THIS_AND_FUTURE_OCCURRENCES
-
     + Body
 
             {
@@ -5800,10 +5796,6 @@ Note that:
             }
 
 + Response 200 (application/json)
-
-    + Headers
-
-            Updated-Count: 13
 
 #### Archive an Activity [DELETE /api/v1/activities/{id}]
 
