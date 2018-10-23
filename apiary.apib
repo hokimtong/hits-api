@@ -4110,6 +4110,8 @@ Notes on payload to create/update event:
 
 #### Check in an event ticket [POST /api/v1/eo/checkIns]
 
+**This API is deprecated.** Use `POST /api/v1/checkIns` instead.
+
 + Request (application/json)
 
     + Body
@@ -4308,6 +4310,8 @@ Notes on payload to create/update event:
         }
 
 #### Check in tasks [GET /api/v1/eo/checkInTasks/]
+
+**This API is deprecated.** Use `GET /api/v1/checkInTasks` instead.
 
 + Response 200 (application/json)
 
@@ -5824,3 +5828,397 @@ The response includes the entire activity resource.
         }
 
 + Response 200 (application/json)
+
+### Check-Ins [/api/v1/checkIns]
+
+This resource represents an attendance record of a congregant in an activity.
+A person can only have one check-in associated with an activity.
+
+A check-in can also be made towards an event ticket. In this case, the owner
+of the ticket is automatically recorded as the attendee. The ticket will also
+be updated with the check-in timestamp for the appropriate part. Note that if
+the check-in is made against the activity, the ticket will not be updated.
+
+By default, check-ins are timestamped with the server time when the request
+is processed. Client applications that run *only* in systems with trustworthy
+clock may specify `checkInTime` for more accurate time record.
+
+When querying for check-ins, at least the attendee or the activity parameter
+must be specified. It is not possible to search for check-ins made by a non-
+congregant specifically.
+
+Based on how the request is authenticated, a check-in will get associated with
+a channel: `HITS_CHECK_IN_APP` (Android app used by ushers to scan tickets),
+`SELF_SERVICE_KIOSK` (Mobile app for camera-based or member ID check-in), or
+`RFID_KIOSK` (legacy RFID-based check-in machines).
+
+#### List check-ins [GET /api/v1/checkIns{?sort,limit,offset,activity,attendee,startTime,endTime,includeArchived}]
+
++ Parameters
+
+    + sort: `+checkInTime` (optional, string)
+      Ascending and descending sorting over a single field. If not specified,
+      the records have no guaranteed ordering.
+
+    + limit: `10` (optional, number)
+      Maximum number of records to retrieve.
+      
+    + offset: `50` (optional, number)
+      Number of records to skip.
+
+    + activity: `51111122222333330000001` (optional, string)
+      Activity ID for which check-ins are to be listed.
+
+    + attendee: `5c1e6c660000001234522222` (optional, string)
+      Person ID for whom check-ins are to be listed.
+
+    + startTime: `2018-12-23T07:00:00.000+07:00`
+      Only include check-ins that happen on or after the time.
+
+    + endTime: `2018-12-23T10:00:00.000+07:00`
+      Only include check-ins that happen on or before the date.
+
+    + includeArchived: `false` (optional, string)
+      Whether to include check-ins that have been archived. Incorrect check-in
+      records may be archived.
+
++ Response 200 (application/json)
+
+        [
+            {
+                "id": "584927692218582906888888",
+                "part": "ACTIVITY",
+                "checkInTime": "2018-12-23T08:55:02.110+07:00",
+                "channel": "SELF_SERVICE_KIOSK",
+                "attendee": {
+                    "id": "5c1e6c660000001234522222",
+                    "fullName": "Kristia Himawan",
+                    "primarySite": {
+                        "code": "SETRASARI",
+                        "name": "GII Setrasari"
+                    },
+                    "currentMembership": {
+                        "type": "REGULAR",
+                        "memberId": "201300102"
+                    },
+                    "email": "kristia.himawan@example.com",
+                    "phoneNumber": "+6282157050505"
+                },
+                "activity": {
+                    "id": "51111122222333330000001",
+                    "type": "SERVICE",
+                    "name": "Kebaktian Umum 1",
+                    "date": "2018-05-27",
+                    "startTime": "07:30",
+                    "timeZone": "+0700"
+                },
+                "_links": {
+                    "self": {
+                        "href": "/api/v1/activities/584927692218582906888888"
+                    },
+                    "activity": {
+                        "href": "/api/v1/activities/51111122222333330000001"
+                    },
+                    "attendee": {
+                        "href": "/api/v1/people/5c1e6c660000001234522222"
+                    }
+                }
+            }
+        ]
+
+#### Lookup a check-in [GET /api/v1/checkIns/{id}]
+
++ Parameters
+
+    + id:`584927692218582906888888` (string, required)
+      Check-in ID.
+
++ Response 200 (application/json)
+
+#### Record a new check-in [POST /api/v1/checkIns]
+
++ Request 1 (application/json)
+
+        {
+            "ticket": {
+                "code": "ABCDEFGH"
+            },
+            "part": "EVENT",
+            "checkInTime": "2018-12-23T08:55:02.110+07:00"
+        }
+
++ Response 200 (application/json)
+
+        {
+            "id": "584927692218582906999999",
+            "attendee": {
+                "id": null,
+                "fullName": "Daniel Wijaya",
+                "primarySite": null
+                "currentMembership": null
+                "homeChurch": "GKI Kebonjati",
+                "email": "daniel@example.com",
+                "phoneNumber": "+6281120005555",
+                "allowFollowUp": true
+            },
+            "part": "EVENT",
+            "checkInTime": "2017-12-14T17:32:59.330+07:00",
+            "channel": "HITS_CHECK_IN_APP",
+            "activity": {
+                "id": "51111122222333330000001",
+                "type": "EVENT",
+                "name": "Perayaan Natal Umum 2017",
+                "date": "2017-12-14",
+                "startTime": "19:00",
+                "timeZone": "+0700",
+                "event": {
+                    "id": "5a113b1edf68706853544757",
+                    "code": "xmas17",
+                    "name": "Perayaan Natal Umum 2017",
+                    "image": "/img/9876asd964eqwesad54sda8964sdak499.jpg"
+                }
+            },
+            "ticket": {
+                "code": "ABCDEFGH",
+                "eventCheckInTime": "2017-12-14T10:32:59.330Z",
+                "eventCheckedInBy": "58c177e773a7d31f5b000001",
+                "transportCheckInTime": null,
+                "transportCheckedInBy": null,
+                "returnTransportCheckInTime": null,
+                "returnTransportCheckedInBy": null,
+                "event": {
+                    "id": "5a113b1edf68706853544757",
+                    "code": "xmas17",
+                    "name": "Perayaan Natal Umum 2017",
+                    "image": "/img/9876asd964eqwesad54sda8964sdak499.jpg"
+                },
+                "ticketClass": {
+                    "code": "GENERAL",
+                    "name": "Tiket Umum",
+                    "price": {
+                        "nominal": 0,
+                        "currency": "IDR"
+                    }
+                },
+                "schedule": {
+                    "code": "095059d4-71c4-4863-bb50-c20135d21fff",
+                    "startTime": "2017-12-14T11:00:00Z",
+                    "endTime": "2017-12-14T13:30:00Z",
+                    "venue": {
+                        "name": "GII Dago",
+                        "address": {
+                            "street": "Jl. Cikapayang No. 2-4",
+                            "city": "Bandung",
+                            "province": "Jawa Barat",
+                            "country": "Indonesia",
+                            "postalCode": "40116"
+                        },
+                        "room": "Main Worship Hall"
+                    }
+                },
+                "transport": {
+                    "code": "02e1ee28-a3ad-4dc1-8702-67058c7584de",
+                    "pickupLocation": {
+                        "name": "GII Setrasari",
+                        "address": {
+                            "street": "Jl. Setrasari Plaza C-4",
+                            "suite": "GSG Istana EGI Setrasari Mall",
+                            "city": "Bandung",
+                            "province": "Jawa Barat",
+                            "country": "Indonesia",
+                            "postalCode": "40162"
+                        }
+                    },
+                    "departureTime": "2017-12-14T09:30:00Z"
+                },
+                "owner": {
+                    "fullName": "Daniel Wijaya",
+                    "primarySite": null
+                    "currentMembership": null
+                    "homeChurch": "GKI Kebonjati",
+                    "email": "daniel@example.com",
+                    "phoneNumber": "+6281120005555",
+                    "allowFollowUp": true
+                },
+                "selfOrdered": false,
+                "orderedBy": {
+                    "id": "591f096c000c40e8ac64790a",
+                    "fullName": "Jonathan Setiadi",
+                    "primarySite": {
+                        "code": "SETRASARI",
+                        "name": "GII Setrasari"
+                    },
+                    "currentMembership": {
+                        "type": "REGULAR",
+                        "memberId": "200220022"
+                    },
+                    "email": "jonathan.setiadi@example.com",
+                    "phoneNumber": "+62817222333"
+                }
+            },
+            "_links": {
+                "self": {
+                    "href": "/api/v1/checkIns/584927692218582906999999"
+                },
+                "activity": {
+                    "href": "/api/v1/activities/51111122222333330000001"
+                }
+            }
+        }
+
++ Response 400 (application/json)
+
+        {
+            "status": 400,
+            "data": {
+                "name": "err.hits.ALREADY_CHECKED_IN",
+                "description": "The ticket has already been checked in for [EVENT]",
+                "details": {
+                    "part": "EVENT",
+                    "ticket": {
+                        "code": "ABCDEFGH",
+                        "eventCheckInTime": "2017-12-14T10:32:59.330Z",
+                        "eventCheckedInBy": "58c177e773a7d31f5b000001",
+                        "transportCheckInTime": null,
+                        "transportCheckedInBy": null,
+                        "returnTransportCheckInTime": null,
+                        "returnTransportCheckedInBy": null,
+                        "event": {
+                            "id": "5a113b1edf68706853544757",
+                            "code": "xmas17",
+                            "name": "Perayaan Natal Umum 2017",
+                            "image": "/img/9876asd964eqwesad54sda8964sdak499.jpg"
+                        },
+                        "ticketClass": {
+                            "code": "GENERAL",
+                            "name": "Tiket Umum",
+                            "price": {
+                                "nominal": 0,
+                                "currency": "IDR"
+                            }
+                        },
+                        "schedule": {
+                            "code": "095059d4-71c4-4863-bb50-c20135d21fff",
+                            "startTime": "2017-12-14T11:00:00Z",
+                            "endTime": "2017-12-14T13:30:00Z",
+                            "venue": {
+                                "name": "GII Dago",
+                                "address": {
+                                    "street": "Jl. Cikapayang No. 2-4",
+                                    "city": "Bandung",
+                                    "province": "Jawa Barat",
+                                    "country": "Indonesia",
+                                    "postalCode": "40116"
+                                },
+                                "room": "Main Worship Hall"
+                            }
+                        },
+                        "transport": {
+                            "code": "02e1ee28-a3ad-4dc1-8702-67058c7584de",
+                            "pickupLocation": {
+                                "name": "GII Setrasari",
+                                "address": {
+                                    "street": "Jl. Setrasari Plaza C-4",
+                                    "suite": "GSG Istana EGI Setrasari Mall",
+                                    "city": "Bandung",
+                                    "province": "Jawa Barat",
+                                    "country": "Indonesia",
+                                    "postalCode": "40162"
+                                }
+                            },
+                            "departureTime": "2017-12-14T09:30:00Z"
+                        },
+                        "owner": {
+                            "fullName": "Daniel Wijaya",
+                            "primarySite": null
+                            "currentMembership": null
+                            "homeChurch": "GKI Kebonjati",
+                            "email": "daniel@example.com",
+                            "phoneNumber": "+6281120005555",
+                            "allowFollowUp": true
+                        },
+                        "selfOrdered": false,
+                        "orderedBy": {
+                            "id": "591f096c000c40e8ac64790a",
+                            "fullName": "Jonathan Setiadi",
+                            "primarySite": {
+                                "code": "SETRASARI",
+                                "name": "GII Setrasari"
+                            },
+                            "currentMembership": {
+                                "type": "REGULAR",
+                                "memberId": "200220022"
+                            },
+                            "email": "jonathan.setiadi@example.com",
+                            "phoneNumber": "+62817222333"
+                        }
+                    }
+                }
+            }
+        }
+
++ Request 2 (application/json)
+
+        {
+            "_links": {
+                "activity": {
+                    "href": "/api/v1/activities/51111122222333330000001"
+                },
+                "attendee": {
+                    "href": "/api/v1/people/591f096c000c40e8ac64790a"
+                }
+            },
+            "part": "ACTIVITY",
+            "checkInTime": "2018-12-23T08:55:02.110+07:00"
+        }
+
++ Response 200 (application/json)
+
+        {
+            "id": "584927692218582906888888",
+            "part": "ACTIVITY",
+            "checkInTime": "2018-12-23T08:55:02.110+07:00",
+            "channel": "RFID_KIOSK",
+            "attendee": {
+                "id": "5c1e6c660000001234522222",
+                "fullName": "Kristia Himawan",
+                "primarySite": {
+                    "code": "SETRASARI",
+                    "name": "GII Setrasari"
+                },
+                "currentMembership": {
+                    "type": "REGULAR",
+                    "memberId": "201300102"
+                },
+                "email": "kristia.himawan@example.com",
+                "phoneNumber": "+6282157050505"
+            },
+            "activity": {
+                "id": "51111122222333330000001",
+                "type": "SERVICE",
+                "name": "Kebaktian Umum 1",
+                "date": "2018-05-27",
+                "startTime": "07:30",
+                "timeZone": "+0700"
+            },
+            "_links": {
+                "self": {
+                    "href": "/api/v1/activities/584927692218582906888888"
+                },
+                "activity": {
+                    "href": "/api/v1/activities/51111122222333330000001"
+                },
+                "attendee": {
+                    "href": "/api/v1/people/5c1e6c660000001234522222"
+                }
+            }
+        }
+
+#### Archive a check-in [DELETE /api/v1/checkIns/{id}]
+
++ Parameters
+
+    + id:`584927692218582906888888` (string, required)
+      Check-in ID.
+
++ Response 204 (application/json)
