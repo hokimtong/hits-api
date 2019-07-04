@@ -6222,3 +6222,60 @@ a channel: `HITS_CHECK_IN_APP` (Android app used by ushers to scan tickets),
       Check-in ID.
 
 + Response 204 (application/json)
+
+#### Retreive check-in tasks [GET /api/v1/checkInTasks]
+
++ Headers
+    Authorization: Basic userid:password
+    
++ Response 200 (application/json)
+    [
+        {
+            "id": "5d1e06e9c4ee854d1fb5e682",
+            "startTime": "2018-12-02T07:30:00+07:00",
+            "endTime": "2018-12-02T09:00:00+07:00",
+            "timeZone": "+0700",
+            "type": "SERVICE",
+            "checkInEnabled" : true,
+            "commission" : "ADULTS",
+            "date" : "2018-12-02T00:00:00+07:00",
+            "name" : "GII Setrasari - Kebaktian Umum 1",
+            "organizer" : {
+                "code" : "SETRASARI",
+                "name" : "GII Setrasari"
+            },
+            "service" : {
+                "code" : "SETRASARI-0730",
+                "name" : "Kebaktian Umum 1"
+            },
+            "_links": {
+                "self": {
+                    "href": "/api/v1/activities/5d1e06e9c4ee854d1fb5e682"
+                }
+            }
+        },
+        {
+            "id": "5d1e06e9c4ee854d1fb5e683",
+            "startTime": "2018-12-02T09:30:00+07:00",
+            "endTime": "2018-12-02T11:00:00+07:00",
+            "timeZone": "+0700",
+            "type": "SERVICE",
+            "checkInEnabled" : true,
+            "commission" : "ADULTS",
+            "date" : "2018-12-02T00:00:00+07:00",
+            "name" : "GII Setrasari - Kebaktian Umum 2",
+            "organizer" : {
+                "code" : "SETRASARI",
+                "name" : "GII Setrasari"
+            },
+            "service" : {
+                "code" : "SETRASARI-0730",
+                "name" : "Kebaktian Umum 2"
+            },
+            "_links": {
+                "self": {
+                    "href": "/api/v1/activities/5d1e06e9c4ee854d1fb5e682"
+                }
+            }
+        }
+    ]
