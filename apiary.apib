@@ -6279,3 +6279,166 @@ a channel: `HITS_CHECK_IN_APP` (Android app used by ushers to scan tickets),
             }
         }
     ]
+
+### Attendance Reports [/api/v1/attendanceReports]
+
+This resource provides attendance report for a Church site, based on the check-
+ins made by congregants whose primary site is set to that site. This report is
+people-centric, and includes check-ins made on other Church sites as well.
+
+The report groups check-ins into weeks, split on Sundays as the first day. The
+dates are always local time to the site.
+
+#### Get attendance report [GET /api/v1/attendanceReports{?limit,offset,sort,primarySite,fullName,membershipCategories,statuses,startDate,endDate}]
+
++ Parameters
+
+    + primarySite: `SETRASARI` (required, string)
+      Primary site for which people's check-ins are to be listed.
+
+    + sort: `+checkInTime` (optional, string)
+      Ascending and descending sorting over a single field of the people. If not
+      specified, the people records are ordered by full name. Allowed fields for
+      sorting are: `fullName`, `title`, `nickname`, `status`, `gender`,
+      `currentMembership.category`, and `currentMembership.memberId`.
+
+    + limit: `10` (optional, number)
+      Maximum number of people records to retrieve.
+      
+    + offset: `50` (optional, number)
+      Number of people records to skip.
+
+    + fullName: `Andreas Excelis Wijayanto` (optional, string)
+      Person name for whom check-ins are to be listed.
+
+    + membershipCategories: `MEMBER,REGULAR_ATTENDER` (optional, string)
+      Comma-separated list of membership categories to be included.
+
+    + statuses: `ACTIVE,INACTIVE` (optional, string)
+      Comma-separated list of person statuses to be included.
+
+    + startDate: `2018-12-23` (optional, string)
+      Only include check-ins for activities that start on or after the date.
+      If not specified, defaults to the first day of the current month.
+
+    + endTime: `2018-12-23` (optional, string)
+      Only include check-ins for activities that start before the date. If not
+      specified, defaults to the last day of the current month.
+
++ Response 200 (application/json)
+
+        [
+          {
+            "status": "ACTIVE",
+            "currentMembership": {
+              "category": "MEMBER",
+              "memberId": "200000301"
+            },
+            "fullName": "Daniel Ngaditoman Wijaya",
+            "nickname": "Danny",
+            "alternateNames": [],
+            "gender": "M",
+            "id": "5e6c59558916464dab2338eb",
+            "_links": {
+              "self": {
+                "href": "/api/v1/people/5e6c59558916464dab2338eb"
+              }
+            },
+            "periods": [
+              {
+                "startDate": "2018-05-23",
+                "endDate": "2018-05-26",
+                "checkIns": []
+              },
+              {
+                "startDate": "2018-05-27",
+                "endDate": "2018-06-02",
+                "checkIns": [
+                  {
+                    "activity": {
+                      "id": "5e6c59558916464dab2338fc",
+                      "name": "IEC Singapore - Sunday Service 2",
+                      "type": "SERVICE",
+                      "date": "2018-05-27",
+                      "startTime": "11:00",
+                      "timeZone": "+0800",
+                      "startTimeTs": "2018-05-27T03:00:00.000Z",
+                      "endTimeTs": "2018-05-27T04:30:00.000Z"
+                    },
+                    "_links": {
+                      "activity": {
+                        "href": "/api/v1/activities/5e6c59558916464dab2338fc"
+                      },
+                      "self": {
+                        "href": "/api/v1/checkIns/5e6c59558916464dab233937"
+                      }
+                    },
+                    "part": "ACTIVITY",
+                    "channel": "RFID_KIOSK",
+                    "checkInTime": "2018-05-27T02:40:00.000Z",
+                    "id": "5e6c59558916464dab233937"
+                  }
+                ]
+              },
+              {
+                "startDate": "2018-06-03",
+                "endDate": "2018-06-09",
+                "checkIns": [
+                  {
+                    "activity": {
+                      "id": "5e6c59558916464dab2338fd",
+                      "name": "IEC Singapore - Sunday Service 2",
+                      "type": "SERVICE",
+                      "date": "2018-06-03",
+                      "startTime": "11:00",
+                      "timeZone": "+0800",
+                      "startTimeTs": "2018-06-03T03:00:00.000Z",
+                      "endTimeTs": "2018-06-03T04:30:00.000Z"
+                    },
+                    "_links": {
+                      "activity": {
+                        "href": "/api/v1/activities/5e6c59558916464dab2338fd"
+                      },
+                      "self": {
+                        "href": "/api/v1/checkIns/5e6c59558916464dab233938"
+                      }
+                    },
+                    "part": "ACTIVITY",
+                    "channel": "RFID_KIOSK",
+                    "checkInTime": "2018-06-03T02:50:00.000Z",
+                    "id": "5e6c59558916464dab233938"
+                  },
+                  {
+                    "activity": {
+                      "id": "5e6c59558916464dab2338fe",
+                      "name": "Family Talk",
+                      "type": "MISC",
+                      "date": "2018-06-03",
+                      "startTime": "10:00",
+                      "timeZone": "+0700",
+                      "startTimeTs": "2018-06-03T03:00:00.000Z",
+                      "endTimeTs": "2018-06-03T04:30:00.000Z"
+                    },
+                    "_links": {
+                      "activity": {
+                        "href": "/api/v1/activities/5e6c59558916464dab2338fe"
+                      },
+                      "self": {
+                        "href": "/api/v1/checkIns/5e6c59558916464dab233939"
+                      }
+                    },
+                    "part": "ACTIVITY",
+                    "channel": "RFID_KIOSK",
+                    "checkInTime": "2018-06-03T02:55:00.000Z",
+                    "id": "5e6c59558916464dab233939"
+                  }
+                ]
+              },
+              {
+                "startDate": "2018-06-10",
+                "endDate": "2018-06-12",
+                "checkIns": []
+              }
+            ]
+          }
+        ]
