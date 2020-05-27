@@ -6442,3 +6442,62 @@ dates are always local time to the site.
             ]
           }
         ]
+
+### Support Ticket [/api/v1/supportTickets]
+
+This resource will be used for congregants to request for any support.
+The core ticketing system will be handled by FreshDesk, and this resources will
+only be the bridging between HITS server and FreshDesk.
+
+#### Create a support ticket [POST /api/v1/supportTickets]
+
++ Request (application/json)
+
+        {
+            "subject": "Permohonan Pembuatan Kartu",
+            "description": "Selamat malam, saya ingin mengajukan permohonan pembuatan kartu anggota GII",
+            "type": "REQUEST"
+        }
+        
++ Response 201 (application/json)
+
+    + Headers
+    
+            Location: /api/v1/supportTickets/1
+            
+    + Body
+    
+            
+            {
+                "cc_emails": [],
+                "fwd_emails": [],
+                "reply_cc_emails": [],
+                "ticket_cc_emails": [],
+                "fr_escalated": false,
+                "spam": false,
+                "email_config_id": null,
+                "group_id": null,
+                "priority": 1,
+                "requester_id": 63003533765,
+                "responder_id": null,
+                "source": 2,
+                "company_id": null,
+                "status": 2,
+                "subject": "Permohonan Pembuatan Kartu",
+                "to_emails": null,
+                "product_id": null,
+                "id": 9,
+                "type": null,
+                "due_by": "2020-06-02T09:00:00Z",
+                "fr_due_by": "2020-05-29T09:00:00Z",
+                "is_escalated": false,
+                "description": "<div>Selat malam, saya ingin mengajukan permohonan pembuatan kartu anggota GII</div>",
+                "description_text": "Selamat malam, saya ingin mengajukan permohonan pembuatan kartu anggota GII",
+                "custom_fields": {},
+                "created_at": "2020-05-27T13:58:55Z",
+                "updated_at": "2020-05-27T13:58:55Z",
+                "tags": [],
+                "attachments": [],
+                "nr_due_by": null,
+                "nr_escalated": false
+            }
